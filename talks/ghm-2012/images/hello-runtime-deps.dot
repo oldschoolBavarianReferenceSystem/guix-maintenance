@@ -1,0 +1,9 @@
+digraph G {
+bgcolor = "#000000";
+color = "#ffffff";
+"/nix/store/ksaxbhsnwmyxilx5ha8k704cp2iabh0y-hello-2.3" [label = "hello-2.3", shape = box, style = filled, color = "white", fillcolor = "#ff0000", fontcolor = "white"];
+"/nix/store/s88vdfglm94x7jn0vqm24pqhq460s0c7-glibc-2.11" -> "/nix/store/ksaxbhsnwmyxilx5ha8k704cp2iabh0y-hello-2.3" [color = "white"];
+"/nix/store/s88vdfglm94x7jn0vqm24pqhq460s0c7-glibc-2.11" [label = "glibc-2.11", shape = box, style = filled, color = "white", fillcolor = "#ff0000", fontcolor = "white"];
+"/nix/store/k92sh6x9gp9j7ncndak0xs3hn8g43daq-linux-headers-2.6.28.5" -> "/nix/store/s88vdfglm94x7jn0vqm24pqhq460s0c7-glibc-2.11" [color = "white"];
+"/nix/store/k92sh6x9gp9j7ncndak0xs3hn8g43daq-linux-headers-2.6.28.5" [label = "linux-headers-2.6.28.5", shape = box, style = filled, fillcolor = "#ff0000", color = "white", fontcolor = "white"];
+}

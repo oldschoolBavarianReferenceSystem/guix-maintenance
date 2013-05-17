@@ -1,0 +1,66 @@
+#+STARTUP: beamer hidestars
+#+TITLE: Guix, functional package management for the people, and for GNU?
+#+AUTHOR: Ludovic Courtès\\\texttt{ludo@gnu.org}
+#+EMAIL: ludo@gnu.org
+#+DATE: GNU Hackers Meeting, July 2012, Düsseldorf
+#+OPTIONS: creator:nil email:nil
+#+LANGUAGE: en
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation]
+#+BEAMER_FRAME_LEVEL: 3
+#+BEAMER_HEADER_EXTRA: \usetheme{default}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \setbeamertemplate{footline}[page number]{} 
+#+LATEX_HEADER: \usepackage{helvet}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows,shapes}
+#+LATEX_HEADER: \setbeamercolor{structure}{fg=nixlightblue,bg=black}
+#+LATEX_HEADER: \setbeamercolor{title}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{date}{fg=nixlightblue,bg=black}
+#+LATEX_HEADER: \setbeamercolor{frametitle}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{titlelike}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{normal text}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{alerted text}{fg=lightgreen,bg=black}
+#+LATEX_HEADER: \setbeamercolor{section in toc}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{section in toc shaded}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{subsection in toc}{fg=nixlightblue,bg=black}
+#+LATEX_HEADER: \setbeamercolor{subsection in toc shaded}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{subsubsection in toc}{fg=nixlightblue,bg=black}
+#+LATEX_HEADER: \setbeamercolor{subsubsection in toc shaded}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{frametitle in toc}{fg=white,bg=black}
+#+LATEX_HEADER: \setbeamercolor{local structure}{fg=nixlightblue,bg=black}
+
+#+LATEX_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{}\tableofcontents[currentsection]\end{frame}}
+#+LATEX_HEADER: \AtBeginSubsection[]{\begin{frame}<beamer>\frametitle{}\tableofcontents[currentsection, currentsubsection]\end{frame}}
+#+COLUMNS: %35ITEM %10BEAMER_env(Env) %10BEAMER_envargs(Args) %4BEAMER_col(Col) %8BEAMER_extra(Ex)
+
+* introduction
+
+* history-based predictions (?)
+
+#+PLOT: title:"Nixpkgs contributions" timefmt:"%m/%d/%Y" ind:1 deps:(2 3) type:2d with:lines set:"yrange [0:]" set:"xrange [0:]"
+| date       | contributors | packages |
+|------------+--------------+----------|
+| 03/14/2003 |            1 |          |
+| 06/01/2003 |            1 |          |
+| 01/01/2004 |            3 |          |
+| 06/01/2004 |            3 |          |
+| 01/01/2005 |            6 |          |
+| 06/01/2005 |            6 |          |
+| 01/01/2006 |            8 |          |
+| 06/01/2006 |           11 |          |
+| 01/01/2007 |           12 |          |
+| 06/01/2007 |           13 |      879 |
+| 01/01/2008 |           16 |          |
+| 06/01/2008 |           21 |          |
+| 01/01/2009 |           23 |          |
+| 06/01/2009 |           24 |     2183 |
+| 01/01/2010 |           26 |     2538 |
+| 06/01/2010 |           28 |     3692 |
+| 01/01/2011 |           32 |     5462 |
+| 05/31/2011 |           36 |     5860 |
+| 01/01/2012 |           38 |     6913 |
+| 06/01/2012 |           41 |     7629 |
+
+
+* summary
