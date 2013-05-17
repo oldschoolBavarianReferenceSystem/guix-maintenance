@@ -1,0 +1,1113 @@
+(use-modules (skribilo package acmproc)
+	     (skribilo engine)
+	     (skribilo ast)
+	     (skribilo writer)
+	     (skribilo evaluator)
+	     (skribilo biblio author)
+	     (skribilo source lisp))
+
+(define (---) ; emdash
+  (resolve (lambda (n e env)
+             (if (engine-format? "html" e)
+                 (! "&mdash;")
+                 (! "---")))))
+
+(define (--) ; endash
+  (resolve (lambda (n e env)
+             (if (engine-format? "html" e)
+                 (! "&ndash;")
+                 (! "--")))))
+		 
+(define (url url)
+  (ref :text (tt url) :url url))
+
+(define (=>)
+  (symbol "=>"))
+  
+;; For pdflatex.
+(engine-custom-set! (find-engine 'latex) 'image-format '("pdf"))
+		 
+(engine-custom-set! (find-engine 'latex) 'usepackage
+		    (let ((u (engine-custom (find-engine 'latex)
+				            'usepackage)))
+		      ;; See <https://en.wikibooks.org/wiki/LaTeX/Labels_and_Cross-referencing>
+		      ;; and <http://tug.org/pipermail/texhax/2010-September/015596.html>.
+		      (string-append u "\n" 
+		                    "\\usepackage{microtype}\n"
+		                    ;; "\\usepackage[hypcap]{caption}\n"
+				    ;; "\\DeclareCaptionType{copyrightbox}\n"
+				    )))
+
+(define %copyright/latex
+  "\\global\\boilerplate{Copyright \\copyright{} 2013 Ludovic Courtès
+
+  Permission is granted to copy, distribute and/or modify this document
+  under the terms of the GNU Free Documentation License, Version 1.3
+  or any later version published by the Free Software Foundation;
+  with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+  A copy of the license is
+  available at \\url{http://www.gnu.org/licenses/gfdl.html}.
+}
+\\conferenceinfo{European Lisp Symposum}{2013, Madrid, Spain}
+")
+
+(engine-custom-set! (find-engine 'latex) 'predocument
+		    (let ((pd (engine-custom (find-engine 'latex)
+				             'predocument)))
+		      (string-append pd "\n" %copyright/latex)))
+
+(markup-writer 'image (find-engine 'latex)
+   :options '(:file :url :width :height :zoom)
+   :action (lambda (n e)
+             (format #t "\n\\includegraphics[width=1.0\\textwidth]{~a}\n"
+	             (markup-option n :file))))
+
+;; Abbreviate author names in the bibliography.
+(markup-writer '&bib-entry-author
+	 :action (lambda (n e)
+		   (let ((names (markup-body n)))
+		     (evaluate-document
+		      (if (string? names)
+			  (abbreviate-first-names names)
+			  names)
+		      e))))
+
+(bibliography "guix.sbib")
+
+(document :title [Functional Package Management with Guix]
+   :author (author :name [Ludovic Courtès]
+	      :email "ludo@gnu.org"
+	      :address "Bordeaux, France")
+   
+   (when (engine-format? "latex")
+     (list (! "\\clubpenalty=500\n")
+           (! "\\widowpenalty=500\n")))
+
+   (abstract
+        (p [We describe the design and implementation of GNU,(~)Guix, a
+purely functional package manager designed to support a complete
+GNU/Linux distribution.  Guix supports transactional upgrades and
+roll-backs, unprivileged package management, per-user profiles, and
+garbage collection.  It builds upon the low-level build and deployment
+layer of the Nix package manager.  Guix uses Scheme as its programming
+interface.  In particular, we devise an embedded domain-specific
+language (EDSL) to describe and compose packages.  We demonstrate how it
+allows us to benefit from the host general-purpose programming language
+while not compromising on expressiveness.  Second, we show the use of
+Scheme to write build programs, leading to a ``two-tier'' programming
+system.]))
+
+   ;; See <http://www.acm.org/about/class/1998>.
+   (chapter :title [Categories and Subject Descriptors] :number #f
+      (p [D.4.5 \[,(bold [Operating Systems])\]: Reliability; D.4.5
+\[,(bold [Operating Systems])\]: System Programs and Utilities; D.1.1
+\[,(bold [Software])\]: Applicative (Functional) Programming]))
+   (chapter :title [General Terms] :number #f
+      (p [Languages, Management, Reliability.]))
+   (chapter :title [Keywords] :number #f
+      (p [Functional package management, Scheme, Embedded
+domain-specific language]))
+   
+   (when (engine-format? "latex")
+     (! "\\newpage\n"))
+
+   (chapter :title [Introduction]
+      
+      (p [GNU,(~)Guix,(footnote (url
+"http://www.gnu.org/software/guix/")) is a ,(emph [purely functional])
+package manager for the GNU system ,(ref :bib 'stallman83:manifesto),
+and in particular GNU/Linux.  Package management consists in all the
+activities that relate to building packages from source, honoring the
+build-time and run-time dependencies on packages, installing, removing,
+and upgrading packages in user environments.  In addition to these
+standard features, Guix supports transactional upgrades and roll-backs,
+unprivileged package management, per-user profiles, and garbage
+collection.  Guix comes with a distribution of user-land free software
+packages.])
+     (p [Guix seeks to empower users in several ways: by offering the
+uncommon features listed above, by providing the tools that allow users
+to formally correlate a binary package and the ``recipes'' and source
+code that led to it,(---)furthering the spirit of the GNU,(~)General
+Public License,(---), by allowing them to customize the distribution,
+and by lowering the barrier to entry in distribution development.])
+     (p [The keys toward these goals are the implementation of a
+purely functional package management paradigm, and the use of both
+declarative and lower-level programming interfaces (APIs) embedded in
+Scheme.  To that end, Guix reuses the package storage and deployment
+model implemented by the Nix functional package manager ,(ref :bib
+'dolstra2004:nix).  On top of that, it provides Scheme APIs, and in
+particular embedded domain-specific languages (EDSLs) to describe
+software packages and their build system.  Guix also uses Scheme for
+programs and libraries that implement the actual package build
+processes, leading to a ``two-tier'' system.])
+     (p [This paper focuses on the programming techniques implemented by
+Guix.  Our contribution is twofold: we demonstrate that use of Scheme
+and EDSLs achieves expressiveness comparable to that of Nix's DSL while
+providing a richer and extensible programming environment; we further
+show that Scheme is a profitable alternative to shell tools when it
+comes to package build programs.  ,(numref :text [Section] :ident
+"background") first gives some background on functional package
+management and its implementation in Nix.  ,(numref :text [Section]
+:ident "api") describes the design and implementation of Guix's
+programming and packaging interfaces.  ,(numref :text [Section] :ident
+"eval") provides an evaluation and discussion of the current status of
+Guix.  ,(numref :text [Section] :ident "related") presents related work,
+and ,(numref :text [Section] :ident "conclusion") concludes.]))
+   
+   (chapter :title [Background]
+      :ident "background"
+
+      (p [This section describe the functional package management
+paradigm and its implementation in Nix.  It then shows how Guix differs,
+and what the rationale is.])
+      
+      (section :title [Functional Package Management]
+	 
+	 (p [Functional package management is a paradigm whereby the
+build and installation process of a package is considered as a pure
+function, without any side effects.  This is in contrast with
+widespread approaches to package build and installation where the build
+process usually has access to all the software installed on the machine,
+regardless of what its declared inputs are, and where installation
+modifies files in place.])
+	 (p [Functional package management was pioneered by the Nix
+package manager ,(ref :bib 'dolstra2004:nix), which has since matured to
+the point of managing a complete GNU/Linux distribution ,(ref :bib
+'dolstra2010:nixos).  To allow build processes to be faithfully
+regarded as pure functions, Nix can run them in a ,(tt [chroot])
+environment that only contains the inputs it explicitly declared; thus,
+it becomes impossible for a build process to use, say, Perl, if that
+package was not explicitly declared as an input of the build process.
+In addition, Nix maps the list of inputs of a build process to a
+statistically unique file system name; that file name is used to
+identify the output of the
+build process.  For instance, a particular build of GNU,(~)Emacs may be
+installed in ,(tt
+[/nix/store/v9zic07iar8w90zcy398r745w78a7lqs-emacs-24.2]), based on a
+cryptographic hash of all the inputs to that build process; changing the
+compiler, configuration options, build scripts, or any other inputs to
+the build process of Emacs yields a different name.  This is a
+form of ,(emph [on-disk memoization]), with the ,(tt [/nix/store])
+directory acting as a cache of ``function results'',(---)i.e., a cache
+of installed packages.  Directories under ,(tt [/nix/store]) are
+immutable.])
+	 (p [This direct mapping from build inputs to the result's
+directory name is basis of the most important properties of a functional package
+manager.  It means that build processes are regarded as ,(emph
+[referentially transparent]).  To put it differently, instead
+of merely providing pre-built binaries
+and/or build recipes, functional package managers provide binaries,
+build recipes, and in effect a ,(emph [guarantee]) that a given binary
+matches a given build recipe.]))
+
+      (section :title [Nix]
+	 
+	 (p [The idea of ,(emph [purely functional]) package started by
+making an analogy between programming language paradigms and software
+deployment techniques ,(ref :bib 'dolstra2004:nix).  The authors
+observed that, in essence, package management tools typically used on
+free operating systems, such as RPM and Debian's APT, implement an
+,(emph [imperative]) software deployment paradigm.  Package
+installation, removal, and upgrade are all done in-place, by mutating
+the operating system's state.  Likewise, changes to the operating
+system's configuration are done in-place by changing configuration
+files.])
+	 (p [This imperative approach has several drawbacks.  First, it
+makes it hard to reproduce or otherwise describe the OS state.  Knowing
+the list of installed packages and their version is not enough, because
+the installation procedure of packages may trigger hooks to change
+global system configuration files ,(ref :bib '(dicosmo10:supporting
+crameri07:stageddeployment)), and of course users may have done
+additional modifications.  Second, installation, removal, and upgrade
+are not transactional; interrupting them may leave the system in an
+undefined, or even unusable state, where some of the files have been
+altered.  Third, rolling back to a previous system configuration is
+practically impossible, due to the absence of a mechanism to formally
+describe the system's configuration.])
+	 (p [Nix attempts to address these shortcomings through the
+functional software deployment paradigm: installed packages are
+immutable, and build processes are regarded as pure functions, as
+explained before.  Thanks to this property, it implements ,(emph
+[transparent source/binary deployment]): the directory name of a build
+result encodes all the inputs of its build process, so if a trusted
+server provides that directory, then it can be directly downloaded from
+there, avoiding the need for a local build.])
+	 (p [Each user has their own ,(emph [profile]), which contains
+symbolic links to the ,(tt [/nix/store]) directories of installed
+packages.  Thus, users can install packages independently, and the
+actual storage is shared when several users install the very same
+package in their profile.  Nix comes with a ,(emph [garbage collector]),
+which has two main functions: with conservative scanning, it can
+determine what packages a build output refers to; and upon user request,
+it can delete any packages not referenced ,(it [via]) any user
+profile.])
+	 (p [To describe and compose build processes, Nix implements its
+own domain-specific language (DSL), which provides a convenient
+interface to the build and storage mechanisms described above.  The Nix
+language is purely functional, lazy, and dynamically typed; it was
+inspired by that of the Vesta software configuration system ,(ref :bib
+'heydon2000:caching).  It comes
+with a handful of built-in data types, and around 50 primitives.  The
+primitive to describe a build process is ,(tt [derivation]).])
+
+	 (figure :legend [Call to the ,(tt [derivation]) primitive in
+the Nix language.]
+	    :ident "fig:derivation-nix"
+
+(prog [
+  derivation {
+    name = "example-1.0";
+    builder = "${./static-bash}";                 ;!string-interp
+    args = [ "-c" "echo hello > $out" \];
+    system = "x86_64-linux";
+  }
+]))
+   
+   (p [Figure,(~),(ref :figure "fig:derivation-nix") shows code that calls
+the ,(tt [derivation]) function with one argument, which is a
+dictionary.  It expects at least the four key/value pairs shown above;
+together, they define the build process and its inputs.  The result is a
+,(emph [derivation]), which is essentially the ,(emph [promise]) of a
+build.  The derivation has a low-level on-disk representation
+independent of the Nix language,(---)in other words, derivations are to
+the Nix language what assembly is to higher-level programming
+languages.  When
+this derivation is instantiated---i.e., built---, it runs the command
+,(tt [static-bash -c "echo hello > $out"]) in a chroot that contains
+nothing but the ,(tt [static-bash]) file; in addition, each key/value
+pair of the ,(tt [derivation]) argument is reified in the build process
+as an environment variable, and the ,(tt [out]) environment variable is
+defined to point to the output ,(tt [/nix/store]) file name.])
+	 (p [Before the build starts, the file ,(tt [static-bash]) is
+imported under ,(tt [/nix/store/])...,(tt [-static-bash]), and the value
+associated with ,(tt [builder]) is substituted with that file name.  This ,(tt
+[${...}]) form on line ,(ref :line "string-interp") for string interpolation makes it easy to insert
+Nix-language values, and in particular computed file names, in the
+contents of build scripts.  The Nix-based GNU/Linux distribution, NixOS,
+has most of its build scripts written in Bash, and makes
+heavy use of string interpolation on the Nix-language side.])
+         (p [The implementation of the Nix language is an interpreter
+written in C++.  In terms of performance, it does not compete with
+typical general-purpose language implementations; that is often not a
+problem given its specific use case, but sometimes requires rewriting
+functions, such as list-processing tools, as language primitives in
+C++.  The language itself is not extensible: it has no macros, a fixed
+set of data types, and no foreign function interface.]))
+      
+      (section :title [From Nix to Guix]
+	 :ident "nix-to-guix"
+      
+      	(p [Our main contribution with GNU,(~)Guix is the use of Scheme
+for both the composition and description of build processes, and the
+implementation of build scripts.  In other words, Guix builds upon the
+build and deployment primitives of Nix, but replaces the Nix language by
+Scheme with embedded domain-specific languages (EDSLs), and promotes
+Scheme as a replacement for Bash in build scripts.  Guix is implemented
+using GNU,(~)Guile,(~)2.0,(footnote (url
+"http://www.gnu.org/software/guile/")), a rich implementation of Scheme
+based on a compiler and bytecode interpreter that supports the R5RS and
+R6RS standards.  It reuses the build primitives of Nix by making remote
+procedure calls (RPCs) to the Nix build daemon.])
+	(p [We claim that using an ,(emph [embedded]) DSL has numerous
+practical benefits over an independent DSL: tooling (use of Guile's
+compiler, debugger, and REPL, Unicode support, etc.), libraries (SRFIs,
+internationalization support, etc.), and seamless integration in larger
+programs.  To illustrate this last point, consider an application that
+traverses the list of available packages and processes it---for instance
+to filter packages whose name matches a pattern, or to render it as
+HTML.  A Scheme program can readily and efficiently do it with Guix,
+where packages are first-class Scheme objects; conversely, writing such
+an implementation with an external DSL such as Nix requires either
+extending the language implementation with the necessary functionality,
+or interfacing with it ,(it [via]) an external representation such as
+XML, which is often inefficient and lossy.])
+        (p [We show that use of Scheme in build scripts is natural, and
+can achieve conciseness comparable to that of shell scripts, but with
+improved expressivity and clearer semantics.])
+	(p [The next section describes the main programming interfaces
+of Guix, with a focus on its high-level package description language and
+``shell programming'' substitutes provided to builder-side code.])))
+   
+   (chapter :title [Build Expressions and Package Descriptions]
+      :ident "api"
+      
+      (p [Our goals when designing Guix was to provide interfaces
+ranging from Nix's low-level primitives such as ,(tt
+[derivation]) to high-level package declarations.  The declarative
+interface is a requirement to help grow and maintain a large software
+distribution.  This section describes the three level of abstractions
+implemented in Guix, and illustrates how Scheme's homoiconicity and
+extensibility were instrumental.])
+      
+      (section :title [Low-Level Store Operations]
+	 
+	 (p [As seen above, ,(emph [derivations]) are the central
+concept in Nix.  A derivation bundles together a ,(emph [builder]) and
+its execution environment: command-line arguments, environment variable
+definitions, as well as a list of input derivations whose result should
+be accessible to the builder.  Builders are typically executed in a ,(tt
+[chroot]) environment where only those inputs explicitly listed are
+visible.  Guix transposes Nix's ,(tt [derivation]) primitive literally
+to its Scheme interface.])
+   
+	 (figure :legend [Using the ,(tt [derivation]) primitive in
+Scheme with Guix.]
+	    :ident "fig:derivation-prim"
+	    :multicolumns #f
+
+	    (prog (source :lang scheme [
+(let* ((store (open-connection))                     ;!conn
+       (bash  (add-to-store store "static-bash"      ;!add-to-store
+                            #t "sha256"
+                            "./static-bash")))
+  (derivation store "example-1.0" 
+              "x86_64-linux" 
+              bash
+              '("-c" "echo hello > $out")
+              '() '()))
+
+,(=>)                                                ;!drv-result
+"/nix/store/nsswy...-example-1.0.drv"
+#<derivation "example-1.0" ...>
+])))
+	 
+	 (p [Figure,(~),(ref :figure "fig:derivation-prim") shows the
+example of Figure,(~),(ref :figure "fig:derivation-nix") rewritten to use
+Guix's low-level Scheme API.  Notice how the former makes explicit
+several operations not visible in the latter.  First, line ,(ref :line
+"conn") establishes a connection to the build daemon; line ,(ref :line
+"add-to-store") explicitly asks the daemon to ``intern'' file ,(tt
+[static-bash]) into the store; finally, the ,(tt [derivation]) call
+instructs the daemon to compute the given derivation.  Two values are
+returned (line ,(ref :line "drv-result")): the file name of the on-disk
+representation of the derivation, and its in-memory representation as a
+Scheme record.])
+	 (p [The build actions represented by this derivation can then
+be performed by passing it to the ,(tt [build-derivations]) RPC.  Again,
+its build result is a single file reading ,(tt [hello]), and its build is
+performed in an environment where the only visible file is a copy of
+,(tt [static-bash]) under ,(tt [/nix/store]).]))
+      
+      (section :title [Build Expressions]
+	 :ident "build-exprs"
+	 
+	 (p [The Nix language heavily relies on string interpolation to
+allow users to insert references to build results, while hiding the
+underlying ,(tt [add-to-store]) or ,(tt [build-derivations]) operations
+that appear explicitly in Figure,(~),(ref :figure "fig:derivation-prim").  Scheme
+has no support for string interpolation; adding it to the underlying
+Scheme implementation is certainly feasible, but it's also unnatural.])
+	 (p [The obvious strategy here is to instead leverage Scheme's
+homoiconicity.  This leads us to the definition of ,(tt
+[build-expression->derivation]), which works similarly to ,(tt
+[derivation]), except that it expects a ,(emph [build expression]) as an
+S-expression instead of a builder.  Figure,(~),(ref :figure
+"fig:expr-derivation") shows the same derivation as before but rewritten
+to use this new interface.])
+	 
+	 (figure :legend [Build expression written in Scheme.]
+	    :ident "fig:expr-derivation"
+	    
+	    (prog      ;; Remove :language so `lambda' is not underlined
+	       (source [
+(let ((store   (open-connection))
+      (builder '(call-with-output-file %output     ;!build-expr
+                  (lambda ()
+                    (display "hello")))))
+  (build-expression->derivation store 
+                                "example-1.0"
+                                "x86_64-linux"
+                                builder '()))
+
+,(=>)
+"/nix/store/zv3b3...-example-1.0.drv"
+#<derivation "example-1.0" ...>
+])))
+	 
+	 (p [This time the builder on line ,(ref :line "build-expr") is
+purely a Scheme expression.  That expression will be evaluated when the
+derivation is built, in the specified build environment with no inputs.
+The environment implicitly includes a copy of Guile, which is used to
+evaluate the ,(tt [builder]) expression.  By default this is a
+stand-alone, statically-linked Guile, but users can also specify a
+derivation denoting a different Guile variant.])
+	 (p [Remember that this expression is run by a separate Guile
+process than the one that calls ,(tt [build-expression->derivation]): it
+is run by a Guile process launched by the build daemon, in a ,(tt
+[chroot]).  So, while there is a single language for both the ``host''
+and the ``build'' side, there are really two ,(emph [strata]) of code,
+or ,(emph [tiers]): the host-side, and the build-side code,(footnote
+[The term ``stratum'' is this context was coined by Manuel Serrano et
+al. for their work on Hop where a similar situation arises ,(ref :bib
+'serrano12:hop).]).])
+	 (p [Notice how the output file name is reified ,(it [via]) the
+,(tt [%output]) variable automatically added to ,(tt [builder])'s scope.
+Input file names are similarly reified through the ,(tt [%build-inputs])
+variable (not shown here.)  Both variables are non-hygienically
+introduced in the build expression by ,(tt
+[build-expression->derivation]).])
+	 (p [Sometimes the build expression needs to use functionality
+from other modules.  For modules that come with Guile, the expression
+just needs to be augmented with the needed ,(tt [(use-modules ...)])
+clause.  Conversely, external modules first need to be imported into the
+derivation's build environment so the build expression can use them.  To
+that end, the ,(tt [build-expression->derivation]) procedure has an
+optional ,(tt [#:modules]) keyword parameter, allowing additional
+modules to be imported into the expression's environment.])
+	 (p [When ,(tt [#:modules]) specifies a non-empty module list, an
+auxiliary derivation is created and added as an input to the initial
+derivation.  That auxiliary derivation
+copies the module source and compiled files in the store.  This
+mechanism allows build expressions to easily use helper modules, as
+described in ,(numref :text [Section] :ident "shell").]))
+      
+      (section :title [Package Declarations]
+	 :ident "pkg-decl"
+	 
+	 (figure :legend [A package definition using the high-level
+interface.]
+	    :ident "fig:hello"
+	    :multicolumns #t
+	    
+	    (prog
+               (source :language scheme [
+(define hello
+  (package
+    (name "hello")
+    (version "2.8")
+    (source (origin                            ;!origin
+              (method url-fetch)
+              (uri (string-append "mirror://gnu/hello/hello-"
+                                  version ".tar.gz")) ;!package-uri
+              (sha256 (base32 "0wqd8..."))))   ;!base32
+    (build-system gnu-build-system)            ;!build-system
+    (arguments
+      '(#:configure-flags                      ;!config-flags
+        `("--disable-color"
+          \,(string-append "--with-gawk="
+                          (assoc-ref %build-inputs "gawk")))))
+    (inputs `(("gawk" ,gawk)))                ;!inputs
+    (synopsis "GNU Hello")
+    (description "An illustration of GNU's engineering practices.")
+    (home-page "http://www.gnu.org/software/hello/")
+    (license gpl3+)))
+])))
+
+	 (p [The interfaces described above remain fairly low-level.  In
+particular, they explicitly manipulate the store, pass around the system
+type, and are very distant from the abstract notion of a software
+package that we want to focus on.  To address this, Guix provides a
+high-level package definition interface.  It is designed to be ,(emph
+[purely declarative]) in common cases, while allowing users to customize
+the underlying build process.  That way, it should be intelligible and
+directly usable by packagers will little or no experience with Scheme.
+As an additional constraint, this extra layer should be efficient in
+space and time: package management tools need to be able to load and
+traverse a distribution consisting in thousands of packages.])
+
+	 (p [Figure,(~),(ref :figure "fig:hello") shows the definition of
+the GNU,(~)Hello package, a typical GNU package written in C and using
+the GNU build system---i.e., a ,(tt [configure]) script that generates a
+makefile supporting standardized targets such as ,(tt [check]) and ,(tt
+[install]).  It is a direct mapping of the abstract notion of a software
+package and should be rather self-descriptive.])
+	 (p [The ,(tt [inputs]) field
+specifies additional dependencies of the package.  Here line ,(ref :line
+"inputs") says that Hello has a dependency labeled ,(tt ["gawk"]) on
+GNU,(~)Awk, whose value is that of the ,(tt [gawk]) global variable
+(,(tt [gawk]) is bound to a similar ,(tt [package]) declaration, omitted
+for conciseness.)])
+	 (p [The ,(tt [arguments]) field specifies arguments to be
+passed to the build system.  Here ,(tt [#:configure-flags]),
+unsurprisingly, specifies flags for the ,(tt [configure]) script.  Its
+value is quoted because it will be evaluated in the build
+stratum---i.e., in the build process, when the derivation is built.  It
+refers to the ,(tt [%build-inputs]) global variable introduced in the
+build stratum by ,(tt [build-expression->derivation]), as seen before.
+That variable is bound to an association list that maps input names,
+like ,(tt ["gawk"]), to their actual directory name on disk, like ,(tt
+[/nix/store/...-gawk-4.0.2]).])
+	(p [The code in Figure,(~),(ref :figure "fig:hello") demonstrates
+Guix's use of embedded domain-specific languages (EDSLs).  The ,(tt
+[package]) form, the ,(tt [origin]) form (line ,(ref :line "origin")),
+and the ,(tt [base32]) form (line ,(ref :line "base32")) are expanded at
+macro-expansion time.  The ,(tt [package]) and ,(tt [origin]) forms
+expand to a call to Guile's ,(tt
+[make-struct]) primitive, which instantiates a record of the given type
+and with the given field values,(footnote [The ,(tt [make-struct])
+instantiates
+SRFI-9-style flat records, which are essentially vectors of a disjoint
+type.  In Guile they are lightweight compared to CLOS-style objects,
+both in terms of run time and memory footprint.  Furthermore, ,(tt
+[make-struct]) is subject to inlining.]); these macros look up
+the mapping of field names to field indexes, such that that mapping
+incurs no run-time overhead, in a way similar to SRFI-35 records ,(ref
+:bib 'kelsey02:srfi-35).  They also bind fields as per ,(tt [letrec*]),
+allowing them to refer to one another, as on line ,(ref :line "package-uri")
+of Figure,(~),(ref :figure "fig:hello").  The ,(tt [base32]) macro simply converts a literal
+string containing a base-32 representation into a bytevector literal,
+again allowing the conversion and error-checking to be done at expansion
+time rather than at run-time.])
+	 
+	(figure :legend [Definition of the ,(tt [package]) record type.]
+	   :ident "fig:package"
+	   
+	   (prog
+	      (source :language scheme [
+(define-record-type* <package>
+  package make-package
+  package?
+
+  (name package-name)
+  (version package-version)
+  (source package-source)
+  (build-system package-build-system)
+  (arguments package-arguments
+             (default '()) (thunked))
+
+  (inputs package-inputs
+          (default '()) (thunked))             ;!thunked
+  (propagated-inputs package-propagated-inputs
+                     (default '()))
+
+  (synopsis package-synopsis)
+  (description package-description)
+  (license package-license)
+  (home-page package-home-page)
+
+  (location package-location
+     (default (current-source-location))))
+])))
+
+	(p [The ,(tt [package]) and ,(tt [origin]) macros are generated
+by a ,(tt [syntax-case]) hygienic macro ,(ref :bib 'sperber09:r6rs),
+,(tt [define-record-type*]), which is layered above SRFI-9's syntactic
+record layer ,(ref :bib 'kelsey99:srfi-9).  Figure,(~),(ref :figure
+"fig:package") shows the definition of the ,(tt [<package>]) record
+type.  In addition to the name of a procedural constructor, ,(tt
+[make-package]), as with SRFI-9, the name of a ,(emph [syntactic])
+constructor, ,(tt [package]), is given.  Fields may have a default
+value, introduced with the ,(tt [default]) keyword.  An interesting use
+of default values is the ,(tt [location]) field: its default value is
+the result of ,(tt [current-source-location]), which is itself a
+built-in macro that expands to the source file location of the ,(tt
+[package]) form.  Thus, records defined with the ,(tt [package]) macro
+automatically have a ,(tt [location]) field denoting their source file
+location.  This allows the user interface to report source file location
+in error messages and in package search results, thereby making it
+easier for users to ``jump into'' the distribution's source, which is
+one of our goals.])
+	 
+      (figure :legend [Creating a variant of the ,(tt [hello]) package.]
+	 :ident "fig:inherit"
+	 
+	 (prog
+	    (source :language scheme [
+(package (inherit hello)
+  (version "2.7")
+  (source
+    (origin
+      (method url-fetch)
+      (uri "mirror://gnu/hello/hello-2.7.tar.gz")
+      (sha256
+        (base32 "7dqw3...")))))
+])))
+	 
+      (p [The syntactic constructors generated by ,(tt
+[define-record-type*]) additionally support a form of ,(emph [functional
+setters]) (sometimes referred to as ``lenses'' ,(ref :bib
+'morris12:lenses)), ,(it [via]) the ,(tt [inherit]) keyword.  It allows
+programmers to create new instances that differ from an existing
+instance by one or more field values.  A typical use case is shown
+in Figure,(~),(ref :figure "fig:inherit"): the expression shown evaluates
+to a new ,(tt [<package>]) instance whose fields all have the same value
+as the ,(tt [hello]) variable of Figure,(~),(ref :figure "fig:hello"),
+except for the ,(tt [version]) and ,(tt [source]) fields.  Under the
+hood, again, this expands to a single ,(tt [make-struct]) call with ,(tt
+[struct-ref]) calls for fields whose value is reused.])
+      (p [The ,(tt [inherit]) feature supports a very useful idiom.  It
+allows new package variants to be created programmatically, concisely,
+and in a purely functional way.  It is notably used to bootstrap the
+software distribution, where bootstrap variants of packages such as
+GCC or the GNU,(~)libc are
+built with different inputs and configuration flags than the
+final versions.  Users can similarly define customized variants of the
+packages found in the distribution.
+This feature also allows high-level transformations to be
+implemented as pure functions.  For instance, the ,(tt [static-package])
+procedure takes a ,(tt [<package>]) instance, and returns a variant of
+that package that is statically linked.  It operates by just adding the
+relevant ,(tt [configure]) flags, and recursively applying itself to the
+package's inputs.])
+	 (p [Another application is the ,(emph [on-line auto-updater]): when
+installing a GNU package defined in the distribution, the ,(tt [guix
+package]) command automatically
+checks whether a newer version is available upstream from ,(tt
+[ftp.gnu.org]), and offers the option to substitute the package's source
+with a fresh download of the
+new upstream version,(---)all at run time.]
+;; It is a way to
+;; ``disintermediate'' the relation between distribution users and
+;; ``upstream'' GNU developers, which is part of our goals.
+[This kind of feature is most
+likely inaccessible to an external DSL implementation.])
+      (p [Sometimes it is desirable for the value of a field to depend
+on the system type targeted.  For instance, for bootstrapping purposes,
+MIT/GNU,(~)Scheme's build system depends on pre-compiled binaries, which
+are architecture-dependent; its ,(tt [input]) field must be able to
+select the right binaries depending on the architecture.
+To allow field values to refer to the target system type,
+we resort to ,(emph [thunked]) fields, as shown on line ,(ref :line
+"thunked") of Figure,(~),(ref :figure "fig:package").  These fields have
+their value automatically wrapped in a thunk (a zero-argument
+procedure); when accessing them with the associated accessor, the thunk
+is transparently invoked.  Thus, the values of thunked fields are
+computed lazily; more to the point, they can refer to ,(emph [dynamic
+state]) in place at their invocation point.  In particular, the ,(tt
+[package-derivation]) procedure (shortly introduced) sets up a ,(tt
+[current-system]) dynamically-scoped parameter, which allows field
+values to know what the target system is.])
+      (p [Finally, both ,(tt [<package>]) and ,(tt [<origin>]) records
+have an associated ``compiler'' that turns them into a derivation.  ,(tt
+[origin-derivation]) takes an ,(tt [<origin>]) instance and returns a
+derivation that downloads it, according to its ,(tt [method]) field.
+Likewise, ,(tt [package-derivation]) takes a package and returns a
+derivation that builds it, according to its ,(tt [build-system]) and
+associated ,(tt [arguments]) (more on that ,(numref :text [in Section]
+:ident "shell")).])
+      (p [Guix essentially implements ,(emph [deep embedding]) of DSLs,
+where the semantics of the packaging DSL is interpreted by a dedicated
+compiler ,(ref :bib "hudak1996:dsel").  Of course the DSLs defined here
+are simple, but they illustrate how Scheme's primitive mechanisms,
+in particular macros, make it easy to implement such DSLs without
+requiring any special support from the Scheme implementation.]))
+      
+      (section :title [Build Programs]
+	 :ident "shell"
+      
+	 (p [The value of the ,(tt [build-system]) field, as shown on
+Figure,(~),(ref :figure "fig:hello"), must be a ,(tt [build-system])
+object, which is essentially a wrapper around two procedure: one
+procedure to do a native build, and one to do a cross-build.  When the
+aforementioned ,(tt [package-derivation]) (or ,(tt
+[package-cross-derivation]), when cross-building) is called, it invokes
+the build system's build procedure, passing it a connection to the
+build daemon, the system type, derivation name, and inputs.  It is the
+build system's responsibility to return a derivation that actually
+builds the software.])
+	 (p [The ,(tt [gnu-build-system]) object (line ,(ref :line
+"build-system") of Figure,(~),(ref :figure "fig:hello")) provides
+procedures to build and cross-build software that uses the GNU build
+system or similar.  In a nutshell, it runs the following phases by
+default:
+
+,(enumerate
+    (item [unpack the source tarball, and change the current directory
+to the resulting directory;])
+    (item [patch shebangs on installed files,(---)e.g., replace ,(tt
+[#!/bin/sh]) by ,(tt [#!/nix/store/...-bash-4.2/bin/sh]); this is
+required to allow scripts to work with our unusual file system layout;])
+    (item [run ,(tt [./configure --prefix=/nix/store/...]), followed by
+,(tt [make]) and ,(tt [make check])])
+    (item [run ,(tt [make install]) and patch shebangs in installed files.]))
+
+Of course, that is all implemented in Scheme, ,(it [via]) ,(tt
+[build-expression->derivation]).  Supporting code is available as a
+build-side module that ,(tt [gnu-build-system]) automatically adds as an
+input to its build scripts.  The default build programs just call the
+procedure of that module that runs the above phases.])
+	 (p [Yet, ,(tt [gnu-build-system]) is customizable, and allows
+users to add more phases, override the default phases, and parametrize
+them.  The value of the ,(tt [arguments]) field, shown on Figure,(~),(ref
+:figure "fig:hello"), is here for that purpose: the ,(tt
+[#:configure-flags]) keyword parameter, for instance, is one of the
+customization flags recognized by ,(tt [gnu-build-system]).  This
+approach was inspired by that of NixOS; but again, using Scheme instead
+of Bash for build scripts obviously allows for better code structuring,
+and improves flexibility.])
+	 (p [Other build systems are provided.  For instance, the standard
+build procedure for Perl packages is slightly different: mainly, the
+configuration phase consists in running ,(tt [perl Makefile.PL]), and
+test suites are run with ,(tt [make test]) instead of ,(tt [make
+check]).  To accommodate that, Guix provides ,(tt [perl-build-system]).
+Its companion build-side module essentially calls out to that of ,(tt
+[gnu-build-system]), only with appropriate ,(tt [configure]) and ,(tt
+[check]) phases.  This build mechanism is similarly planned to be used
+for other build systems such as CMake and Python's build system.])
+      
+	 (figure :legend [The ,(tt [substitute*]) macro for ,(tt
+[sed])-like substitutions.]
+	    :ident "fig:substitute*"
+
+	    (prog :line #f  ;; Note: remove :lang because of string escapes
+	       (source [
+(substitute* (find-files "gcc/config"
+                         "^gnu-user(64)?\\\\.h$")
+  (("#define LIB_SPEC (.*)$" _ suffix)
+   (string-append "#define LIB_SPEC \\"-L" libc
+                  "/lib \\" " suffix "\\n"))
+  (("#define STARTFILE_SPEC.*$" line)
+   (string-append "#define STARTFILE_PREFIX_1 \\""
+                  libc "/lib\\"\\n" line)))
+])))
+
+	 (p [Build programs often need to traverse file trees, modify
+files according to a given pattern, etc.  One example is the ``patch
+shebang'' phase mentioned above: all the source files must be traversed,
+and those starting with ,(tt [#!]) are candidate to patching.  This kind
+of task is usually associated with ``shell programming''---as is the
+case with the build scripts found in NixOS, which are written in Bash,
+and resort to ,(tt [sed]), ,(tt [find]), etc.  In Guix, a build-side
+Scheme module provides the necessary tools, built on top of Guile's
+operating system interface.  For instance, ,(tt [find-files]) returns a
+list of files whose names matches a given pattern; ,(tt [patch-shebang])
+performs the ,(tt [#!]) adjustment described above; ,(tt
+[copy-recursively]) and ,(tt [delete-recursively]) are the equivalent,
+respectively, of the shell ,(tt [cp -r]) and ,(tt [rm -rf]) commands;
+etc.])
+	 (p [An interesting example is the ,(tt [substitute*]) macro,
+which does ,(tt [sed])-style substitution on files.  Figure,(~),(ref
+:figure "fig:substitute*") illustrates its use to patch a series of
+files returned by ,(tt [find-files]).  There are two clauses, each with
+a pattern in the form of a POSIX regular expression; each clause's body
+returns a string, which is the substitution for any matching line in the
+given files.  In the first clause's body, ,(tt [suffix]) is bound to the
+submatch corresponding to ,(tt [(.*)]) in the regexp; in the second
+clause, ,(tt [line]) is bound to the whole match for that regexp.  This
+snippet is nearly as concise than equivalent shell code using ,(tt
+[find]) and ,(tt [sed]), and it is much easier to work with.])
+	 (p [Build-side modules also include support for fetching files
+over HTTP (using Guile's web client module) and FTP, as needed to
+realize the derivation of ,(tt [origin])s (line ,(ref :line "origin") of
+Figure,(~),(ref :figure "fig:hello")).  TLS support is available when
+needed through the Guile bindings of the GnuTLS library.])))
+      
+   (chapter :title [Evaluation and Discussion]
+        :ident "eval"
+      
+      (p [This section discusses the current status of Guix and its
+associated GNU/Linux distribution, and outlines key aspects of their
+development.])
+
+      (section :title [Status]
+	 
+	 (p [Guix is still a young project.  Its main features as a
+package manager are already available.  This includes the APIs discussed
+in ,(numref :text [Section] :ident "api"), as well as command-line
+interfaces.  The development of Guix's interfaces was facilitated by the
+reuse of Nix's build daemon as the storage and deployment layer.])
+	 (p [The ,(tt [guix package]) command is the main user
+interface: it allows packages to be browsed, installed, removed, and
+upgraded.  The command takes care of maintaining meta-data about
+installed packages, as well as a per-user tree of symlinks pointing to
+the actual package files in ,(tt [/nix/store]), called the ,(emph [user
+profile]).  It has a simple interface.  For instance, the following
+command installs Guile and removes Bigloo from the user's profile, as a
+single transaction:]
+	 
+	 (blockquote
+	   (prog :line #f
+	       [$ guix package --install guile --remove bigloo]))
+	 
+	 [The transaction can be rolled back with the following command:]
+	 
+	 (blockquote
+	   (prog :line #f
+	      [$ guix package --roll-back]))
+	    
+	 [The following command upgrades all the installed packages
+whose name starts with a `g':]
+      
+         (blockquote
+	   (prog :line #f
+	      [$ guix package --upgrade '^g.*']))
+	 
+	 [The ,(tt [--list-installed]) and ,(tt [--list-available])
+options can be used to list the installed or available packages.])
+	 (p [As of this writing, Guix comes with a user-land
+distribution of GNU/Linux.  That is, it allows users to install packages
+on top of a running GNU/Linux system.  The distribution is
+self-contained, as explained in ,(numref :text [Section] :ident "bootstrap"), and available on ,(tt
+[x86_64]), ,(tt [i686]), and ,(tt [mips64el]).  It provides around 400
+packages, including core GNU packages such as the GNU C Library, GCC,
+Binutils, and Coreutils, as well as the Xorg software stack and
+applications such as Emacs, TeX,(~)Live, and several Scheme
+implementations.  This is roughly a tenth of the number of packages
+found in mature free software distributions such as Debian.  Experience
+with NixOS shows that the functional model, coupled with continuous
+integration, allows the distribution to grow relatively quickly, because it is
+always possible to precisely monitor the status of the whole
+distribution and the effect of a change,(---)unlike with imperative
+distributions, where the upgrade of a single package can affect many
+applications in many unpredictable ways ,(ref :bib
+'crameri07:stageddeployment).])
+	 (p [From a programming point of view, packages are exposed as
+first-class global variables.  For instance, the ,(tt [(gnu packages
+guile)]) module exports two variables, ,(tt [guile-1.8]) and ,(tt
+[guile-2.0]), each bound to a ,(tt [<package>]) variable corresponding
+to the legacy and current stable series of Guile.  In turn, this module
+imports ,(tt [(gnu packages multiprecision)]), which exports a ,(tt
+[gmp]) global variable, among other things; that ,(tt [gmp]) variable is
+listed in the ,(tt [inputs]) field of ,(tt [guile]) and ,(tt
+[guile-2.0]).  The package manager ,(emph [and]) the distribution are
+just a set of ``normal'' modules that any program or library can use.])
+	 (p [Packages carry meta-data, as shown in Figure,(~),(ref :figure
+"fig:hello").  Synopses and descriptions are internationalized using
+GNU,(~)Gettext,(---)that is, they can be translated in the user's native
+language, a feature that comes for free when embedding the DSL in a
+mature environment like Guile.  We are in the process of implementing
+mechanisms to synchronize part of that meta-data, such as synopses, with
+other databases of the GNU Project.])
+	 (p [While the distribution is not bootable yet, it already
+includes a set of tools to build bootable GNU/Linux images for the QEMU
+emulator.  This includes a package for the kernel itself, as well as
+procedures to build QEMU images, and Linux ``initrd'',(---)the ``initial
+RAM disk'' used by Linux when booting, and which is responsible for
+loading essential kernel modules and mounting the root file system,
+among other things.  For example, we provide the ,(tt
+[expression->derivation-in-linux-vm]): it works in a way similar to ,(tt
+[build-expression->derivation]), except that the given expression is
+evaluated in a virtual machine that mounts the host's store over CIFS.
+As a demonstration, we implemented a derivation that builds a
+``boot-to-Guile'' QEMU image, where the initrd contains a
+statically-linked Guile that directly runs a boot program written in
+Scheme ,(ref :bib 'courtès13:boot-to-guile).])
+	 (p [The performance-critical parts are the derivation
+primitives discussed in ,(numref :text [Section] :ident "api").  For
+instance, the computation of Emacs's derivation involves that of 292
+other derivations,(---)that is, 292 invocations of the ,(tt
+[derivation]) primitive,(---)corresponding to 582 RPCs,(footnote [The
+number of ,(tt [derivation]) calls and ,(tt [add-to-store]) RPCs is
+reduced thanks to the use of client-side memoization.]).  The wall time
+of evaluating that derivation is 1.1 second on average on a 2.6,(~)GHz
+,(tt [x86_64]) machine.  This is acceptable as a user, but 5 times
+slower than Nix's clients for a similar derivation written in the Nix
+language.  Profiling shows that
+Guix spends most of its time in its derivation serialization code and
+RPCs.  We interpret this as a consequence of Guix's unoptimized code, as
+well as the difference between native C++ code and our interpreted
+bytecode.]))
+	 ;; XXX: improve perfs
+	 
+      (section :title [Purity]
+	 
+	 (p [Providing pure build environments that do not honor the
+``standard'' file system layout turned out not to be a problem, as
+already evidenced in NixOS ,(ref :bib 'dolstra2004:nix).  This is largely
+thanks to the ubiquity of the GNU build system, which strives to
+provide users with ways to customize the layout of installed
+packages and to adjust to the user's file locations.])
+	 (p [The only directories visible in the build ,(tt [chroot])
+environment are ,(tt [/dev]), ,(tt [/proc]), and the subset of ,(tt
+[/nix/store]) that is explicitly declared in the derivation being built.
+NixOS makes one exception: it relies on the availability of ,(tt
+[/bin/sh]) in the ,(tt [chroot]) ,(ref :bib 'dolstra2010:nixos).
+We remove that exception, and instead
+automatically patch script ``shebangs'' in the package's source, as
+noted in ,(numref :text [Section] :ident "shell").  This turned out to
+be more than just a theoretical quest for ``purity''.  First, some
+GNU/Linux distributions use Dash as the implementation of ,(tt [/bin/sh]), while
+others use Bash; these are two variants of the Bourne shell, with
+different extensions, and in general different behavior.  Second, ,(tt
+[/bin/sh]) is typically a dynamically-linked executable.  So adding ,(tt
+[/bin]) to the ,(tt [chroot]) is not enough; one typically needs to also
+add ,(tt [/lib*]) and ,(tt [/lib/*-linux-gnu]) to the chroot.  At that
+point, there are many impurities, and a great potential for
+non-reproducibility,(---)which defeats the purpose of the ,(tt
+[chroot]).])
+	 (p [Several packages had to be adjusted for proper function in
+the absence of ,(tt [/bin/sh]) ,(ref :bib 'courtès13:binsh).  In
+particular, libc's ,(tt [system]) and ,(tt [popen]) functions had to be
+changed to refer to ``our'' Bash instance.  Likewise, GNU,(~)Make,
+GNU,(~)Awk, GNU,(~)Guile, and Python needed adjustment.  Occasionally,
+occurrences of ,(tt [/bin/sh]) are not be handled automatically, for
+instance in test suites; these have to be patched manually in the
+package's recipe.])
+	 #;(p [As noted before, the output of builds in restricted build
+environments like ours has been observed to be mostly deterministic in
+practice, with the exception of a tiny fraction of build processes that
+include timestamps or the host name in their output ,(ref :bib
+'dolstra2010:nixos).])
+     )
+
+      (section :title [Bootstrapping]
+	 :ident "bootstrap"
+	 
+	 (figure :legend [Dependency graph of the software distribution
+bootstrap.]
+	    :multicolumns #t
+	    :ident "boot-graph"
+
+	    (image :file "bootstrap-graph.pdf"))
+	 
+	 (p [Bootstrapping in our context refers to how the distribution
+gets built ``from nothing''.  Remember that the build environment of a
+derivation contains nothing but its declared inputs.  So there's an
+obvious chicken-and-egg problem: how does the first package get built?
+How does the first compiler get compiled?])
+	 (p [The GNU system we are building is primarily made of C code,
+with libc at its core.  The GNU build system itself assumes the
+availability of a Bourne shell, traditional Unix tools provided by
+GNU,(~)Coreutils, Awk, Findutils, sed, and grep.  Furthermore, our build
+programs are written in Guile Scheme.  Consequently, we rely on
+pre-built statically-linked binaries of GCC, Binutils, libc, and the
+other packages mentioned above to get started.])
+	 (p [Figure,(~),(ref :figure "boot-graph") shows the very beginning
+of the dependency graph of our distribution.  At this level of detail,
+things are slightly more complex.  First, Guile itself consists of an
+ELF executable, along with many source and compiled Scheme files that
+are dynamically loaded when it runs.  This gets stored in the ,(tt
+[guile-2.0.7.tar.xz]) tarball shown in this graph.  This tarball is part
+of Guix's ``source'' distribution, and gets inserted into the store with
+,(tt [add-to-store]).])
+	 (p [But how do we write a derivation that unpacks this tarball
+and adds it to the store?  To solve this problem, the ,(tt
+[guile-bootstrap-2.0.drv]) derivation,(---)the first one that gets
+built,(---)uses ,(tt [bash]) as its builder, which runs ,(tt
+[build-bootstrap-guile.sh]), which in turn calls ,(tt [tar]) to unpack
+the tarball.  Thus, ,(tt [bash]), ,(tt [tar]), ,(tt [xz]), and ,(tt
+[mkdir]) are statically-linked binaries, also part of the Guix source
+distribution, whose sole purpose is to allow the Guile tarball to be
+unpacked.])
+	 (p [Once ,(tt [guile-bootstrap-2.0.drv]) is built, we have a
+functioning Guile that can be used to run subsequent build programs.
+Its first task is to download tarballs containing the other pre-built
+binaries,(---)this is what the ,(tt [.tar.xz.drv]) derivations do.
+Downloading uses modules part of the Guix source distribution, such as
+,(tt [ftp-client.scm]).  The ,(tt [module-import.drv]) derivations
+import those modules in a directory in the store, using the original
+layout,(footnote [In Guile, module names are a list of symbols, such as
+,(tt [(guix ftp-client)]), which map directly to file names, such as
+,(tt [guix/ftp-client.scm]).]).  The ,(tt [module-import-compiled.drv])
+derivations compile those modules, and write them in an output directory
+with the right layout.  This corresponds to the ,(tt [#:module])
+argument of ,(tt [build-expression->derivation]) mentioned in ,(numref
+:text [Section] :ident "build-exprs").])
+	 (p [Finally, the various tarballs are unpacked by the
+derivations ,(tt [gcc-bootstrap-0.drv]), ,(tt [glibc-bootstrap-0.drv]),
+etc., at which point we have a working C GNU tool chain.  The first
+tool that gets built with these tools (not shown here) is GNU,(~)Make,
+which is a prerequisite for all the following packages.])
+	 (p [Bootstrapping is complete when we have a full tool
+chain that does not depend on the pre-built bootstrap tools shown in
+Figure,(~),(ref :figure "boot-graph").  Ways to achieve this are known, and
+notably documented by the ,(it [Linux From Scratch]) project ,(ref :bib
+'linux-from-scratch13:web).  We can formally verify this no-dependency
+requirement by checking whether the files of the final tool chain
+contain references to the ,(tt [/nix/store]) directories of the
+bootstrap inputs.])
+	 (p [Obviously, Guix contains ,(tt [package]) declarations to
+build the bootstrap binaries shown in Figure,(~),(ref :figure "boot-graph").
+Because the final tool chain does not depend on those tools, they rarely
+need to be updated.  Having a way to do that automatically proves to be
+useful, though.  Coupled with Guix's nascent support for
+cross-compilation, porting to a new architecture will boil down to
+cross-building all these bootstrap tools.])))
+      
+   (chapter :title [Related Work]
+      :ident "related"
+      
+      (p [Numerous package managers for Scheme programs and libraries
+have been developed, including Racket's PLaneT, Dorodango for R6RS
+implementations, Chicken Scheme's ``Eggs'', Guildhall for Guile, and
+ScmPkg ,(ref :bib 'serrano07:scmpkg).  Unlike GNU,(~)Guix, they are
+typically limited to Scheme-only code, and take the core operating
+system software for granted.  To our knowledge, they implement the
+,(emph [imperative]) package management paradigm, and do not attempt to
+support features such as transactional upgrades and rollbacks.
+Unsurprisingly, these tools rely on package descriptions that more or
+less resemble those described in ,(numref :text [Section] :ident
+"pkg-decl"); however, in the case of at least ScmPkg, Dorodango, and
+Guildhall, package descriptions are written in an ,(emph [external])
+DSL, which happens to use s-expression syntax.])
+      (p [In ,(ref :bib 'tucker01:units), the authors illustrate how the
+,(it [units]) mechanism of MzScheme modules could be leveraged to
+improve operating system packaging systems.  The examples therein focus
+on OS services, and multiple instantiation thereof, rather than on
+package builds and composition.])
+      (p [The Nix package manager is the primary source of inspiration
+for Guix ,(ref :bib '(dolstra2004:nix dolstra2010:nixos)).  As noted in
+,(numref :text [Section] :ident "nix-to-guix"), Guix reuses the
+low-level build and deployment mechanisms of Nix, but differs in its
+programming interface and preferred implementation language for build
+scripts.  While the Nix language relies on laziness to ensure that only
+packages needed are built ,(ref :bib 'dolstra2010:nixos), we instead
+support ,(it [ad hoc]) laziness with the ,(tt [package]) form.  Nix and
+Guix have the same application: packaging of a complete GNU/Linux
+distribution.])
+      (p [Before Nix, the idea of installing each package in a directory
+of its own and then managing symlinks pointing to those was already
+present in a number of systems.  In particular, the Depot ,(ref :bib
+'clark90:the-depot), Store ,(ref :bib 'christensen95:store), and then
+GNU,(~)Stow ,(ref :bib 'glickstein12:stow) have long supported this
+approach.  GNU's now defunct package management project called `stut',
+ca. 2005, used that approach, with Stow as a back-end.  A ``Stow file
+system'', or ,(tt [stowfs]), has been available in the GNU,(~)Hurd
+operating system core to offer a dynamic and more elegant approach to
+user profiles, compared to symlink trees.  The storage model of Nix/Guix
+can be thought of as a formalization of Stow's idea.])
+      (p [Like Guix and Nix, Vesta is a purely functional build system
+,(ref :bib 'heydon2000:caching).  It uses an external DSL close to the
+Nix language.  However, the primary application of Vesta is fine-grain
+software build operations, such as compiling a single C file.  It is a
+developer tool, and does not address deployment to end-user machines.
+Unlike Guix and Nix, Vesta tries hard to support the standard Unix file
+system layout, relying on a virtual file system to ``map'' files to
+their right location in the build environment.])
+      (p [Hop defines a ,(emph [multi-tier]) extension of Scheme to
+program client/server web applications ,(ref :bib 'serrano12:hop).  It
+allows client code to be introduced (``quoted'') in server code, and
+server code to be invoked from client code.  There's a parallel between
+the former and Guix's use of Scheme in two different strata, depicted in
+,(numref :text [Section] :ident "build-exprs").])
+      (p [Scsh provides a complete interface to substitute Scheme in
+``shell programming'' tasks ,(ref :bib 'shivers06:scsh).  Since it spans
+a wide range of applications, it goes beyond the tools discussed in
+,(numref :text [Section] :ident "shell") some ways, notably by providing
+a concise ,(emph [process notation]) similar to that of typical Unix
+shells, and S-expression regular expressions (SREs).]))
+
+   (chapter :title [Conclusion] :ident "conclusion"
+      
+      (p [GNU,(~)Guix is a contribution to package management of free
+operating systems.  It builds on the functional paradigm pioneered by
+the Nix package manager ,(ref :bib 'dolstra2004:nix), and benefits from
+its unprecedented feature set,(---)transactional upgrades and roll-back,
+per-user unprivileged package management, garbage collection, and
+referentially-transparent build processes, among others.])
+      (p [We presented Guix's two main contributions from a programming
+point of view.  First, Guix ,(emph [embeds]) a declarative
+domain-specific language in Scheme, allowing it to benefit from its
+associated tool set.  Embedding in a general-purpose language has
+allowed us to easily support internationalization of package
+descriptions, and to write a fast keyword search mechanism; it has also
+permitted novel features, such as an on-line auto-updater.  Second, its
+build programs and libraries are also written in Scheme, leading to a
+unified programming environment made of two strata of code.])
+      (p [We hope to make Guix a good vehicle for an innovative free
+software distribution.  The GNU system distribution we envision will
+give Scheme an important role just above the operating system
+interface.]))
+   
+   (chapter :title [Acknowledgments] :number #f
+      
+      (p [The author would like to thank the Guix contributors for their
+work improving the system: Andreas Enge, Nikita Karetnikov, Cyril
+Roelandt, and Mark H. Weaver.  We are also grateful to the Nix
+community, and in particular to Eelco Dolstra for his inspiring PhD work
+that led to Nix.]))
+
+   (chapter :title [References]
+     (the-bibliography :sort bib-sort/first-author-last-name))
+      
+   (when (engine-format? "latex")
+     (! "\\balancecolumns")))
+
+;; Local Variables:
+;; coding: utf-8
+;; compile-command: "skribilo -t latex -o guix.tex guix.skb && pdflatex guix.tex"
+;; comment-start: ";; "
+;; ispell-local-dictionary: "american"
+;; End:
+
+;; LocalWords:  homoiconicity reified

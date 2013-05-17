@@ -1,0 +1,228 @@
+;; -*- Skribe -*- bibliography.
+;;
+
+(inproceedings dolstra2004:nix
+  (url "http://nixos.org/nix/docs.html")
+  (title "Nix: A Safe and Policy-Free System for Software Deployment")
+  (author "Eelco Dolstra, Merijn de Jonge, Eelco Visser")
+  (affiliation "Utrecht University")
+  (booktitle "Proceedings of the 18th Large Installation System Administration Conference (LISA '04)")
+  (pages "79--92")
+  (publisher "USENIX")
+  (year "2004")
+  (month "November")
+  (address "Atlanta, Georgia, USA"))
+
+(article dolstra2010:nixos
+  (url "http://nixos.org/nixos/docs.html")
+  (title "NixOS: A Purely Functional Linux Distribution")
+  (author "Eelco Dolstra, Andres Löh, Nicolas Pierron")
+  (journal "Journal of Functional Programming")
+  (number "5-6")
+  (pages "577--615")
+  (publisher "Cambridge University Press")
+  (address "New York, NY, USA")
+  (year "2010")
+  (month "November"),
+  ;; (ee "http://dx.doi.org/10.1017/S0956796810000195")
+  )
+
+(article hudak1996:dsel
+  (author "Paul Hudak")
+  (title "Building domain-specific embedded languages")
+  (journal "ACM Computing Surveys")
+  (issue-date "Dec. 1996")
+  (volume "28")
+  (number "4es")
+  (month "December")
+  (year "1996")
+  (issn "0360-0300")
+  (articleno "196")
+  (url "http://doi.acm.org/10.1145/242224.242477")
+  (doi "10.1145/242224.242477")
+  (acmid "242477")
+  (publisher "ACM")
+  (address "New York, NY, USA"))
+
+(inproceedings tucker01:units
+  (author "David B. Tucker, Shiriram Krishnamurthi")
+  (title "Applying Module System Research to Package Management")
+  (booktitle "Proceedings of the Tenth International Workshop on
+Software Configuration Management")
+  (year "2001"))
+
+(inproceedings serrano07:scmpkg
+  (author "Manuel Serrano, Érick Gallesio")
+  (title "An Adaptive Package Management System for Scheme")
+  (booktitle "Proceedings of the 2007 Symposium on Dynamic languages")
+  (series "DLS '07")
+  (year "2007")
+  (isbn "978-1-59593-868-8")
+  (location "Montreal, Quebec, Canada")
+  (pages "65--76")
+  (numpages "12")
+  (url "http://doi.acm.org/10.1145/1297081.1297093")
+  (doi "10.1145/1297081.1297093")
+  (acmid "1297093")
+  (publisher "ACM")
+  (address "New York, NY, USA")
+  (keywords "functional programming"))
+  
+(article serrano12:hop
+  (author "Manuel Serrano, Gérard Berry")
+  (title "Multitier Programming in Hop")
+  (journal "Queue")
+  (issue-date "07-01-2012")
+  (volume "10")
+  (number "7")
+  (month "July")
+  (year "2012")
+  (issn "1542-7730")
+  (pages "10:10--10:22")
+  (articleno "10")
+  (numpages "13")
+  (url "http://doi.acm.org/10.1145/2330087.2330089")
+  (doi "10.1145/2330087.2330089")
+  (acmid "2330089")
+  (publisher "ACM")
+  (address "New York, NY, USA"))
+
+(inproceedings heydon2000:caching
+  (author "Allan Heydon, Roy Levin, Yuan Yu")
+  (title "Caching Function Calls Using Precise Dependencies")
+  (booktitle "Proceedings of the ACM SIGPLAN 2000 conference on
+Programming Language Design and Implementation")
+  (series "PLDI '00")
+  (year "2000")
+  (isbn "1-58113-199-2")
+  (location "Vancouver, British Columbia, Canada")
+  (pages "311--320")
+  (numpages "10")
+  (url "http://doi.acm.org/10.1145/349299.349341")
+  (doi "10.1145/349299.349341")
+  (acmid "349341")
+  (publisher "ACM")
+  (address "New York, NY, USA"))
+
+(incollection christensen95:store
+  (year "1995")
+  (isbn "978-3-540-60578-2")
+  (booktitle "Software Configuration Management")
+  (volume "1005")
+  (series "Lecture Notes in Computer Science")
+  (editor "Estublier, Jacky")
+  (doi "10.1007/3-540-60578-9_22")
+  (title "Store—a system for handling third-party applications in a heterogeneous computer environment")
+  (url "http://dx.doi.org/10.1007/3-540-60578-9_22")
+  (publisher "Springer Berlin Heidelberg")
+  (author "Anders Christensen, Tor Egge")
+  (pages "263--276"))
+
+(inproceedings clark90:the-depot
+  (author "Stephen N. Clark, Walter Rowe Nist")
+  (title "The Depot: A Framework for Sharing Software Installation Across Organizational and UNIX Platform Boundaries")
+  (booktitle "In Proceedings of the Fourth Large Installation Systems Administrator’s Conference (LISA ’90)")
+  (year "1990")
+  (pages "37--46"))
+  
+(misc glickstein12:stow
+  (author "Bob Glickstein, Kahlil Hodgson")
+  (title "Stow---Managing the Installation of Software Packages")
+  (year "2012")
+  (url "http://www.gnu.org/software/stow/"))
+
+(inproceedings crameri07:stageddeployment
+  (author "Olivier Crameri, Ricardo Bianchini, Willy Zwaenepoel, Dejan Kostić")
+  (title "Staged Deployment in Mirage, an Integrated Software Upgrade Testing and Distribution System")
+  (booktitle "In Proceedings of the Symposium on Operating Systems Principles")
+  (address "Bretton Woods")
+  (year "2007"))
+
+(article dicosmo10:supporting
+   (author "Roberto Di Cosmo, Davide Di Ruscio, Patrizio Pelliccione,
+Alfonso Pierantonio, Stefano Zacchiroli")
+   (title "Supporting software evolution in component-based FOSS systems")
+   (journal "Sci. Comput. Program.")
+   (issue-date "December, 2011")
+   (volume "76")
+   (number "12")
+   (month "December")
+   (year "2011")
+   (issn "0167-6423")
+   (pages "1144--1160")
+   (numpages "17")
+   (url "http://dx.doi.org/10.1016/j.scico.2010.11.001")
+   (doi "10.1016/j.scico.2010.11.001")
+   (acmid "1998794")
+   (publisher "Elsevier North-Holland, Inc.")
+   (address "Amsterdam, The Netherlands")
+   (keywords "Configuration management, FOSS systems, Model-driven
+engineering (MDE), Open source project, System's upgrade"))
+
+(misc stallman83:manifesto
+  (author "Richard M. Stallman")
+  (title "The GNU Manifesto")
+  (year "1983")
+  (url "http://www.gnu.org/gnu/manifesto.html"))
+  
+(article sperber09:r6rs
+  (author "Michael Sperber, R. Kent Dybvig, Matthew Flatt, Anton Van
+Straaten, Robert Bruce Findler, Jacob Matthews")
+  (title [Revised,(sup [6]) Report on the Algorithmic Language Scheme])
+  (journal "Journal of Functional Programming")
+  (volume "19")
+  (issue "Supplement S1")
+  (month "7")
+  (year "2009")
+  (issn "1469-7653")
+  (pages "1--301")
+  (numpages "301")
+  (doi "10.1017/S0956796809990074")
+  (url "http://journals.cambridge.org/article_S0956796809990074"))
+
+(misc kelsey99:srfi-9
+  (author "Richard Kelsey")
+  (title "Defining Record Types")
+  (year "1999")
+  (url "http://srfi.schemers.org/srfi-9/srfi-9.html"))
+
+(misc kelsey02:srfi-35
+  (author "Richard Kelsey, Michael Sperber")
+  (title "Conditions")
+  (year "2002")
+  (url "http://srfi.schemers.org/srfi-35/srfi-35.html"))
+
+(misc morris12:lenses
+  (author "Tony Morris")
+  (title "Asymmetric Lenses in Scala")
+  (year "2012")
+  (booktitle "Scala Days 2012")
+  (url "http://days2012.scala-lang.org/"))
+
+(misc shivers06:scsh
+  (author "Olin Shivers, Brian D. Carlstrom, Martin Gasbichler, Mike Sperber")
+  (title "Scsh Reference Manual")
+  (year "2006")
+  (url "http://www.scsh.net/"))
+
+(misc linux-from-scratch13:web
+  (title "Linux From Scratch")
+  (year "2013")
+  (author "Gerard Beekmans, Matthew Burgess, Bruce Dubbs")
+  (url "http://www.linuxfromscratch.org/lfs/"))
+
+(misc courtès13:boot-to-guile
+  (title "Boot-to-Guile!")
+  (author "Ludovic Courtès")
+  (year "2013")
+  (month "February")
+  (url "http://lists.gnu.org/archive/html/bug-guix/2013-02/msg00173.html"))
+  
+(misc courtès13:binsh
+  (title "Down with /bin/sh!")
+  (author "Ludovic Courtès")
+  (year "2013")
+  (month "January")
+  (url "https://lists.gnu.org/archive/html/bug-guix/2013-01/msg00041.html"))
+
+;; BiBTeX regexp: \([a-z_-]+\) = {\([^}]+\)},$
