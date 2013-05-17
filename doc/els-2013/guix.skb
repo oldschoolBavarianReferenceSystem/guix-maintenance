@@ -1095,7 +1095,8 @@ interface.]))
 work improving the system: Andreas Enge, Nikita Karetnikov, Cyril
 Roelandt, and Mark H. Weaver.  We are also grateful to the Nix
 community, and in particular to Eelco Dolstra for his inspiring PhD work
-that led to Nix.]))
+that led to Nix.  Lastly, thanks to the anonymous reviewer whose insight
+has helped improve this document.]))
 
    (chapter :title [References]
      (the-bibliography :sort bib-sort/first-author-last-name))
