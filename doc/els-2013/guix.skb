@@ -695,6 +695,28 @@ the build system's build procedure, passing it a connection to the
 build daemon, the system type, derivation name, and inputs.  It is the
 build system's responsibility to return a derivation that actually
 builds the software.])
+
+	 (figure :legend [Entry point of the builder side code of ,(tt
+[gnu-build-system]).]
+	    :ident "fig:gnu-build"
+	    
+	    (prog :line #f
+	       (source :lang scheme [
+(define* (gnu-build #:key (source #f) (outputs #f) (inputs #f)
+                    (phases %standard-phases)
+                    #:allow-other-keys
+                    #:rest args)
+  "Build from SOURCE to OUTPUTS, using INPUTS, and by running all of PHASES
+in order.  Return #t if all the PHASES succeeded, #f otherwise."
+  (every (match-lambda
+          ((name . proc)
+           (format #t "starting phase `~a'~%" name)
+           (let ((result (apply proc args)))
+             (format #t "phase `~a' done~%" name)
+             result)))
+         phases))
+])))
+
 	 (p [The ,(tt [gnu-build-system]) object (line ,(ref :line
 "build-system") of Figure,(~),(ref :figure "fig:hello")) provides
 procedures to build and cross-build software that uses the GNU build
@@ -716,15 +738,76 @@ Of course, that is all implemented in Scheme, ,(it [via]) ,(tt
 build-side module that ,(tt [gnu-build-system]) automatically adds as an
 input to its build scripts.  The default build programs just call the
 procedure of that module that runs the above phases.])
-	 (p [Yet, ,(tt [gnu-build-system]) is customizable, and allows
-users to add more phases, override the default phases, and parametrize
-them.  The value of the ,(tt [arguments]) field, shown on Figure,(~),(ref
-:figure "fig:hello"), is here for that purpose: the ,(tt
-[#:configure-flags]) keyword parameter, for instance, is one of the
-customization flags recognized by ,(tt [gnu-build-system]).  This
-approach was inspired by that of NixOS; but again, using Scheme instead
-of Bash for build scripts obviously allows for better code structuring,
-and improves flexibility.])
+	 (p [The ,(tt [(guix build gnu-build-system)]) module contains
+the implementation of the above phases; it is imported on the builder
+side.  The phases are modeled as follows: each phase is a procedure
+accepting several keyword arguments, and ignoring any keyword arguments
+it does not recognize,(footnote [Like many Scheme implementations, Guile
+supports ,(emph [named]) or ,(emph [keyword]) arguments as an extension
+to the R5 and R6RS.  In addition, procedure definitions whose formal
+argument list contains the ,(tt [#:allow-other-keys]) keyword ignore any
+unrecognized keyword arguments that they are passed.]).  For instance
+the ,(tt [configure]) procedure is in charge of running the package's
+,(tt [./configure]) script; that procedure honors the ,(tt
+[#:configure-flags]) keyword parameter seen on Figure,(~),(ref :figure
+"fig:hello").  Similarly, the ,(tt [build]), ,(tt [check]), and ,(tt
+[install]) procedures run the ,(tt [make]) command, and all honor the
+,(tt [#:make-flags]) keyword parameter.)])
+	 (p [All the procedures implementing the standard phases of the
+GNU build system are listed in the ,(tt [%standard-phases]) builder-side
+variable, in the form of a list of phase name/procedure pairs.  The
+entry point of the builder-side code of ,(tt [gnu-build-system]) is
+shown on Figure,(~),(ref :figure "fig:gnu-build").  It calls all the
+phase procedures in order, by default those listed in the ,(tt
+[%standard-phases]) association list, passing them all the arguments it
+got; its return value is true when every procedure's return value is
+true.])
+ 	 (figure :legend [Variant of the package specification of Figure
+,(ref :figure "fig:hello") with customized build phases.]
+	    :ident "fig:hello-custom"
+	    
+	    (prog :line #f
+	       (source :lang scheme [
+(define hello
+  (package
+    ;; ...
+    (arguments
+      '(#:phases
+        (alist-cons-after
+          'configure 'change-hello
+          (lambda* (#:key system #:allow-other-keys)
+            (substitute* "src/hello.c"
+              (("Hello, world!")
+               (string-append "Howdy! Running on "
+                              system "."))))
+          %standard-phases)))
+    ;; ...
+    ))
+])))
+	 (p [The ,(tt [arguments]) field, shown on Figure,(~),(ref
+:figure "fig:hello"), allows users to pass keyword arguments to the
+builder-side code.  In addition to the ,(tt [#:configure-flags])
+argument shown on the figure, users may use the ,(tt [#:phases])
+argument to specify a different set of phases.  The value of the ,(tt
+[#:phases]) must be a list of phase name/procedure pairs, as discussed
+above.  This allows users to arbitrarily extend or modify the behavior
+of the build system.  Figure,(~),(ref :figure "fig:hello-custom") shows
+a variant of the definition in Figure,(~),(ref :figure "fig:hello") that
+adds a custom build phase.  The ,(tt [alist-cons-after]) procedure is
+used to add a pair with ,(tt [change-hello]) as its first item and the
+,(tt [lambda*]) as its second item right after the pair in ,(tt
+[%standard-phases]) whose first item is ,(tt [configure]); in other
+words, it reuses the standard build phases, but with an additional ,(tt
+[change-hello]) phase right after the ,(tt [configure]) phase.  The
+whole ,(tt [alist-cons-after]) expression is code that runs on the
+builder side.])
+         (p [This approach was inspired by that of NixOS, which uses
+Bash for its build scripts.  Even with ``advanced'' Bash features such
+as functions, arrays, and associative arrays, the phases mechanism in
+NixOS remains limited and fragile, often leading to string escaping
+issues and obscure error reports due to the use of ,(tt [eval]).  Again,
+using Scheme instead of Bash unsurprisingly allows for better code
+structuring, and improves flexibility.])
 	 (p [Other build systems are provided.  For instance, the standard
 build procedure for Perl packages is slightly different: mainly, the
 configuration phase consists in running ,(tt [perl Makefile.PL]), and
@@ -732,7 +815,7 @@ test suites are run with ,(tt [make test]) instead of ,(tt [make
 check]).  To accommodate that, Guix provides ,(tt [perl-build-system]).
 Its companion build-side module essentially calls out to that of ,(tt
 [gnu-build-system]), only with appropriate ,(tt [configure]) and ,(tt
-[check]) phases.  This build mechanism is similarly planned to be used
+[check]) phases.  This mechanism is similarly used
 for other build systems such as CMake and Python's build system.])
       
 	 (figure :legend [The ,(tt [substitute*]) macro for ,(tt
@@ -834,7 +917,7 @@ Binutils, and Coreutils, as well as the Xorg software stack and
 applications such as Emacs, TeX,(~)Live, and several Scheme
 implementations.  This is roughly a tenth of the number of packages
 found in mature free software distributions such as Debian.  Experience
-with NixOS shows that the functional model, coupled with continuous
+with NixOS suggests that the functional model, coupled with continuous
 integration, allows the distribution to grow relatively quickly, because it is
 always possible to precisely monitor the status of the whole
 distribution and the effect of a change,(---)unlike with imperative
