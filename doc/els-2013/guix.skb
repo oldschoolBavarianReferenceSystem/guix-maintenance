@@ -649,8 +649,22 @@ new upstream version,(---)all at run time.]
 ;; It is a way to
 ;; ``disintermediate'' the relation between distribution users and
 ;; ``upstream'' GNU developers, which is part of our goals.
-[This kind of feature is most
-likely inaccessible to an external DSL implementation.])
+
+[This kind of feature is hardly accessible to an external DSL
+implementation.  Among other things, this feature requires networking
+primitives (for the FTP client), which are typically unavailable in an
+external DSL such as the Nix language.  The feature could be implemented
+in a language other than the DSL,(---)for instance, Nix can export its
+abstract syntax tree as XML to external programs.  However, this
+approach is often inefficient, due to the format conversion, and lossy:
+the exported representation may be either be too distant from the source
+code, or too distant from the preferred abstraction level.  The author's
+own experience writing an off-line auto-updater for Nix revealed other
+specific issues; for instance, the Nix language is lazily evaluated, but
+to make use of its XML output, one has to force strict evaluation, which
+in turn may generate more data than needed.  In Guix, ,(tt [<package>])
+instances have the expected level of abstraction, and they are readily
+accessible as first-class Scheme objects.])
       (p [Sometimes it is desirable for the value of a field to depend
 on the system type targeted.  For instance, for bootstrapping purposes,
 MIT/GNU,(~)Scheme's build system depends on pre-compiled binaries, which
