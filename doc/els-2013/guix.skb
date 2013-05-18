@@ -244,8 +244,8 @@ profile.])
 	 (p [To describe and compose build processes, Nix implements its
 own domain-specific language (DSL), which provides a convenient
 interface to the build and storage mechanisms described above.  The Nix
-language is purely functional, lazy, and dynamically typed; it was
-inspired by that of the Vesta software configuration system ,(ref :bib
+language is purely functional, lazy, and dynamically typed; it is similar
+to that of the Vesta software configuration system ,(ref :bib
 'heydon2000:caching).  It comes
 with a handful of built-in data types, and around 50 primitives.  The
 primitive to describe a build process is ,(tt [derivation]).])
@@ -286,6 +286,17 @@ Nix-language values, and in particular computed file names, in the
 contents of build scripts.  The Nix-based GNU/Linux distribution, NixOS,
 has most of its build scripts written in Bash, and makes
 heavy use of string interpolation on the Nix-language side.])
+	 (p [All the files referenced by derivations live under ,(tt
+[/nix/store]), called ,(emph [the store]).  In a multi-user setup, users
+have read-only access to the store, and all other accesses to the store
+are mediated by a daemon running as ,(tt [root]).  Operations such as
+importing files in the store, computing a derivation, building a
+derivation, or running the garbage collector are all implemented as
+remote procedure calls (RPCs) to the daemon.  This guarantees that the
+store is kept in a consistent state,(---)e.g., that referenced files and
+directories are not garbage-collected, and that the contents of files
+and directories are genuine build results of the inputs hashed in their
+name.])
          (p [The implementation of the Nix language is an interpreter
 written in C++.  In terms of performance, it does not compete with
 typical general-purpose language implementations; that is often not a
@@ -924,7 +935,7 @@ options can be used to list the installed or available packages.])
 distribution of GNU/Linux.  That is, it allows users to install packages
 on top of a running GNU/Linux system.  The distribution is
 self-contained, as explained in ,(numref :text [Section] :ident "bootstrap"), and available on ,(tt
-[x86_64]), ,(tt [i686]), and ,(tt [mips64el]).  It provides around 400
+[x86_64]) and ,(tt [i686]).  It provides more than 400
 packages, including core GNU packages such as the GNU C Library, GCC,
 Binutils, and Coreutils, as well as the Xorg software stack and
 applications such as Emacs, TeX,(~)Live, and several Scheme
