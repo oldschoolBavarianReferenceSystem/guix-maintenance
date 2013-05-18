@@ -702,12 +702,11 @@ builds the software.])
 	    
 	    (prog :line #f
 	       (source :lang scheme [
-(define* (gnu-build #:key (source #f) (outputs #f) (inputs #f)
-                    (phases %standard-phases)
+(define* (gnu-build #:key (phases %standard-phases)
                     #:allow-other-keys
                     #:rest args)
-  "Build from SOURCE to OUTPUTS, using INPUTS, and by running all of PHASES
-in order.  Return #t if all the PHASES succeeded, #f otherwise."
+  ;; Run all the PHASES in order, passing them ARGS.
+  ;; Return true on success.
   (every (match-lambda
           ((name . proc)
            (format #t "starting phase `~a'~%" name)
