@@ -1188,7 +1188,10 @@ the former and Guix's use of Scheme in two different strata, depicted in
 a wide range of applications, it goes beyond the tools discussed in
 ,(numref :text [Section] :ident "shell") some ways, notably by providing
 a concise ,(emph [process notation]) similar to that of typical Unix
-shells, and S-expression regular expressions (SREs).]))
+shells, and S-expression regular expressions (SREs).  However, we chose
+not to use it as its port to Guile had been unmaintained for some time,
+and Guile has since grown a rich operating system interface on top of
+which it was easy to build the few additional tools we needed.]))
 
    (chapter :title [Conclusion] :ident "conclusion"
       
