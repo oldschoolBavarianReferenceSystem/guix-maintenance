@@ -161,7 +161,7 @@ and ,(numref :text [Section] :ident "conclusion") concludes.]))
    (chapter :title [Background]
       :ident "background"
 
-      (p [This section describe the functional package management
+      (p [This section describes the functional package management
 paradigm and its implementation in Nix.  It then shows how Guix differs,
 and what the rationale is.])
       
@@ -346,7 +346,7 @@ of Guix, with a focus on its high-level package description language and
    (chapter :title [Build Expressions and Package Descriptions]
       :ident "api"
       
-      (p [Our goals when designing Guix was to provide interfaces
+      (p [Our goal when designing Guix was to provide interfaces
 ranging from Nix's low-level primitives such as ,(tt
 [derivation]) to high-level package declarations.  The declarative
 interface is a requirement to help grow and maintain a large software
@@ -463,7 +463,7 @@ al. for their work on Hop where a similar situation arises ,(ref :bib
 	 (p [Notice how the output file name is reified ,(it [via]) the
 ,(tt [%output]) variable automatically added to ,(tt [builder])'s scope.
 Input file names are similarly reified through the ,(tt [%build-inputs])
-variable (not shown here.)  Both variables are non-hygienically
+variable (not shown here).  Both variables are non-hygienically
 introduced in the build expression by ,(tt
 [build-expression->derivation]).])
 	 (p [Sometimes the build expression needs to use functionality
@@ -523,7 +523,7 @@ the underlying build process.  That way, it should be intelligible and
 directly usable by packagers will little or no experience with Scheme.
 As an additional constraint, this extra layer should be efficient in
 space and time: package management tools need to be able to load and
-traverse a distribution consisting in thousands of packages.])
+traverse a distribution consisting of thousands of packages.])
 
 	 (p [Figure,(~),(ref :figure "fig:hello") shows the definition of
 the GNU,(~)Hello package, a typical GNU package written in C and using
