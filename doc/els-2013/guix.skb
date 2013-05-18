@@ -47,6 +47,10 @@
   with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
   A copy of the license is
   available at \\url{http://www.gnu.org/licenses/gfdl.html}.
+
+  % Give a link to the 'Transparent Copy', as per Section 3 of the GFDL.
+  The source form of this document is available from
+  \\url{http://git.sv.gnu.org/cgit/guix/maintenance.git}.
 }
 \\conferenceinfo{European Lisp Symposum}{2013, Madrid, Spain}
 ")
