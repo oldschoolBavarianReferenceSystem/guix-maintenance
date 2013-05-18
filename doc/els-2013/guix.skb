@@ -604,9 +604,11 @@ by a ,(tt [syntax-case]) hygienic macro ,(ref :bib 'sperber09:r6rs),
 ,(tt [define-record-type*]), which is layered above SRFI-9's syntactic
 record layer ,(ref :bib 'kelsey99:srfi-9).  Figure,(~),(ref :figure
 "fig:package") shows the definition of the ,(tt [<package>]) record
-type.  In addition to the name of a procedural constructor, ,(tt
+type (the ,(tt [<origin>]) record type, not shown here, is defined
+similarly.)  In addition to the name of a procedural constructor, ,(tt
 [make-package]), as with SRFI-9, the name of a ,(emph [syntactic])
-constructor, ,(tt [package]), is given.  Fields may have a default
+constructor, ,(tt [package]), is given (likewise, ,(tt [origin]) is the
+syntactic constructor of ,(tt [<origin>]).)  Fields may have a default
 value, introduced with the ,(tt [default]) keyword.  An interesting use
 of default values is the ,(tt [location]) field: its default value is
 the result of ,(tt [current-source-location]), which is itself a
