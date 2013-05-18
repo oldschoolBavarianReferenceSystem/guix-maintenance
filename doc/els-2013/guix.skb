@@ -375,7 +375,7 @@ Scheme with Guix.]
               "x86_64-linux" 
               bash
               '("-c" "echo hello > $out")
-              '() '()))
+              '() '()))                              ;!drv-env-inputs
 
 ,(=>)                                                ;!drv-result
 "/nix/store/nsswy...-example-1.0.drv"
@@ -389,7 +389,12 @@ several operations not visible in the latter.  First, line ,(ref :line
 "conn") establishes a connection to the build daemon; line ,(ref :line
 "add-to-store") explicitly asks the daemon to ``intern'' file ,(tt
 [static-bash]) into the store; finally, the ,(tt [derivation]) call
-instructs the daemon to compute the given derivation.  Two values are
+instructs the daemon to compute the given derivation.  The two arguments
+on line,(~),(ref :line "drv-env-inputs") are a set of environment variable
+definitions to be set in the build environment (here, it's just the
+empty list), and a set of ,(emph [inputs]),(---)other derivations
+depended on, and whose result must be available to the build process.
+Two values are
 returned (line ,(ref :line "drv-result")): the file name of the on-disk
 representation of the derivation, and its in-memory representation as a
 Scheme record.])
@@ -523,11 +528,11 @@ makefile supporting standardized targets such as ,(tt [check]) and ,(tt
 [install]).  It is a direct mapping of the abstract notion of a software
 package and should be rather self-descriptive.])
 	 (p [The ,(tt [inputs]) field
-specifies additional dependencies of the package.  Here line ,(ref :line
-"inputs") says that Hello has a dependency labeled ,(tt ["gawk"]) on
-GNU,(~)Awk, whose value is that of the ,(tt [gawk]) global variable
-(,(tt [gawk]) is bound to a similar ,(tt [package]) declaration, omitted
-for conciseness.)])
+specifies additional dependencies of the package.  Here line,(~),(ref :line
+"inputs") means that Hello has a dependency labeled ,(tt ["gawk"]) on
+GNU,(~)Awk, whose value is that of the ,(tt [gawk]) global variable;
+,(tt [gawk]) is bound to a similar ,(tt [package]) declaration, omitted
+for conciseness.])
 	 (p [The ,(tt [arguments]) field specifies arguments to be
 passed to the build system.  Here ,(tt [#:configure-flags]),
 unsurprisingly, specifies flags for the ,(tt [configure]) script.  Its
@@ -699,7 +704,12 @@ derivation that downloads it, according to its ,(tt [method]) field.
 Likewise, ,(tt [package-derivation]) takes a package and returns a
 derivation that builds it, according to its ,(tt [build-system]) and
 associated ,(tt [arguments]) (more on that ,(numref :text [in Section]
-:ident "shell")).])
+:ident "shell")).  As we have seen on Figure,(~),(ref :figure
+"fig:hello"), the ,(tt [inputs]) field lists dependencies of a package,
+which are themselves ,(tt [<package>]) objects; the ,(tt
+[package-derivation]) procedure recursively applies to those inputs,
+such that their derivation is computed and passed as the inputs argument
+of the lower-level ,(tt [build-expression->derivation]).])
       (p [Guix essentially implements ,(emph [deep embedding]) of DSLs,
 where the semantics of the packaging DSL is interpreted by a dedicated
 compiler ,(ref :bib "hudak1996:dsel").  Of course the DSLs defined here
