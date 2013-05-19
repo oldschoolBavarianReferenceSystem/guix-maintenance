@@ -811,7 +811,7 @@ the ,(tt [configure]) procedure is in charge of running the package's
 [#:configure-flags]) keyword parameter seen on Figure,(~),(ref :figure
 "fig:hello").  Similarly, the ,(tt [build]), ,(tt [check]), and ,(tt
 [install]) procedures run the ,(tt [make]) command, and all honor the
-,(tt [#:make-flags]) keyword parameter.)])
+,(tt [#:make-flags]) keyword parameter.])
 	 (p [All the procedures implementing the standard phases of the
 GNU build system are listed in the ,(tt [%standard-phases]) builder-side
 variable, in the form of a list of phase name,(!latex "\\-")/procedure pairs.  The
@@ -821,15 +821,13 @@ phase procedures in order, by default those listed in the ,(tt
 [%standard-phases]) association list, passing them all the arguments it
 got; its return value is true when every procedure's return value is
 true.])
- 	 (figure :legend [Variant of the package specification of Figure
-,(ref :figure "fig:hello") with customized build phases.]
+ 	 (figure :legend [Package specification with custom build phases.]
 	    :ident "fig:hello-custom"
 	    
 	    (prog :line #f
 	       (source :lang scheme [
-(define hello
-  (package
-    ;; ...
+(define howdy
+  (package (inherit hello)
     (arguments
       '(#:phases
         (alist-cons-after
@@ -839,9 +837,7 @@ true.])
               (("Hello, world!")
                (string-append "Howdy! Running on "
                               system "."))))
-          %standard-phases)))
-    ;; ...
-    ))
+          %standard-phases)))))
 ])))
 	 (p [The ,(tt [arguments]) field, shown on Figure,(~),(ref
 :figure "fig:hello"), allows users to pass keyword arguments to the
@@ -858,7 +854,7 @@ used to add a pair with ,(tt [change-hello]) as its first item and the
 [%standard-phases]) whose first item is ,(tt [configure]); in other
 words, it reuses the standard build phases, but with an additional ,(tt
 [change-hello]) phase right after the ,(tt [configure]) phase.  The
-whole ,(tt [alist-cons-after]) expression is code that runs on the
+whole ,(tt [alist-cons-after]) expression is evaluated on the
 builder side.])
          (p [This approach was inspired by that of NixOS, which uses
 Bash for its build scripts.  Even with ``advanced'' Bash features such
@@ -981,7 +977,7 @@ integration, allows the distribution to grow relatively quickly, because it is
 always possible to precisely monitor the status of the whole
 distribution and the effect of a change,(---)unlike with imperative
 distributions, where the upgrade of a single package can affect many
-applications in many unpredictable ways ,(ref :bib
+applications in many unpredictable ways,(~),(ref :bib
 'crameri07:stageddeployment).])
 	 (p [From a programming point of view, packages are exposed as
 first-class global variables.  For instance, the ,(tt [(gnu packages
@@ -1232,18 +1228,17 @@ unified programming environment made of two strata of code.])
       (p [We hope to make Guix a good vehicle for an innovative free
 software distribution.  The GNU system distribution we envision will
 give Scheme an important role just above the operating system
-interface.])
-      (!latex "\\newpage"))
+interface.]))
    
    (chapter :title [Acknowledgments] :number #f
       
       (p [The author would like to thank the Guix contributors for their
-work improving the system: Andreas Enge, Nikita Karetnikov, Cyril
+work growing the system: Andreas Enge, Nikita Karetnikov, Cyril
 Roelandt, and Mark H. Weaver.  We are also grateful to the Nix
 community, and in particular to Eelco Dolstra for his inspiring PhD work
 that led to Nix.  Lastly, thanks to the anonymous reviewer whose insight
 has helped improve this document.])
-      (!latex "\\balance"))
+      (!latex "\\newpage\n\\balance"))
 
    (references))
 
