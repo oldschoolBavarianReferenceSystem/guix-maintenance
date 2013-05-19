@@ -1,5 +1,6 @@
 (use-modules (skribilo package acmproc)
 	     (skribilo engine)
+	     (skribilo engine latex)
 	     (skribilo ast)
 	     (skribilo writer)
 	     (skribilo evaluator)
@@ -165,7 +166,8 @@ management and its implementation in Nix.  ,(numref :text [Section]
 programming and packaging interfaces.  ,(numref :text [Section] :ident
 "eval") provides an evaluation and discussion of the current status of
 Guix.  ,(numref :text [Section] :ident "related") presents related work,
-and ,(numref :text [Section] :ident "conclusion") concludes.]))
+and ,(numref :text [Section] :ident "conclusion") concludes.])
+      (!latex "\\newpage\n"))
    
    (chapter :title [Background]
       :ident "background"
@@ -639,7 +641,8 @@ one of our goals.])
   (source
     (origin
       (method url-fetch)
-      (uri "mirror://gnu/hello/hello-2.7.tar.gz")
+      (uri
+       "mirror://gnu/hello/hello-2.7.tar.gz")
       (sha256
         (base32 "7dqw3...")))))
 ])))
