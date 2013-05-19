@@ -1230,8 +1230,7 @@ community, and in particular to Eelco Dolstra for his inspiring PhD work
 that led to Nix.  Lastly, thanks to the anonymous reviewer whose insight
 has helped improve this document.]))
 
-   (chapter :title [References]
-     (the-bibliography :sort bib-sort/first-author-last-name))
+   (references)
       
    (when (engine-format? "latex")
      (! "\\balancecolumns")))
