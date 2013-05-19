@@ -18,6 +18,12 @@
                  (! "&ndash;")
                  (! "--")))))
 		 
+(define (dash-dash)
+  (resolve (lambda (n e env)
+             (if (engine-format? "latex" e)
+	         (! "{-}{-}")
+		 "--"))))
+
 (define (url url)
   (ref :text (tt url) :url url))
 
@@ -769,7 +775,7 @@ to the resulting directory;])
     (item [patch shebangs on installed files,(---)e.g., replace ,(tt
 [#!/bin/sh]) by ,(tt [#!/nix/store/...-bash-4.2/bin/sh]); this is
 required to allow scripts to work with our unusual file system layout;])
-    (item [run ,(tt [./configure --prefix=/nix/store/...]), followed by
+    (item [run ,(tt [./configure ,(dash-dash)prefix=/nix/store/...]), followed by
 ,(tt [make]) and ,(tt [make check])])
     (item [run ,(tt [make install]) and patch shebangs in installed files.]))
 
@@ -930,22 +936,22 @@ single transaction:]
 	 
 	 (blockquote
 	   (prog :line #f
-	       [$ guix package --install guile --remove bigloo]))
+	       [$ guix package ,(dash-dash)install guile ,(dash-dash)remove bigloo]))
 	 
 	 [The transaction can be rolled back with the following command:]
 	 
 	 (blockquote
 	   (prog :line #f
-	      [$ guix package --roll-back]))
+	      [$ guix package ,(dash-dash)roll-back]))
 	    
 	 [The following command upgrades all the installed packages
 whose name starts with a `g':]
       
          (blockquote
 	   (prog :line #f
-	      [$ guix package --upgrade '^g.*']))
+	      [$ guix package ,(dash-dash)upgrade '^g.*']))
 	 
-	 [The ,(tt [--list-installed]) and ,(tt [--list-available])
+	 [The ,(tt [,(dash-dash)list-installed]) and ,(tt [,(dash-dash)list-available])
 options can be used to list the installed or available packages.])
 	 (p [As of this writing, Guix comes with a user-land
 distribution of GNU/Linux.  That is, it allows users to install packages
