@@ -108,16 +108,19 @@ Scheme to write build programs, leading to a ``two-tier'' programming
 system.]))
 
    ;; See <http://www.acm.org/about/class/1998>.
-   (chapter :title [Categories and Subject Descriptors] :number #f
-      (p [D.4.5 \[,(bold [Operating Systems])\]: Reliability; D.4.5
-\[,(bold [Operating Systems])\]: System Programs and Utilities; D.1.1
-\[,(bold [Software])\]: Applicative (Functional) Programming]))
-   (chapter :title [General Terms] :number #f
-      (p [Languages, Management, Reliability.]))
-   (chapter :title [Keywords] :number #f
-      (p [Functional package management, Scheme, Embedded
-domain-specific language]))
-   
+   (acm-category :index "D.4.5"
+                 :section "Operating Systems"
+		 :subsection "Reliability")
+   (acm-category :index "D.4.5"
+                 :section "Operating Systems"
+		 :subsection "System Programs and Utilities")
+   (acm-category :index "D.1.1"
+                 :section "Software"
+		 :subsection "Applicative (Functional) Programming")
+   (acm-terms [Languages, Management, Reliability])
+   (acm-keywords [Functional package management, Scheme, Embedded
+domain-specific language])
+
    (when (engine-format? "latex")
      (! "\\newpage\n"))
 
