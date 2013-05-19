@@ -1096,8 +1096,8 @@ unpacked.])
 functioning Guile that can be used to run subsequent build programs.
 Its first task is to download tarballs containing the other pre-built
 binaries,(---)this is what the ,(tt [.tar.xz.drv]) derivations do.
-Downloading uses modules part of the Guix source distribution, such as
-,(tt [ftp-client.scm]).  The ,(tt [module-import.drv]) derivations
+Guix modules such as ,(tt [ftp-client.scm]) are used for this purpose.
+The ,(tt [module-import.drv]) derivations
 import those modules in a directory in the store, using the original
 layout,(footnote [In Guile, module names are a list of symbols, such as
 ,(tt [(guix ftp-client)]), which map directly to file names, such as
