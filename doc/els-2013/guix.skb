@@ -55,10 +55,10 @@
   available at \\url{http://www.gnu.org/licenses/gfdl.html}.
 
   % Give a link to the 'Transparent Copy', as per Section 3 of the GFDL.
-  The source form of this document is available from
+  The source of this document is available from
   \\url{http://git.sv.gnu.org/cgit/guix/maintenance.git}.
 }
-\\conferenceinfo{European Lisp Symposum}{2013, Madrid, Spain}
+\\conferenceinfo{European Lisp Symposium}{2013, Madrid, Spain}
 ")
 
 (engine-custom-set! (find-engine 'latex) 'predocument
