@@ -25,6 +25,12 @@
 	         (! "{-}{-}")
 		 "--"))))
 
+(define (corresponding)
+  (resolve (lambda (n e env)
+             (if (engine-format? "latex" e)
+	         (! "co\\-rres\\-pon\\-ding")
+		 "corresponding"))))
+
 (define (url url)
   (ref :text (tt url) :url url))
 
@@ -807,7 +813,7 @@ the ,(tt [configure]) procedure is in charge of running the package's
 ,(tt [#:make-flags]) keyword parameter.)])
 	 (p [All the procedures implementing the standard phases of the
 GNU build system are listed in the ,(tt [%standard-phases]) builder-side
-variable, in the form of a list of phase name/procedure pairs.  The
+variable, in the form of a list of phase name,(!latex "\\-")/procedure pairs.  The
 entry point of the builder-side code of ,(tt [gnu-build-system]) is
 shown on Figure,(~),(ref :figure "fig:gnu-build").  It calls all the
 phase procedures in order, by default those listed in the ,(tt
@@ -1011,7 +1017,7 @@ Scheme ,(ref :bib 'courtès13:boot-to-guile).])
 primitives discussed in ,(numref :text [Section] :ident "api").  For
 instance, the computation of Emacs's derivation involves that of 292
 other derivations,(---)that is, 292 invocations of the ,(tt
-[derivation]) primitive,(---)corresponding to 582 RPCs,(footnote [The
+[derivation]) primitive,(---),(corresponding) to 582 RPCs,(footnote [The
 number of ,(tt [derivation]) calls and ,(tt [add-to-store]) RPCs is
 reduced thanks to the use of client-side memoization.]).  The wall time
 of evaluating that derivation is 1.1 second on average on a 2.6,(~)GHz
