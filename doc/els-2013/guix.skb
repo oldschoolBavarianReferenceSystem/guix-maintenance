@@ -1238,7 +1238,7 @@ has helped improve this document.]))
 
 ;; Local Variables:
 ;; coding: utf-8
-;; compile-command: "skribilo -t latex -o guix.tex guix.skb && pdflatex guix.tex"
+;; compile-command: "make guix.pdf"
 ;; comment-start: ";; "
 ;; ispell-local-dictionary: "american"
 ;; End:
