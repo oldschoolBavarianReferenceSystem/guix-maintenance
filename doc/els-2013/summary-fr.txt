@@ -1,0 +1,16 @@
+French abstract
+
+Nous présentons la conception et la mise en œuvre de GNU Guix, un
+gestionnaire de paquets purement fonctionnel pour distribution
+GNU/Linux.  Guix permet les mises à jour et retours en arrière
+transactionnels, la gestion de paquets sans privilèges, des profiles par
+utilisateur et le ramasse-miettes.  Il s'appuie sur les mécanismes de
+bas niveau de l'outil Nix pour la construction et le déploiement de
+paquets.  Guix utilise le langage Scheme pour son interface de
+programmation.  En particulier, nous définissons un sous-langage de
+programmation spécifique plongé dans le langage Scheme pour la
+définition et la composition de paquets.  Nous démontrons comment cela
+nous permet de bénéficier du langage de programmation généraliste hôte,
+sans pour autant compromettre l'expressivité.  Enfin, nous montrons
+l'utilisation de Scheme pour les programmes de construction de paquets,
+produisant ainsi un système de programmation à deux niveaux.
