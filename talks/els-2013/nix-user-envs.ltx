@@ -1,0 +1,152 @@
+  \begin{pgfpicture}{-0.2cm}{-1.2cm}{6cm}{6.0cm}
+
+    % 0, -3, 20, 15
+
+    \pgfsetxvec{\pgfpoint{0.38cm}{0cm}}
+    \pgfsetyvec{\pgfpoint{0cm}{0.4cm}}
+
+    \pgfsetlinewidth{2pt}
+
+    % PATH environment variable.
+    \pgfputat{\pgfxy(0,13)}{\pgfbox[left,center]{\code{\bf \$PATH}}}
+    \begin{pgfscope}
+      \symlink
+      \pgfxycurve(2.5,13)(5,13)(4,10)(3.5,9.5)
+    \end{pgfscope}
+
+    % Links dir and current link.
+    \pgfputat{\pgfxy(0,10)}{\pgfbox[left,bottom]{/nix/.../profiles}}
+    \pgfxyline(0,10)(0,7)
+    \pgfxyline(0,9)(1,9)
+    \pgfputat{\pgfxy(1,9)}{\pgfbox[left,center]{current}}
+
+     % Generation 42 link
+    \only<1-5>{
+      \pgfxyline(0,7)(1,7)
+      \pgfputat{\pgfxy(1,7)}{\pgfbox[left,center]{42}}
+      \begin{pgfscope}
+        \symlink
+        \pgfxycurve(2,7)(5,7)(5.6,11.6)(6.6,12.6)
+      \end{pgfscope}
+    }
+
+    \only<1-4>{
+      \begin{pgfscope}
+        \symlink
+        \pgfxycurve(0.9,8.7)(0,8)(0,8)(0.9,7.3)
+      \end{pgfscope}
+    }
+
+    % Generation 43 link
+    \only<4->{
+      \pgfxyline(0,7)(0,5)
+      \pgfxyline(0,5)(1,5)
+      \pgfputat{\pgfxy(1,5)}{\pgfbox[left,center]{43}}
+      \begin{pgfscope}
+        \symlink
+        \pgfxycurve(2,5)(4,5)(5.6,1.3)(6.6,0.3)
+      \end{pgfscope}
+    }
+
+    \only<5->{
+      \begin{pgfscope}
+        \symlink
+        \pgfxycurve(0.9,8.7)(0,8)(0,6)(0.9,5.3)
+      \end{pgfscope}
+    }
+
+    \begin{pgftranslate}{\pgfxy(6.3,-4)}
+      \pgfputat{\pgfxy(0,18)}{\pgfbox[left,bottom]{/nix/store}}
+      \pgfxyline(0,18)(0,10)
+
+      \only<1-6>{
+        \begin{pgfscope}
+          
+        \only<6>{\color{red}}
+
+        % First user environment consisting of OpenSSH and Icecat
+        \pgfxyline(0,17)(1,17)
+        \pgfputat{\pgfxy(1,17)}{\pgfbox[left,center]{pp56i0a01si5...-user-env}}
+        \pgfxyline(1,16.5)(1,16)
+        \pgfxyline(1,16)(2,16)
+        \pgfputat{\pgfxy(2,16)}{\pgfbox[left,center]{bin}}
+        \pgfxyline(2,15.5)(2,14)
+        \pgfxyline(2,15)(3,15)
+        \pgfputat{\pgfxy(3,15)}{\pgfbox[left,center]{icecat}}
+        \pgfxyline(2,14)(3,14)
+        \pgfputat{\pgfxy(3,14)}{\pgfbox[left,center]{ssh}}
+
+        \begin{pgfscope}
+          \symlink
+          \pgfxycurve(4.7,14)(13,14)(13,11)(5,11) % SSH link
+          \pgfxycurve(5.1,15)(15,15)(15,8)(5.4,8) % Icecat link
+        \end{pgfscope}
+
+        % OpenSSH 4.6p1.
+        \pgfxyline(0,13)(1,13)
+        \pgfputat{\pgfxy(1,13)}{\pgfbox[left,center]{l9w6773m1msy...-openssh-4.6p1}}
+        \pgfxyline(1,12.5)(1,12)
+        \pgfxyline(1,12)(2,12)
+        \pgfputat{\pgfxy(2,12)}{\pgfbox[left,center]{bin}}
+        \pgfxyline(2,11.5)(2,11)
+        \pgfxyline(2,11)(3,11)
+        \pgfputat{\pgfxy(3,11)}{\pgfbox[left,center]{ssh}}
+
+        \end{pgfscope}
+      }
+
+      % Icecat.
+      \pgfxyline(0,10)(1,10)
+      \pgfputat{\pgfxy(1,10)}{\pgfbox[left,center]{rpdqxnilb0cg...-icecat-3.5.4}}
+      \pgfxyline(1,9.5)(1,9)
+      \pgfxyline(1,9)(2,9)
+      \pgfputat{\pgfxy(2,9)}{\pgfbox[left,center]{bin}}
+      \pgfxyline(2,8.5)(2,8)
+      \pgfxyline(2,8)(3,8)
+      \pgfputat{\pgfxy(3,8)}{\pgfbox[left,center]{icecat}}
+
+      \only<2->{
+
+        \pgfxyline(0,10)(0,7)
+
+        % OpenSSH 5.2p1.
+        \pgfxyline(0,7)(1,7)
+        \pgfputat{\pgfxy(1,7)}{\pgfbox[left,center]{aqn3wygq9jzk...-openssh-5.2p1}}
+        \pgfxyline(1,6.5)(1,6)
+        \pgfxyline(1,6)(2,6)
+        \pgfputat{\pgfxy(2,6)}{\pgfbox[left,center]{bin}}
+        \pgfxyline(2,5.5)(2,5)
+        \pgfxyline(2,5)(3,5)
+        \pgfputat{\pgfxy(3,5)}{\pgfbox[left,center]{ssh}}
+
+      }
+      
+      \only<3->{
+
+        \pgfxyline(0,7)(0,4)
+
+        % Second user environment, with updated OpenSSH and old Icecat.
+        \pgfxyline(0,4)(1,4)
+        \pgfputat{\pgfxy(1,4)}{\pgfbox[left,center]{i3d9vh6d8ip1...-user-env}}
+        \pgfxyline(1,3.5)(1,3)
+        \pgfxyline(1,3)(2,3)
+        \pgfputat{\pgfxy(2,3)}{\pgfbox[left,center]{bin}}
+        \pgfxyline(2,2.5)(2,1)
+        \pgfxyline(2,2)(3,2)
+        \pgfputat{\pgfxy(3,2)}{\pgfbox[left,center]{ssh}}
+        \pgfxyline(2,1)(3,1)
+        \pgfputat{\pgfxy(3,1)}{\pgfbox[left,center]{icecat}}
+
+        \begin{pgfscope}
+          \symlink
+%          \pgfxycurve(2.9,2)(-3,2)(-3,5)(2.9,5) % SSH link
+%          \pgfxycurve(2.9,1)(-5,1)(-5,8)(2.9,8) % Icecat link
+          \pgfxycurve(4.7,2)(13,2)(13,5)(5,5) % SSH link
+          \pgfxycurve(5.1,1)(15,1)(16,8)(7,8) % Icecat link
+        \end{pgfscope}
+
+      }
+      
+    \end{pgftranslate}
+
+  \end{pgfpicture}
