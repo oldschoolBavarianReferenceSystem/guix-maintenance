@@ -510,20 +510,20 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 
   \small{
     \begin{semiverbatim}
-\uncover<3->{\alert{let} dep = }\tikz[baseline]{\node[anchor=base](funcall){\alert{derivation}};} \{
+\only<3->{\alert{let} dep = }\tikz[baseline]{\node[anchor=base](funcall){\alert{derivation}};} \{
   name = "foo";
   system = "x86\_64-linux";
-  builder = builtins.toFile "builder.sh"
-    '' mkdir -p "\tikz[baseline]{\node[anchor=base](outvar){$out};}"
-       echo "Hello, world!" > "$out/some-result"
-    '';
-\tikz[baseline]{\node[anchor=base](args){\}};}\uncover<3->{;}\uncover<4->{ in \alert{derivation} \{
+  builder = "$\{./static-bash\}";
+  args = [ "-c" "echo hello > "\tikz[baseline]{\node[anchor=base](outvar){$out};}" ];
+\tikz[baseline]{\node[anchor=base](args){\}};}\uncover<3->{;}\uncover<3->{ in \alert{derivation} \{
   name = "bar";
   system = "x86\_64-linux";
-  builder = builtins.toFile "builder.sh"
+  builder = "\$\{./static-bash\}";
+  args = [ "-c"
     '' mkdir -p "$out"
        ln -s "\tikz[baseline]{\node[anchor=base](strinterp){\alert{$\{dep\}}};}/some-result" "\$out/my-result"
-    '';
+    '' ];
+  PATH = "\$\{coreutils\}/bin";
 \} }
     \end{semiverbatim}
   }
@@ -548,7 +548,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
     \end{tikzpicture}
   }
 
-  \only<5>{
+  \only<4>{
     \begin{textblock}{7}(5,14)
       \tikz \node[fill=white, text=black](labelstrinterp){expands to \texttt{/nix/store/...-foo}};
     \end{textblock}
@@ -753,6 +753,210 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 
 \subsection{overview}
 
+\begin{frame}{programming interface layers}
+
+  \large{
+    \begin{enumerate}
+    \item \alert{\textbf{declarative}} packaging layer
+    \item Scheme \alert{\textbf{build expressions}}
+    \item \alert{\texttt{derivation}} primitive (from Nix)
+    \end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{declarative packaging layer}
+  \begin{semiverbatim}
+    \small{
+(define hello
+  (\alert{package}
+   (name "hello")
+   (version "2.8")
+   (source (\alert{origin}
+            (method url-fetch)
+            (uri (string-append
+                  "http://ftp.gnu.org/\textrm{...}/hello-" version
+                  ".tar.gz"))
+            (sha256 (base32 "0wqd\textrm{...}dz6"))))
+   (\alert{build-system} gnu-build-system)
+   (synopsis "GNU Hello")
+   (description "Produce a friendly greeting.")
+   (home-page "http://www.gnu.org/software/hello/")
+   (license gpl3+)))
+}
+  \end{semiverbatim}
+
+  \begin{textblock}{15}(6,7)
+    \only<2>{
+      \tikz
+      \node[overlay, rounded corners=4, text centered,
+      minimum size=10mm, fill=guixorange1, text width=5cm,
+      inner sep=2mm, rotate=-3, opacity=.75, text opacity=1,
+      drop shadow={opacity=0.5}] at (1, 0) {
+        \textbf{how do we reach this level of abstraction?}
+      };
+    }
+  \end{textblock}
+\end{frame}
+
+\begin{frame}[fragile]{binding of Nix's \texttt{derivation} primitive}
+  \begin{semiverbatim}
+(let* ((store \tikz[baseline]{\node[anchor=base](conn){(open-connection)};})
+       (bash  (\tikz[baseline]{\node[anchor=base](addtostore){add-to-store};} store "static-bash"
+                            #t "sha256"
+                            "./static-bash")))
+  (\tikz[baseline]{\node[anchor=base](derivation){\alert{derivation}};} store "example-1.0" 
+              "x86\_64-linux" 
+              \tikz[baseline]{\node[anchor=base](bash){bash};}
+              '("-c" "echo hello > \$out")
+              '(("HOME" . "/homeless"))
+              '()))
+
+=> "/nix/store/nsswy...-example-1.0\tikz[baseline]{\node[anchor=base](drv){.drv};}"
+=> \#<derivation "example-1.0" ...>
+  \end{semiverbatim}
+
+  \only<2>{
+    \begin{textblock}{6}(7, 2)
+      \tikz{\node<2>[fill=white, text=black](labelconn){connect to
+          the build daemon};}
+    \end{textblock}
+
+    \begin{tikzpicture}[overlay]
+      \path[->, fill=white, thick]<2>(labelconn) edge (conn);
+    \end{tikzpicture}
+  }
+
+  \only<3>{
+    \begin{textblock}{5}(11, 3)
+      \tikz \node[fill=white, text=black](labeladdtostore){``intern''
+        the file};
+    \end{textblock}
+    
+    \begin{textblock}{6}(8, 8)
+      \tikz \node[fill=white,
+      text=black](labelbash){\texttt{/nix/store/...-static-bash}};
+    \end{textblock}
+
+    \begin{tikzpicture}[overlay]
+      \path[->, thick] (labeladdtostore) edge (addtostore);
+      \path[->, thick] (labelbash) edge (bash);
+    \end{tikzpicture}
+  }
+
+  \only<4>{
+    \begin{textblock}{5}(1, 9)
+      \tikz{\node[fill=white, text=black, text
+        width=4.0cm](labeldrv){compute ``derivation''---i.e., build
+          promise};}
+    \end{textblock}
+
+    \begin{tikzpicture}[overlay]
+      \path[->, thick] (labeldrv) edge (derivation);
+      \path[->, thick] (labeldrv) edge (drv);
+    \end{tikzpicture}
+  }
+\end{frame}
+
+\begin{frame}[fragile]{build expressions}
+  \begin{semiverbatim}
+(let* ((store   \tikz[baseline]{\node[anchor=base](conn){(open-connection)};})
+       (builder '(\tikz[baseline]{\node[anchor=base](builder){begin};}
+                   (mkdir \%output)
+                   (call-with-output-file
+                       (string-append \%output "/test")
+                     (lambda (p)
+                       (display '(hello guix) p)))))
+       (drv (\tikz[baseline]{\node[anchor=base](drv){\alert{build-expression->derivation}};}
+               store "foo" "x86\_64-linux"
+               builder
+               '(("HOME" . "/nowhere")))))
+  (\tikz[baseline]{\node[anchor=base](build){\alert{build-derivations}};} store (list drv)))
+  \end{semiverbatim}
+
+  % \begin{textblock}{6}(3, 2)
+  %   \tikz{\node<2>[fill=white, text=black](labelconn){connect to
+  %       the build daemon};}
+  % \end{textblock}
+
+  \begin{textblock}{6}(8, 2)
+    \tikz{\node<2>[fill=white, text=black](labelbuilder){build script,
+        to be eval'd in chroot};}
+  \end{textblock}
+
+  \begin{textblock}{4}(1, 6)
+    \tikz{\node<3>[fill=white, text=black, text width=4cm](labeldrv){compute derivation
+        for this builder, system, and env.~vars};}
+  \end{textblock}
+
+  \begin{textblock}{5}(1, 7)
+    \tikz{\node<4>[fill=white, text=black, text
+      width=4cm](labelguile){implicitly adds Guile as an input};}
+  \end{textblock}
+
+  \begin{textblock}{6}(1, 9)
+    \tikz{\node<5>[fill=white, text=black](labelbuild){build it!};}
+  \end{textblock}
+
+  \begin{tikzpicture}[overlay]
+    % \path[->, fill=white, thick]<2>(labelconn) edge (conn);
+    \path[->, fill=white, thick]<2>(labelbuilder) edge (builder);
+    \path[->, fill=white, thick]<3>(labeldrv) edge (drv);
+    \path[->, fill=white, thick]<4>(labelguile) edge (drv);
+    \path[->, fill=white, thick]<5>(labelbuild) edge (build);
+  \end{tikzpicture}
+\end{frame}
+
+\subsection{package declarations}
+
+\begin{frame}[fragile]{building packages}
+  \begin{semiverbatim}
+(\alert{use-modules} (guix packages) (guix store)
+             (gnu packages base))
+
+(define store
+  \tikz[baseline]{\node[anchor=base](conn){(\alert<1>{open-connection})};})
+
+(package? hello)
+=> \#t
+
+\uncover<2->{(define drv (\tikz[baseline]{\node[anchor=base](drv){\alert<2>{package-derivation}};} store hello))
+\uncover<3->{drv
+=> "/nix/store/xyz\textrm{...}-hello-2.8\alert<3>{.drv}"
+
+\uncover<4->{(build-derivations (list drv))
+\textsf{\alert{... Nix daemon builds/downloads package on our behalf...}}
+\uncover<5->{=> "/nix/store/pqr\textrm{...}-hello-2.8"}}}}
+  \end{semiverbatim}
+
+  \begin{textblock}{6}(8, 4)
+    \tikz{\node<1>[fill=white, text=black](labelconn){connect to
+        the Nix build daemon};}
+  \end{textblock}
+
+  \begin{textblock}{6}(9, 6)
+    \tikz{\node<2>[fill=white, text=black, text
+      width=4.3cm](labeldrv){compute ``derivation''---i.e., build
+        promise};}
+  \end{textblock}
+
+  \begin{tikzpicture}[overlay]
+    \path[->, fill=white, thick]<1>(labelconn) edge (conn);
+    \path[->, fill=white, thick]<2>(labeldrv) edge (drv);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{building packages}
+  \begin{semiverbatim}
+\$ \alert<1>{guix build} hello
+\uncover<2->{The following derivations will be built:
+   /nix/store/4gy79\textrm{...}-gawk-4.0.0.drv
+   /nix/store/7m2r9\textrm{...}-hello-2.8.drv
+\textrm{...}
+\alert{/nix/store/71aj1\textrm{...}-hello-2.8}
+}
+\end{semiverbatim}
+\end{frame}
+
 \begin{frame}[fragile]{Guix's declarative packaging layer}
   \begin{semiverbatim}
     \vspace{-0.5cm}
@@ -770,10 +974,10 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
    (\alert{build-system} \tikz[baseline]{\node[anchor=base](gbs){gnu-build-system};})
    (arguments '(#:configure-flags '("--disable-silent-rules")))
    \tikz[baseline]{\node[anchor=base](deps){(inputs `(("gawk" ,\tikz[baseline]{\node[anchor=base](gawkvar){\only<1-3,5->{\alert<3>{gawk}}\only<4>{\alert{my-other-awk}}};})))};}
-   (description "GNU Hello")
-   (long-description "GNUten Tag, Düsseldorf!")
+   (synopsis "GNU Hello")
+   (description "Produce a friendly greeting.")
    (home-page "http://www.gnu.org/software/hello/")
-   (license "GPLv3+")))
+   (license gpl3+)))
 }
   \end{semiverbatim}
 
@@ -860,7 +1064,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
                    "  ~a~\%  lt\_dladdsearchdir(\\"~a/lib\\");~\%"
                    match (assoc-ref outputs "out")))))
             \tikz[baseline]{\node[anchor=base](phases){\alert<3-4>{\%standard-phases}};})}))
-   (inputs `(\uncover<2->{("\alert<2>{patch/snarf}" "distro/guile-1.8.patch")}
+   (inputs `(\uncover<2->{("\alert<2>{patch/snarf}" "guile-1.8.patch")}
              ("gawk" ,gawk)
              ("readline" ,readline)))
 
@@ -889,114 +1093,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]{building packages}
-  \begin{semiverbatim}
-(\alert{use-modules} (guix packages) (guix store)
-             (distro base))
-
-(define store
-  \tikz[baseline]{\node[anchor=base](conn){(\alert<1>{open-connection})};})
-
-(package? hello)
-=> \#t
-
-\uncover<2->{(define drv (\tikz[baseline]{\node[anchor=base](drv){\alert<2>{package-derivation}};} store hello))
-\uncover<3->{drv
-=> "/nix/store/xyz\textrm{...}-hello-2.8\alert<3>{.drv}"
-
-\uncover<4->{(build-derivations (list drv))
-\textsf{\alert{... Nix daemon builds/downloads package on our behalf...}}
-\uncover<5->{=> "/nix/store/pqr\textrm{...}-hello-2.8"}}}}
-  \end{semiverbatim}
-
-  \begin{textblock}{6}(8, 4)
-    \tikz{\node<1>[fill=white, text=black](labelconn){connect to
-        the Nix build daemon};}
-  \end{textblock}
-
-  \begin{textblock}{6}(9, 6)
-    \tikz{\node<2>[fill=white, text=black, text
-      width=4.3cm](labeldrv){compute ``derivation''---i.e., build
-        promise};}
-  \end{textblock}
-
-  \begin{tikzpicture}[overlay]
-    \path[->, fill=white, thick]<1>(labelconn) edge (conn);
-    \path[->, fill=white, thick]<2>(labeldrv) edge (drv);
-  \end{tikzpicture}
-\end{frame}
-
-\begin{frame}[fragile]{building packages}
-  \begin{semiverbatim}
-\$ \alert<1>{guix-build} hello
-\uncover<2->{the following derivations will be built:
-   /nix/store/4gy79\textrm{...}-gawk-4.0.0.drv
-   /nix/store/7m2r9\textrm{...}-hello-2.8.drv
-\textrm{...}
-\alert{/nix/store/71aj1\textrm{...}-hello-2.8}
-}
-\end{semiverbatim}
-\end{frame}
-
-\begin{frame}[fragile]{under the hood}
-  \begin{semiverbatim}
-(let* ((store   \tikz[baseline]{\node[anchor=base](conn){(open-connection)};})
-       (builder '(\tikz[baseline]{\node[anchor=base](builder){begin};}
-                   (mkdir \%output)
-                   (call-with-output-file
-                       (string-append \%output "/test")
-                     (lambda (p)
-                       (display '(hello guix) p)))))
-       (drv (\tikz[baseline]{\node[anchor=base](drv){\alert{build-expression->derivation}};}
-               store "foo" "x86\_64-linux"
-               builder
-               '(("HOME" . "/nowhere")))))
-  (\tikz[baseline]{\node[anchor=base](build){\alert{build-derivations}};} store (list drv)))
-  \end{semiverbatim}
-
-  \begin{textblock}{6}(3, 2)
-    \tikz{\node<2>[fill=white, text=black](labelconn){connect to
-        the build daemon};}
-  \end{textblock}
-
-  \begin{textblock}{6}(8, 2)
-    \tikz{\node<3>[fill=white, text=black](labelbuilder){build script,
-        to be eval'd in chroot};}
-  \end{textblock}
-
-  \begin{textblock}{4}(1, 6)
-    \tikz{\node<4>[fill=white, text=black, text width=4cm](labeldrv){compute derivation
-        for this builder, system, and env.~vars};}
-  \end{textblock}
-
-  \begin{textblock}{6}(1, 9)
-    \tikz{\node<5>[fill=white, text=black](labelbuild){build it!};}
-  \end{textblock}
-
-  \begin{tikzpicture}[overlay]
-    \path[->, fill=white, thick]<2>(labelconn) edge (conn);
-    \path[->, fill=white, thick]<3>(labelbuilder) edge (builder);
-    \path[->, fill=white, thick]<4>(labeldrv) edge (drv);
-    \path[->, fill=white, thick]<5>(labelbuild) edge (build);
-  \end{tikzpicture}
-\end{frame}
-
-\begin{frame}[fragile]{\texttt{derivation} primitive}
-  \begin{semiverbatim}
-  (let* ((store (open-connection))
-         (builder
-          (add-text-to-store store "my-builder.sh"
-                             "echo hello > \\"\$out\\""
-                             '()))
-         (drv
-          (\alert{derivation} store "foo" "x86\_64-linux"
-                      "/bin/sh" `(,builder)
-                      '(("HOME" . "/homeless")
-                        ("PATH" . "/nothing:/here"))
-                      `((,builder)))))
-    (build-derivations store (list drv)))
-  \end{semiverbatim}
-\end{frame}
+\section{evaluation \& discussion}
 
 \begin{frame}{status}
   % TODO!
