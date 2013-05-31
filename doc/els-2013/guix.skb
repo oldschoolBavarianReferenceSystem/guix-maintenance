@@ -538,7 +538,7 @@ package that we want to focus on.  To address this, Guix provides a
 high-level package definition interface.  It is designed to be ,(emph
 [purely declarative]) in common cases, while allowing users to customize
 the underlying build process.  That way, it should be intelligible and
-directly usable by packagers will little or no experience with Scheme.
+directly usable by packagers with little or no experience with Scheme.
 As an additional constraint, this extra layer should be efficient in
 space and time: package management tools need to be able to load and
 traverse a distribution consisting of thousands of packages.])
@@ -787,7 +787,7 @@ default:
 to the resulting directory;])
     (item [patch shebangs on installed files,(---)e.g., replace ,(tt
 [#!/bin/sh]) by ,(tt [#!/nix/store/...-bash-4.2/bin/sh]); this is
-required to allow scripts to work with our unusual file system layout;])
+required to allow scripts to work without that impurity;])
     (item [run ,(tt [./configure ,(dash-dash)prefix=/nix/store/...]), followed by
 ,(tt [make]) and ,(tt [make check])])
     (item [run ,(tt [make install]) and patch shebangs in installed files.]))
