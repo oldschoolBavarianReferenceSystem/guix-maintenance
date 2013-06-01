@@ -6,11 +6,16 @@
 \usepackage{hyperref,xspace,multicol}
 \usepackage[absolute,overlay]{textpos}
 \usepackage{tikz}
-\usetikzlibrary{arrows,shapes,trees,shadows}
+\usetikzlibrary{arrows,shapes,trees,shadows,positioning}
 \usepackage{tree}
+\usepackage{fancyvrb}           % for \Verb
 
 % Remember the position of every picture.
 \tikzstyle{every picture}+=[remember picture]
+
+\tikzset{onslide/.code args={<#1>#2}{%
+  \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
+}}
 
 % Colors.
 \definecolor{guixred1}{RGB}{226,0,38}  % red P
@@ -79,23 +84,17 @@
 
 \maketitle
 
-\begin{frame}{¡Hola Madrid!}
-  \includegraphics[width=0.9\textwidth]{images/guile-banner-white}
-  \\[0.7em]
-  \uncover<2->{\includegraphics[width=0.75\textwidth]{images/nixos-white}}
-  \begin{textblock}{15}(6, 7)
-    \only<3->{
-      \tikz \node[overlay, fill=black, opacity=.8, text height=5cm,
-          text centered, text opacity=1, inner sep=10mm] at (1,0) {
-        \includegraphics[width=0.8\textwidth]{images/guix-logo-white}
-      };
-    }
-  \end{textblock}
-\end{frame}
+\begin{frame}{¡Hola!}
+  \center{\includegraphics[width=0.7\textwidth]{images/guile-banner-white}}
+  \\[0.8em]
+  \uncover<2->{\center{\includegraphics[width=0.5\textwidth]{images/nixos-white}}}
+  \\
 
-\begin{frame}
-  \frametitle{acknowledgments}
-  %% FIXME: Inria logo
+  \begin{textblock}{15}(0, 6)
+    \tikz \node<3->[overlay, fill=black, opacity=.8, text height=5cm,
+       text centered, text opacity=1, inner sep=10mm] at (0.5, -0.5) {
+      \includegraphics[width=0.55\textwidth]{images/guix-logo-white}};
+  \end{textblock}
 \end{frame}
 
 \begin{frame}
@@ -504,7 +503,64 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
     \end{textblock}
   }
 \end{frame}
-  
+
+\begin{frame}[fragile]
+  \frametitle{Nix multi-user setup}
+
+  \begin{tikzpicture}[tools/.style = {
+                        text width=35mm, minimum height=4cm,
+                        text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black
+                      },
+                      tool/.style = {
+                        fill=black, text=white, text width=3cm,
+                        text centered
+                      },
+                      daemon/.style = {
+                        rectangle, text width=50mm, text centered,
+                        rounded corners=2mm, minimum height=15mm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      builders/.style = {
+                        draw=guixorange1, very thick, dashed,
+                        fill=black, text=white, text width=5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=guixred2, thick, rectangle,
+                        fill=black, text=white,
+                        rotate=90
+                      }]
+    \matrix[row sep=3mm, column sep=1cm] {
+      \node(builders)[builders, text height=5cm]{}
+          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+          node[builder, onslide=<1-2>{black}] at (-1,-0.5) {Bash, make, etc.}
+          node[builder, onslide=<1-2>{black}] at ( 0,-0.5) {Bash, make, etc.}
+          node[builder, onslide=<1-2>{black}] at ( 1,-0.5) {Bash, make, etc.}; &
+      \node[tools]{}
+          node[fill=white, text=black] at (0, 1) {\large{\textbf{Nix tools}}}
+          node[tool] at (0, 0) {interpreter}
+          node(client)[tool] at (0, -1) {client lib};
+      \\
+
+      \node(daemon)[daemon]{\large{\textbf{Nix build daemon}}}; &
+      &
+      \\
+    };
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[overlay]
+    \path[very thick, draw=guixorange1]<2->
+      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+    \path[->, very thick, draw=guixorange1]<3->
+      (daemon) edge (builders);
+  \end{tikzpicture}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Nix language build primitive}
 
@@ -666,6 +722,21 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 \subsection{rationale}
 
 \begin{frame}
+  \frametitle{}
+
+  \begin{quote}
+    \Large{
+      The truth is that Lisp is not the right language for any particular
+      problem.  Rather, Lisp encourages one to attack a new problem by
+      implementing new languages tailored to that problem.
+    }
+  \end{quote}
+
+  \vspace{1cm}
+  \hfill{-- Albelson \& Sussman, 1987}
+\end{frame}
+
+\begin{frame}
   \frametitle{from Nix\only<1>{...}\only<2->{ to Guix}}
 
   \begin{textblock}{7}(1, 3)
@@ -737,21 +808,76 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{textblock}
 \end{frame}
 
+\begin{frame}[fragile]{Guix architecture}
+  \begin{tikzpicture}[tools/.style = {
+                        text width=35mm, minimum height=4cm,
+                        text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black
+                      },
+                      tool/.style = {
+                        fill=white, text=black, text width=3cm,
+                        text centered
+                      },
+                      daemon/.style = {
+                        rectangle, text width=50mm, text centered,
+                        rounded corners=2mm, minimum height=15mm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      builders/.style = {
+                        draw=guixorange1, very thick, dashed,
+                        fill=black, text=white, text width=5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=guixred2, thick, rectangle,
+                        fill=black, text=white,
+                        rotate=90
+                      }]
+    \matrix[row sep=3mm, column sep=1cm] {
+      \node(builders)[builders, text height=5cm]{}
+          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+          node[builder] at (-1,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 0,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 1,-0.5) {\alert{Guile}, make, etc.}; &
+      \node[tools]{}
+          node[fill=white, text=black] at (0, 1) {\large{\textbf{Guile}}}
+          node[tool] at (0, 0) {\texttt{(guix packages)}}
+          node(client)[tool] at (0, -1) {\texttt{(guix store)}};
+      \\
+
+      \node(daemon)[daemon]{\large{\textbf{Nix build daemon}}}; &
+      &
+      \\
+    };
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[overlay]
+    \path[very thick, draw=guixorange1]
+      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+    \path[->, very thick, draw=guixorange1]
+      (daemon) edge (builders);
+  \end{tikzpicture}
+\end{frame}
+
 \begin{frame}{thesis}
 
   \Large{
     \begin{enumerate}
     \item Scheme + EDSL at least as \alert{expressive} as the Nix
       language
-    \item<2-> Scheme better suited than the shell for \alert{build
+    \item Scheme better suited than the shell for \alert{build
         programs}
-    \item<3-> Guix provides a \alert{unified \& extensible} programming
+    \item Guix provides a \alert{unified \& extensible} programming
       environment
     \end{enumerate}
   }    
 \end{frame}
 
-\subsection{overview}
+\subsection{programming interfaces}
 
 \begin{frame}{programming interface layers}
 
@@ -798,7 +924,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{textblock}
 \end{frame}
 
-\begin{frame}[fragile]{binding of Nix's \texttt{derivation} primitive}
+\begin{frame}[fragile]{Nix's \texttt{derivation} primitive in Scheme}
   \begin{semiverbatim}
 (let* ((store \tikz[baseline]{\node[anchor=base](conn){(open-connection)};})
        (bash  (\tikz[baseline]{\node[anchor=base](addtostore){add-to-store};} store "static-bash"
@@ -906,7 +1032,73 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{tikzpicture}
 \end{frame}
 
-\subsection{package declarations}
+\begin{frame}[fragile]{declarative packaging layer}
+  \begin{semiverbatim}
+    \vspace{-0.8cm}
+    \small{
+(define hello
+  (\alert{package}
+   (name "hello")
+   (version "2.8")
+   (source (\alert{origin}
+            (method url-fetch)
+            (uri (string-append
+                  "http://ftp.gnu.org/\textrm{...}/hello-" version
+                  ".tar.gz"))
+            (sha256 (base32 "0wqd\textrm{...}dz6"))))
+   (\alert{build-system} \tikz[baseline]{\node[anchor=base](gbs){gnu-build-system};})
+   \tikz[baseline]{\node[anchor=base](deps){(inputs `(("gawk" ,\tikz[baseline]{\node[anchor=base](gawkvar){\only<1-3,5->{\alert<3>{gawk}}\only<4>{\alert{my-other-awk}}};})))};}
+   (synopsis "GNU Hello")
+   (description "Produce a friendly greeting.")
+   (home-page "http://www.gnu.org/software/hello/")
+   (license gpl3+)))
+}
+  \end{semiverbatim}
+
+  \begin{textblock}{5}(11, 12)
+    \tikz{\node<2-3>(labeldeps)[fill=white, text=black]{dependencies};}
+  \end{textblock}
+
+  \begin{textblock}{5}(9, 9)
+    \tikz{\node<3-4>(labelgawkvar)[fill=white, text=black]{reference to a
+        variable};}
+  \end{textblock}
+
+  \begin{textblock}{5}(3, 5)
+    \tikz{\node<5>(labelgbs)[fill=white, text=black]{\texttt{./configure
+        \&\& make install}...};}
+  \end{textblock}
+
+  \begin{textblock}{5}(8, 7)
+    \tikz{\node<5>(labelgbsdeps)[fill=white, text=black]{depends on
+        \texttt{gcc}, \texttt{make}, \texttt{bash}, etc.};}
+  \end{textblock}
+
+  \begin{tikzpicture}[overlay]
+    \path[->, fill=white, thick]<2-3>(labeldeps) edge (deps);
+    \path[->, fill=white, thick]<3-4>(labelgawkvar) edge (gawkvar);
+    \path[->, fill=white, thick]<5>(labelgbs) edge (gbs);
+    \path[->, fill=white, thick]<5>(labelgbsdeps) edge (gbs);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{build-system protocol}
+  \begin{semiverbatim}
+(define gnu-build-system
+  (\alert{build-system} (name 'gnu)
+    (description "./configure \&\& make \&\& make install")
+    (build gnu-build)
+    (cross-build gnu-cross-build)))
+  \end{semiverbatim}
+
+  \begin{itemize}
+    \item<2-> \texttt{python-build-system}: run \texttt{python setup.py}
+      etc.
+    \item<2-> \texttt{perl-build-system}: run \texttt{perl Makefile.PL}
+      etc.
+    \item<2-> \texttt{cmake-build-system}: run \texttt{cmake .} etc.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{building packages}
   \begin{semiverbatim}
@@ -924,7 +1116,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 => "/nix/store/xyz\textrm{...}-hello-2.8\alert<3>{.drv}"
 
 \uncover<4->{(build-derivations (list drv))
-\textsf{\alert{... Nix daemon builds/downloads package on our behalf...}}
+\textsf{\alert{... daemon builds/downloads package on our behalf...}}
 \uncover<5->{=> "/nix/store/pqr\textrm{...}-hello-2.8"}}}}
   \end{semiverbatim}
 
@@ -947,294 +1139,389 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 
 \begin{frame}[fragile]{building packages}
   \begin{semiverbatim}
-\$ \alert<1>{guix build} hello
+\$ \alert<1>{guix build}\only<3->{ --\alert{target}=armel-linux-gnueabi} hello
 \uncover<2->{The following derivations will be built:
-   /nix/store/4gy79\textrm{...}-gawk-4.0.0.drv
-   /nix/store/7m2r9\textrm{...}-hello-2.8.drv
+   /nix/store/\only<1-2>{4gy79}\only<3>{1gm99}\textrm{...}-\only<1-2>{gawk-4.0.0}\only<3>{gcc-armel-linux-gnu-4.8.1}.drv
+   /nix/store/\only<1-2>{7m2r9}\only<3>{71ah1}\textrm{...}-hello-2.8.drv
 \textrm{...}
-\alert{/nix/store/71aj1\textrm{...}-hello-2.8}
+\alert{/nix/store/\only<1-2>{71aj1}\only<3->{7m2r9}\textrm{...}-hello-2.8}
 }
 \end{semiverbatim}
 \end{frame}
 
-\begin{frame}[fragile]{Guix's declarative packaging layer}
+% \begin{frame}[fragile]{customized package declaration}
+%   \begin{semiverbatim}
+%     \vspace{-1.3cm}
+%     \small{
+% (define guile-1.8
+%   (\alert{package} \textrm{...}
+%    (\alert{arguments}
+%      '(\alert<1>{#:configure-flags} '("--disable-error-on-warning")
+%        \uncover<2->{\alert<2>{#:patches} (list (assoc-ref %build-inputs "patch/snarf"))}
+
+%        \uncover<3->{
+%        \alert<3-4>{#:phases}
+%          (\tikz[baseline]{\node[anchor=base](alistcons){alist-cons-before 'configure 'patch-search-path};}
+%             (lambda* (#:key outputs #:allow-other-keys)
+%               (\tikz[baseline]{\node[anchor=base](subst){\alert<5>{substitute*}};} "libguile/dynl.c"
+%                 (("lt_dlinit.*\$" match)
+%                  (format \#f
+%                    "  ~a~\%  lt\_dladdsearchdir(\\"~a/lib\\");~\%"
+%                    match (assoc-ref outputs "out")))))
+%             \tikz[baseline]{\node[anchor=base](phases){\alert<3-4>{\%standard-phases}};})}))
+%    (inputs `(\uncover<2->{("\alert<2>{patch/snarf}" "guile-1.8.patch")}
+%              ("gawk" ,gawk)
+%              ("readline" ,readline)))
+
+%    ...
+%    }
+%   \end{semiverbatim}
+
+%   \begin{textblock}{5}(1, 9)
+%     \tikz{\node<3-4>[fill=white, text=black](labelphases){configure, build, check, install};}
+%   \end{textblock}
+
+%   \begin{textblock}{5}(8, 5)
+%     \tikz{\node<4>(labelalistcons)[fill=white, text=black]{add a phase
+%         before \texttt{configure}};}
+%   \end{textblock}
+
+%   \begin{textblock}{5}(5, 5)
+%     \tikz{\node<5>(labelsubst)[fill=white, text=black]{patch things up à
+%         la \texttt{sed}};}
+%   \end{textblock}
+
+%   \begin{tikzpicture}[overlay]
+%     \path[->, fill=white, thick]<3-4>(labelphases) edge (phases);
+%     \path[->, fill=white, thick]<4>(labelalistcons) edge (alistcons);
+%     \path[->, fill=white, thick]<5>(labelsubst) edge (subst);
+%   \end{tikzpicture}
+% \end{frame}
+
+\begin{frame}[fragile]{packages based on existing ones}
   \begin{semiverbatim}
-    \vspace{-0.5cm}
-    \small{
-(define-public hello
-  (\alert{package}
-   (name "hello")
-   (version "2.8")
-   (source (\alert{origin}
-            (method http-fetch)
-            (uri (string-append
-                  "http://ftp.gnu.org/\textrm{...}/hello-" version
-                  ".tar.gz"))
-            (sha256 (base32 "0wqd\textrm{...}dz6"))))
-   (\alert{build-system} \tikz[baseline]{\node[anchor=base](gbs){gnu-build-system};})
-   (arguments '(#:configure-flags '("--disable-silent-rules")))
-   \tikz[baseline]{\node[anchor=base](deps){(inputs `(("gawk" ,\tikz[baseline]{\node[anchor=base](gawkvar){\only<1-3,5->{\alert<3>{gawk}}\only<4>{\alert{my-other-awk}}};})))};}
-   (synopsis "GNU Hello")
-   (description "Produce a friendly greeting.")
-   (home-page "http://www.gnu.org/software/hello/")
-   (license gpl3+)))
-}
+(package (\tikz[baseline]{\node(inherit)[anchor=base]{\alert{inherit}};} hello)
+  (version "2.7")
+  (source
+    (origin
+      (method url-fetch)
+      (uri "mirror://gnu/hello/hello-2.7.tar.gz")
+      (sha256
+        (base32 "7dqw3...")))))
   \end{semiverbatim}
 
-  \begin{textblock}{5}(11, 12)
-    \tikz{\node<2-3>(labeldeps)[fill=white, text=black]{dependencies};}
+  \begin{textblock}{6}(7, 2)
+    \tikz \node(labelinherit)[fill=white, text=black, text width=5.5cm]
+      {copy fields from \texttt{hello} except for \texttt{version} and
+        \texttt{source}};
   \end{textblock}
-
-  \begin{textblock}{5}(8, 10)
-    \tikz{\node<3-4>(labelgawkvar)[fill=white, text=black]{reference to a
-        variable};}
-  \end{textblock}
-
-  \begin{textblock}{5}(3, 5)
-    \tikz{\node<5->(labelgbs)[fill=white, text=black]{\texttt{./configure
-        \&\& make install}...};}
-  \end{textblock}
-
-  \begin{textblock}{5}(8, 7)
-    \tikz{\node<6>(labelgbsdeps)[fill=white, text=black]{depends on
-        \texttt{gcc}, \texttt{make}, \texttt{bash}, etc.};}
-  \end{textblock}
-
+  
   \begin{tikzpicture}[overlay]
-    \path[->, fill=white, thick]<2-3>(labeldeps) edge (deps);
-    \path[->, fill=white, thick]<3-4>(labelgawkvar) edge (gawkvar);
-    \path[->, fill=white, thick]<5->(labelgbs) edge (gbs);
-    \path[->, fill=white, thick]<6->(labelgbsdeps) edge (gbs);
+    \path[->] (labelinherit) edge (inherit);
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]{customized package declaration}
+\begin{frame}[fragile]{functional package adapters}
+  \begin{semiverbatim}
+(define (static-package p)
+  ;; Return a statically-linked variant of P.
+  (package (\alert{inherit} p)
+    (arguments
+     `(\#:configure-flags '("--disable-shared"
+                            "LDFLAGS=-static")
+       ,@(package-arguments p)))))
+  \end{semiverbatim}
+\end{frame}
+
+% \begin{frame}[fragile]{system-dependent inputs}
+% \end{frame}
+
+\begin{frame}[fragile]{system-dependent arguments}
   \begin{semiverbatim}
     \vspace{-1.3cm}
     \small{
-(define-public gawk
+(define gawk
   (\alert{package}
    (name "gawk")
-   (version "4.0.0")
-   (source (origin (method http-fetch)
+   (version "4.0.2")
+   (source (origin (method url-fetch)
                    (uri "http://ftp.gnu.org/...")
                    (sha256 (base32 "0sss..."))))
    (build-system gnu-build-system)
    (\alert{arguments}
-     (case-lambda
-       ((\tikz[baseline]{\node[anchor=base](sys){system};})                \alert{; native builds}
-        (if (string=? system "i686-cygwin")
-            '(#:tests? #f)      ; work around test failure
-            '(#:parallel-tests? #f))) ; seq. test suite
-       ((system cross-system)   \alert{; cross builds}
-        (arguments cross-system)))) ; same as above
+     (if (string-prefix? "i686" (\tikz[baseline]{\node[anchor=base](sys){\%current-system};}))
+         '(#:tests? #f)      ; skip tests on 32-bit hosts
+         '()))
    (inputs `(("libsigsegv" ,libsigsegv)))
    (home-page "http://www.gnu.org/software/gawk/")
-   (description "GNU Awk")))
+   (synopsis "GNU Awk")))
    }
  \end{semiverbatim}
 
-  \begin{textblock}{5}(8, 7)
-    \tikz{\node<2>(labelsys)[fill=white, text=black]{build options
-        based on target};}
+  \begin{textblock}{5}(9, 5)
+    \tikz \node<2>(labelsys)
+           [fill=white, text=black, text width=4cm]
+           {dynamically-scoped parameter (SRFI-39)};
   \end{textblock}
 
+
   \begin{tikzpicture}[overlay]
+    \node<2> [fill=white, text=black, text opacity=1, opacity=.7,
+              rounded corners=2mm, inner sep=3mm, text width=5.5cm]
+             at (120pt, 44pt)
+             {evaluated within the dynamic extent of \texttt{package-derivation}};
+    \draw<2> (16pt, 110pt) [very thick, color=guixorange2, rounded corners=8pt]
+      arc (20:-40:-40pt and 45pt);
     \path[->, fill=white, thick]<2>(labelsys) edge (sys);
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]{customized package declaration}
+\begin{frame}[fragile]{under the hood: fancy records}
+  \vspace{-0.3cm}
   \begin{semiverbatim}
-    \vspace{-1.3cm}
-    \small{
-(define-public guile-1.8
-  (\alert{package} \textrm{...}
-   (\alert{arguments}
-     '(\alert<1>{#:configure-flags} '("--disable-error-on-warning")
-       \uncover<2->{\alert<2>{#:patches} (list (assoc-ref %build-inputs "patch/snarf"))}
+(\alert{define-record-type*} <package>
+  \tikz[baseline]{\node(package)[anchor=base]{package};} make-package package?
 
-       \uncover<3->{
-       \alert<3-4>{#:phases}
-         (\tikz[baseline]{\node[anchor=base](alistcons){alist-cons-before 'configure 'patch-search-path};}
-            (lambda* (#:key outputs #:allow-other-keys)
-              (\tikz[baseline]{\node[anchor=base](subst){\alert<5>{substitute*}};} "libguile/dynl.c"
-                (("lt_dlinit.*\$" match)
-                 (format \#f
-                   "  ~a~\%  lt\_dladdsearchdir(\\"~a/lib\\");~\%"
-                   match (assoc-ref outputs "out")))))
-            \tikz[baseline]{\node[anchor=base](phases){\alert<3-4>{\%standard-phases}};})}))
-   (inputs `(\uncover<2->{("\alert<2>{patch/snarf}" "guile-1.8.patch")}
-             ("gawk" ,gawk)
-             ("readline" ,readline)))
+  (name package-name)
+  (version package-version)
+  (source package-source)
+  (build-system package-build-system)
+  (arguments package-arguments
+             (\alert{default} '()) (\tikz[baseline]{\node(thunked)[anchor=base]{\alert{thunked}};}))
 
-   ...
-   }
- \end{semiverbatim}
+  (inputs package-inputs
+          (\alert{default} '()) (\alert{thunked}))
+
+  ;; \ldots{}
+
+  (location package-location
+     (\alert{default} (current-source-location))))
+  \end{semiverbatim}
+
+  \begin{textblock}{6}(9, 5)
+    \tikz \node<2>(labelthunked)
+      [fill=white, text=black]
+      {enclose value in a thunk};
+  \end{textblock}
+  
+  \begin{textblock}{6}(10, 3)
+    \tikz \node<2>(labelpackage)[fill=white, text=black]{generated
+      macro};
+  \end{textblock}
+  
+  \begin{tikzpicture}[overlay]
+    \path[->, fill=white, thick]<2> (labelthunked) edge (thunked);
+    \path[->, fill=white, thick]<2> (labelpackage.west)
+      edge [bend left, out=0, in=165] (package);
+  \end{tikzpicture}
+\end{frame}
+
+\subsection{builder-side code}
+
+\begin{frame}[fragile]{builder side of \texttt{gnu-build-system}}
+  \vspace{-0.4cm}
+  \begin{semiverbatim}
+(\alert{define} \%standard-phases
+  `((configure . ,configure)
+    (build . ,build)
+    ;; \textrm{...}
+    ))
+
+(\alert{define*} (gnu-build #:key (phases \%standard-phases)
+                    #:allow-other-keys
+                    #:rest args)
+  ;; Run all the PHASES in order, passing them ARGS.
+  (every (match-lambda
+          ((name . proc)
+           (format #t "starting phase `~a'~\%" name)
+           (let ((result (apply proc args)))
+             (format #t "phase `~a' done~\%" name)
+             result)))
+         phases))
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]{inserting a build phase}
+  \begin{semiverbatim}
+(define howdy
+  (\alert{package} (inherit hello)
+    (arguments
+      '(#:phases
+        (\tikz[baseline]{\node(alistcons)[anchor=base]{alist-cons-after};}
+          'configure 'change-hello
+          (lambda* (#:key system #:allow-other-keys)
+            (\tikz[baseline]{\node(subst)[anchor=base]{\alert<4>{substitute*}};} "src/hello.c"
+              (("Hello, world!")
+               (string-append "Howdy! Running on "
+                              system "."))))
+          \tikz[baseline]{\node(phases)[anchor=base]{\%standard-phases};})))))
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \draw<2> (40pt, 145pt) [very thick, color=guixorange2, rounded corners=8pt]
+      arc (20:-40:-50pt and 110pt);
+    \node<2>[fill=white, text=black, text opacity=1, opacity=.7,
+          rounded corners=2mm, inner sep=5mm]
+      at (7, 4) {\textbf{builder-side expression}};
+  \end{tikzpicture}
 
   \begin{textblock}{5}(1, 9)
-    \tikz{\node<3-4>[fill=white, text=black](labelphases){configure, build, check, install};}
+    \tikz{\node<3>[fill=white, text=black](labelphases){configure, build, check, install};}
   \end{textblock}
 
   \begin{textblock}{5}(8, 5)
-    \tikz{\node<4>(labelalistcons)[fill=white, text=black]{add a phase
+    \tikz{\node<3>(labelalistcons)[fill=white, text=black]{add a phase
         before \texttt{configure}};}
   \end{textblock}
 
   \begin{textblock}{5}(5, 5)
-    \tikz{\node<5>(labelsubst)[fill=white, text=black]{patch things up à
+    \tikz{\node<4>(labelsubst)[fill=white, text=black]{patch things up à
         la \texttt{sed}};}
   \end{textblock}
 
   \begin{tikzpicture}[overlay]
-    \path[->, fill=white, thick]<3-4>(labelphases) edge (phases);
-    \path[->, fill=white, thick]<4>(labelalistcons) edge (alistcons);
-    \path[->, fill=white, thick]<5>(labelsubst) edge (subst);
+    \path[->, fill=white, thick]<3>(labelphases) edge (phases);
+    \path[->, fill=white, thick]<3>(labelalistcons) edge (alistcons);
+    \path[->, fill=white, thick]<4>(labelsubst) edge (subst);
   \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{downloading sources}
+  \begin{semiverbatim}
+(\alert{origin}
+  (method \tikz[baseline]{\node(fetch)[anchor=base]{url-fetch};})
+  (uri (string-append "mirror://gnu/gcc/gcc-"
+                      version "/gcc-" version
+                      ".tar.bz2"))
+  (sha256 (base32 "1hx9\textrm{...}")))
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \node<2->(labelfetch)[fill=white, text=black] at (4, 5)
+      {use Guile HTTP(S)/FTP client};
+    \path[->, fill=white, thick]<2-> (labelfetch) edge (fetch);
+
+    \node<3->[overlay, rounded corners=4, text centered,
+            minimum size=10mm, fill=guixorange1, text width=5cm,
+            inner sep=3mm, rotate=2, opacity=.75, text opacity=1,
+            drop shadow={opacity=0.5}] at (5, 1) {
+              \textbf{how is the very first tarball downloaded?}
+            };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{bootstrapping the distribution}
+  \begin{enumerate}
+    \setcounter{enumi}{0}
+    \item statically-linked binaries of \texttt{mkdir}, \texttt{tar},
+      \texttt{xz}, \texttt{bash}, and Guile
+    \item run Bash script to untar Guile
+    \item use Guile to download statically-linked binaries of GCC,
+      Binutils, libc, Coreutils et al., and Bash
+    \item use that to build GNU~Make
+    \item ...
+  \end{enumerate}
 \end{frame}
 
 \section{evaluation \& discussion}
 
 \begin{frame}{status}
-  % TODO!
   \begin{itemize}
-  \item good API/language support for builds \& composition
-  \item expressive enough to build weird packages
-  \item<2-> mini Guix-based distro!
+  \item API/language support for builds \& composition
+  \item builder-side libs equiv. to \texttt{wget}, \texttt{find},
+    \texttt{grep}, \texttt{sed}, etc.
+  \item expressive enough to build a variety of packages
   \end{itemize}
 \end{frame}
 
-\begin{frame}{road map}
-  % TODO!
+\begin{frame}{benefits of DSL embedding}
+  \begin{enumerate}
+    \item{Guile tools readily available
+        \begin{itemize}
+          \item<2-> libraries, macros, compiler, etc.
+          \item<2-> i18n support (for package descriptions)
+          \item<2-> development environment: Emacs + Geiser
+        \end{itemize}}
+    \item{simplified implementation of auxiliary tools
+        \begin{itemize}
+          \item<2-> off-line \& on-line package auto-updater
+          \item<2-> description synchronization with external DB
+          \item<2-> searching packages by keyword
+        \end{itemize}}
+  \end{enumerate}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-% \section{Bonuses}
+\begin{frame}{GNU/Linux distribution}
+  \begin{itemize}
+    \item installable atop a running GNU/Linux system
+    \item self-contained (pure!)
+    \item transactional upgrade/roll-back, pre-built binaries, etc.
+    \item {$\approx$400 packages
+        \begin{itemize}
+          \item TeX Live, Xorg, GCC, ...
+          \item and 6 Scheme implementations! :-)
+        \end{itemize}}
+  \end{itemize}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Cross-Compilation}
+\begin{frame}[fragile]{pushing the limits: booting to Guile}
+  \vspace{-0.7cm}
+  \begin{semiverbatim}
+\small{
+(\alert{expression->initrd}
+ '(begin
+    (mkdir "/proc")
+    (mount "none" "/proc" "proc")
 
-%   \begin{enumerate}
-%     \item<1-> define the target system
-%     \item<3-> build
-%     \item<4-> copy to the target store
-%     \item<5-> install on the target
-%   \end{enumerate}
-%   \vspace{4cm}
+    ;; Load Linux kernel modules.
+    (let ((slurp (lambda (module)
+                   (call-with-input-file
+                       (string-append "/modules/" module)
+                     get-bytevector-all))))
+      (for-each (compose load-linux-module slurp)
+                (list "md4.ko" "ecb.ko" "cifs.ko")))
 
-%   \begin{textblock}{10}(1, 6)
-%     \begin{semiverbatim}
-%       \only<1>{
-% crossSystem = \{          # GNU/Linux on ARM (SheevaPlug)
-%   \alert{config} = "armv5tel-unknown-linux-gnueabi";
-%   bigEndian = false;
-%   arch = "arm";
-%   libc = "glibc";
-%   float = "soft";
-%   withTLS = true;
-%   \alert{platform} = pkgs.platforms.sheevaplug;
-% \};
-%       }
-%     \end{semiverbatim}
-%   \end{textblock}
+    ;; Turn eth0 up.
+    (let ((sock (socket AF_INET SOCK_STREAM 0)))
+      (set-network-interface-flags sock "eth0" IFF_UP))
 
-%   \begin{textblock}{10}(1, 6)
-%     \begin{semiverbatim}
-%       \only<2>{
-% crossSystem = \{                   # GNU, a.k.a. GNU/Hurd
-%   \alert{config} = "i586-pc-gnu";
-%   bigEndian = false;
-%   arch = "i586";
-%   libc = "glibc";
-%   float = "hard";
-%   withTLS = true;
-%   \alert{platform} = pkgs.platforms.pc;
-% \};
-%       }
-%     \end{semiverbatim}
-%   \end{textblock}
+    ;; At last, the warm and friendly REPL.
+    (start-repl)))
+}
+  \end{semiverbatim}
+\end{frame}
 
-%   \begin{textblock}{10}(1, 7)
-%     \begin{semiverbatim}
-%       \only<3>{
-% \$ nix-build -A coreutils.\alert{hostDrv}
-% \textrm{...}
-%       }
-%     \end{semiverbatim}
-%   \end{textblock}
+\begin{frame}{road map}
+  \begin{itemize}
+    \item{ \alert{short-term}
+        \begin{itemize}
+          \item tweak more packages for cross-compilation
+          \item port to mips64el (N64), and armel (?)
+          \item more packages: GTK+ stack, applications
+          \end{itemize}}
+    \item<2->{ \alert{medium-term}
+        \begin{itemize}
+          \item stand-alone, bootable distribution!
+          \item with NixOS-style whole-system configuration EDSL
+          \item with the Guile-powered DMD init system
+        \end{itemize}}
+  \end{itemize}
 
-%   \begin{textblock}{10}(1, 7)
-%     \begin{semiverbatim}
-%       \only<4>{
-% \$ \alert{nix-copy-closure} --to target@foo /nix/store/...
-% \textrm{...}
-%       }
-%     \end{semiverbatim}
-%   \end{textblock}
+  \begin{textblock}{5}(7,8)
+    \tikz
+    \node<3->[overlay, rounded corners=4, text centered,
+            minimum size=10mm, fill=guixorange1, text width=5cm,
+            inner sep=3mm, rotate=4, opacity=.75, text opacity=1,
+            drop shadow={opacity=0.5}] at (1, 0) {
+              \textbf{Your help needed!}
+            };
 
-%   \begin{textblock}{10}(1, 7)
-%     \begin{semiverbatim}
-%       \only<5>{
-% target\$ \alert{nix-env --install} /nix/store/...
-% \textrm{...}
-%       }
-%     \end{semiverbatim}
-%   \end{textblock}
-% \end{frame}
+  \end{textblock}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{System-Wide Regression Testing Using VM Networks}
-
-%   \begin{semiverbatim}
-% \only<1-2>{\{ pkgs, ... \}:
-
-% \{
-%   \alert{nodes} = \{
-%     server = 
-%       \{ pkgs, config, ... \}:
-%       \{ services.openssh.enable = true; \};
-      
-%     client = 
-%       \{ pkgs, config, ... \}:
-%       \{ \only<2>{kernelPackages = pkgs.linuxPackages\_2\_6\_25; }\};
-%   \};}\only<3>{
-%   \alert{testScript} = ''
-%     my \$key=`\${pkgs.openssh}/bin/ssh-keygen -t dsa -f key -N ""`;
-    
-%     \$\alert{server}->mustSucceed("mkdir -m 700 /root/.ssh");
-%     \$\alert{server}->copyFileFromHost("key.pub", "/root/.ssh/authorized\_keys");
-    
-%     \$\alert{client}->mustSucceed("mkdir -m 700 /root/.ssh");
-%     \$\alert{client}->copyFileFromHost("key", "/root/.ssh/id\_dsa");
-%     \$\alert{client}->mustSucceed("chmod 600 /root/.ssh/id\_dsa");
-    
-%     \$\alert{client}->mustSucceed("ssh server 'echo Hello RMLL'");
-%   '';
-% \}}
-%   \end{semiverbatim}
-
-% \end{frame}
-
-% \begin{frame}
-%   \frametitle{Continuous Integration with Hydra/Nix}
-
-% \only<1>{\center{30+ GNU packages continuously built}}
-% \only<1>{\alert{\url{http://hydra.nixos.org/project/gnu/}}}
-
-% %  \vspace{-1cm}
-% \only<2>{\center{\includegraphics[width=1.0\textwidth]{images/hydra-gnutls-jobset}}}
-% \only<3>{\center{\includegraphics[width=1.0\textwidth]{images/hydra-gnutls-views}}}
-% \only<4>{\center{\includegraphics[width=1.0\textwidth]{images/hydra-gnutls-view}}}
-% %\only<3>{\center{\includegraphics[width=1.0\textwidth]{images/hydra-gnutls-build}}}
-
-% \end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{summary}
-
-  \bf \huge{parentheses + weird paths}
-  \uncover<2->{right, but more importantly...}
+\begin{frame}{no compromise}
+  \center{\includegraphics[width=0.6\textwidth]{images/lmi-machine}}
+  \\
 \end{frame}
 
 \begin{frame}
@@ -1243,15 +1530,15 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \begin{itemize}
   \item \textbf{features}
     \begin{itemize}
-    \item per-user, unprivileged installation
-    \item transactional upgrades; rollback
+    \item transactional upgrades; rollback; per-user profiles
     \item full power of Guile to build \& compose packages
+    \item unified packaging development environment
     \end{itemize}
   \item \textbf{foundations}
     \begin{itemize}
     \item purely functional package management
-    \item traceable package source \& dependencies
-    \item completely bootstrapped
+    \item packaging DSL embedded in Scheme
+    \item second tier: flexible builds programs in Scheme
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -1259,7 +1546,8 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 \begin{frame}{}
 
 \vfill{
-  \vspace{7cm}
+  \vspace{6.5cm}
+  \hfill{\includegraphics[width=0.3\textwidth]{images/guix-logo-white}}\\[0.2cm]
   \texttt{ludo@gnu.org} \hfill{\alert{\url{http://gnu.org/software/guix/}}}
 }
 
@@ -1267,9 +1555,9 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 
 \begin{frame}{}
 
-  \vfill{
+  \begin{textblock}{12}(2, 8)
     \tiny{
-      Copyright \copyright{} 2010, 2012 Ludovic Courtès \texttt{ludo@gnu.org}.
+      Copyright \copyright{} 2010, 2012, 2013 Ludovic Courtès \texttt{ludo@gnu.org}.
 
       Picture of user environments is: \\
       Copyright \copyright{} 2009 Eelco Dolstra \texttt{e.dolstra@tudelft.nl}.
@@ -1283,16 +1571,19 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
       \url{http://creativecommons.org/licenses/by-sa/3.0/} or send a
       letter to Creative Commons, 171 Second Street, Suite 300, San
       Francisco, California, 94105, USA.
-      \\
+      \\[2.0mm]
       At your option, you may instead copy, distribute and/or modify
       this document under the terms of the \alert{GNU Free Documentation
         License, Version 1.3 or any later version} published by the Free
       Software Foundation; with no Invariant Sections, no Front-Cover
       Texts, and no Back-Cover Texts.  A copy of the license is
       available at \url{http://www.gnu.org/licenses/gfdl.html}.
+      \\[2.0mm]
+      % Give a link to the 'Transparent Copy', as per Section 3 of the GFDL.
+      The source of this document is available from
+      \url{http://git.sv.gnu.org/cgit/guix/maintenance.git}.
     }
-  }
-
+  \end{textblock}
 \end{frame}
 
 
