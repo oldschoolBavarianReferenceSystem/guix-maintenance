@@ -102,15 +102,16 @@
   \framesubtitle{\url{http://gnu.org/software/guix/}}
 
   \begin{itemize}
-  \item<1-> \textbf{functional package manager}!
-  \item<1-> written in \textbf{Guile Scheme}!
-  \item<2-> a new programming layer for \textbf{Nix}
-  \item<3-> GNU's package manager
-  \item<4->{foundation for the GNU System
+  \item<1->{ \textbf{functional package manager}
       \begin{itemize}
-        \item GNU(/Linux) distro, est. 2012
-        \item currently: i686, x86\_64
-        \item $\approx$ 400 packages
+      \item written in \textbf{Guile Scheme}
+      \item a new programming layer for \textbf{Nix}
+      \end{itemize}}
+  \item<2->{ GNU's package manager
+      \begin{itemize}
+      \item foundation for the \textbf{GNU System}
+      \item GNU(/Linux) distro, est. 2012
+      \item focus on user freedom + consistent user interface
       \end{itemize}
     }
   \end{itemize}
@@ -123,14 +124,14 @@
   \begin{itemize}
   \item another \textbf{functional package manager}
   \item basis of Guix
-  \item<2->{foundation of NixOS GNU/Linux
+  \item{foundation of NixOS GNU/Linux
       \begin{itemize}
       \item GNU/Linux distro, est. 2006
       \item i686, x86\_64, armv5tel
       \item $\approx$8000 packages
       \end{itemize}
     }
-  \item<3-> more on Nix later...
+  \item<2-> more on Nix later...
   \end{itemize}
 \end{frame}
 
@@ -350,10 +351,10 @@ GNU Emacs \alert<5->{24.2}
   \framesubtitle{... as pioneered by Nix}
 
   \begin{enumerate}
-    \item<1-> one directory per installed package
-    \item<2-> immutable installation directories
-    \item<3-> undeclared dependencies invisible to the build process
-    \item<4-> build performed in chroot, with separate UID, etc.
+    \item one directory per installed package
+    \item immutable installation directories
+    \item undeclared dependencies invisible to the build process
+    \item build performed in chroot, with separate UID, etc.
   \end{enumerate}
 
 \end{frame}
@@ -426,7 +427,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   % Arrows
   \only<2>{
     \begin{tikzpicture}[overlay]
-      \path[->](labelnixhash.north) edge (nixhash.south);
+      \path[->](labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
     \end{tikzpicture}
   }
 
@@ -449,7 +450,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
     \end{textblock}
 
     \begin{tikzpicture}[overlay]
-      \only<1-2>{\path[->](hellobuilddepslabel.south) edge [bend left] (hellobuilddeps.north);}
+      \only<1-2>{\path[->](hellobuilddepslabel.south) edge [bend left, in=180] (hellobuilddeps.north);}
     \end{tikzpicture}
   \end{overlayarea}
 \end{frame}
@@ -461,7 +462,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \begin{itemize}
     \item \alert{\bf immutable} software installations
     \item builds/installs have \alert{\bf no side effects}
-    \item build \& deployment $\equiv$ calling the build function
+    \item build \& deployment $\equiv$ \alert {\bf calling a build function}
     \item the store $\equiv$ \alert{\bf memoization}
     \item garbage collection...
   \end{itemize}
@@ -1092,11 +1093,9 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{semiverbatim}
 
   \begin{itemize}
-    \item<2-> \texttt{python-build-system}: run \texttt{python setup.py}
-      etc.
-    \item<2-> \texttt{perl-build-system}: run \texttt{perl Makefile.PL}
-      etc.
-    \item<2-> \texttt{cmake-build-system}: run \texttt{cmake .} etc.
+    \item<2-> \texttt{python-build-system} $\rightarrow$ \texttt{python setup.py}
+    \item<2-> \texttt{perl-build-system} $\rightarrow$ \texttt{perl Makefile.PL}
+    \item<2-> \texttt{cmake-build-system} $\rightarrow$ \texttt{cmake .}
   \end{itemize}
 \end{frame}
 
@@ -1412,18 +1411,18 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
 
 \begin{frame}[fragile]{bootstrapping the distribution}
   \begin{enumerate}
-    \setcounter{enumi}{0}
-    \item statically-linked binaries of \texttt{mkdir}, \texttt{tar},
+    \setcounter{enumi}{-1}
+    \item<1-> statically-linked binaries of \texttt{mkdir}, \texttt{tar},
       \texttt{xz}, \texttt{bash}, and Guile
-    \item run Bash script to untar Guile
-    \item use Guile to download statically-linked binaries of GCC,
+    \item<2-> derivation runs Bash script to untar Guile
+    \item<3-> use Guile to download statically-linked binaries of GCC,
       Binutils, libc, Coreutils et al., and Bash
-    \item use that to build GNU~Make
-    \item ...
+    \item<4-> use that to build GNU~Make
+    \item<4-> ...
   \end{enumerate}
 \end{frame}
 
-\section{evaluation \& discussion}
+\section{discussion}
 
 \begin{frame}{status}
   \begin{itemize}
@@ -1519,7 +1518,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
   \end{textblock}
 \end{frame}
 
-\begin{frame}{no compromise}
+\begin{frame}{the first no-compromise GNU distribution}
   \center{\includegraphics[width=0.6\textwidth]{images/lmi-machine}}
   \\
 \end{frame}
