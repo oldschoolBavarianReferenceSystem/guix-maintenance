@@ -168,13 +168,13 @@
   \frametitle{per-user, unprivileged package installation}
 
   \begin{semiverbatim}
-alice@foo\$ \alert<1>{guix package --install gcc}
+alice@foo\$ \alert<1>{guix package --install=gcc}
 \uncover<3->{alice@foo\$ \alert<3>{guix gc --references `which gcc`}
 /nix/store/...-glibc-2.17
 /nix/store/...-gcc-4.8.0
 ...}
 
-\uncover<2->{bob@foo\$ \alert<2>{guix package --install gcc-4.7.3}}
+\uncover<2->{bob@foo\$ \alert<2>{guix package --install=gcc-4.7.3}}
 \uncover<4->{bob@foo\$ \alert<4>{guix gc --references `which gcc`}
 /nix/store/...-glibc-2.13
 /nix/store/...-gcc-4.7.3
@@ -186,7 +186,7 @@ alice@foo\$ \alert<1>{guix package --install gcc}
   \frametitle{transparent binary/source deployment}
   \begin{overlayarea}{\textwidth}{6cm}
     \begin{semiverbatim}
-alice@foo\$ \alert{guix package --install} emacs
+alice@foo\$ \alert{guix package --install=}emacs
 The following package will be installed:
    emacs-24.3	out	/nix/store/...-emacs-24.3
 \only<1>{
@@ -248,7 +248,7 @@ guile (GNU Guile) \only<2>{2.0.9}\only<4->{\alert{1.8.8}}
 \$ emacs --version
 GNU Emacs \alert<5->{24.2}
 
-\uncover<2->{\$ \alert<2>{guix package --upgrade emacs}
+\uncover<2->{\$ \alert<2>{guix package --upgrade=emacs}
 The following packages will be installed:
    emacs-\alert<2>{24.3.1}	out	/nix/store/...-emacs-24.3.1
 ...}
@@ -396,7 +396,7 @@ one child at (3,0) and two children at (3,-1) and (3,1)}]
       \input{nix-user-envs.ltx}
     }
 
-    \only<2-5>{\alert<2>{\code{guix package --upgrade openssh}}}
+    \only<2-5>{\alert<2>{\code{guix package --upgrade=openssh}}}
     % \only<6>{\alert{\code{nix-env --remove-generations old}}}
     \only<7>{\alert{\code{guix gc}}}
 
