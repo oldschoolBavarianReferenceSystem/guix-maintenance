@@ -1,0 +1,58 @@
+#+TITLE: Demos for the GHM 2013 talk
+
+* guix package demo
+** preparation
+
+export USER=demo
+export HOME=/home/ludo/src/guix-maintenance/demo-home
+cd
+unset GUILE_LOAD_PATH
+unset GUILE_LOAD_COMPILED_PATH
+export PATH=$HOME/.guix-profile/bin:/var/run/current-system/sw/bin:$HOME/local/bin
+rm -f /nix/var/nix/profiles/per-user/demo/guix-profile*
+rm -f ~/.guix-profile
+
+** first
+
+guix package --list-installed
+guix package -i hello
+which hello
+
+guix package -i guile-1.8.8
+guile --version
+
+guix package -p old-times -i guile-1.8.8
+./old-times/bin/guile --version
+
+* Geiser demo
+
+** first
+
+emacs.scm:
+
+  (use-modules (srfi srfi-1))
+
+  (define-public emacs-xaw
+    (package (inherit emacs)
+      (name "emacs-xaw")
+      (inputs `(("libXaw" ,libxaw)
+		,@(alist-delete "gtk+"
+				(package-inputs emacs))))))
+
+guile.scm:
+
+  (define-public guile-ncurses/guile-1.8
+    (package (inherit guile-ncurses)
+      (name "guile-ncurses-for-guile-1.8")
+      (inputs `(("guile" ,guile-1.8)
+		,@(alist-delete "guile" (package-inputs guile-ncurses))))))
+
+** second
+
+scheme@(guile-user)> (use-modules(gnu packages guile)(guix packages)(guix store))
+scheme@(guile-user)> (define s (open-connection))
+scheme@(guile-user)> (build-derivations s (list $2))
+$5 = #t
+scheme@(guile-user)> (use-modules(guix derivations))
+scheme@(guile-user)> (derivation-path->output-path $2)
+$6 = "/nix/store/halrrsx6hy0ldjqasrg4nvan7lkl8qs8-guile-ncurses-for-guile-1.8-1.4"
