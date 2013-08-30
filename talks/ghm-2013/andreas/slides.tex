@@ -1,0 +1,528 @@
+\documentclass [t]{beamer}
+
+\usepackage [T1]{fontenc}
+\usepackage {fontspec,xunicode,xltxtra}
+\usepackage {graphicx}
+\usepackage {amsmath, amsfonts, amssymb}
+\usepackage {tikz}
+\usepackage {array}
+
+\usepackage {color}
+\definecolor {rot}{rgb}{1,0,0}
+\definecolor {blau}{rgb}{0,0,1}
+\definecolor {gruen}{rgb}{0,0.6,0.1}
+\definecolor {orange}{rgb}{1,0.3,0}
+
+\usetheme {Boadilla}
+\usecolortheme {seahorse}
+\setbeamertemplate {navigation symbols}{}
+% zeige keine Seitenzahlen an; outhertheme-infolines entnommen und modifiziert
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~(\insertshortinstitute)
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \hfill\usebeamerfont{date in head/foot}\insertshortdate{}\hfill\insertframenumber{}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\title [GNU Guix packaging]{GNU Guix: Package without a scheme!}
+\date [GHM 2013]{GNU Hackers Meeting \\
+Paris, 23 August 2013}
+\author {Andreas Enge}
+\institute [GNU Guix]{\includegraphics [width=2.5cm]{guix-logo.png} \\
+\vspace {5mm}
+\url {andreas@enge.fr}}
+
+
+\begin {document}
+
+\begin {frame}
+\maketitle
+\end {frame}
+
+\begin {frame}{Guix system}
+Two chunks of code
+\begin {itemize}
+\item
+Guix package manager
+\begin {itemize}
+\item
+inside \texttt {guix/}
+\item
+\textcolor {orange}{lots of Scheme}
+\end {itemize}
+\item
+GNU system
+\begin {itemize}
+\item
+inside \texttt {gnu/}
+\item
+Bootable system (\texttt {gnu/system/}), not yet written
+\item
+Packages (\texttt {gnu/packages/}),
+\textcolor {gruen}{almost no Scheme!}
+\end {itemize}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{Available packages}
+\begin {itemize}
+\item
+\texttt {guix package -A | wc}
+
+454
+\item
+115 GNU packages (out of 364)
+\item
+GCC, 6 Schemes, Perl, Python, Ocaml
+\item
+TeX Live
+\item
+X.org (client side)
+\item
+Glib, Cairo, Pango, Gtk+
+\item
+\textcolor {orange}{Only \textcolor {rot}{free} software!}
+\item
+\textcolor {gruen}{As pristine as possible (minimal patches)}
+\end {itemize}
+
+\begin {center}
+\color {blau}
+\fbox {\url {http://www.gnu.org/software/guix/package-list.html}}
+\end {center}
+\end {frame}
+
+
+\begin {frame}{Package description}
+\begin {itemize}
+\item
+name: Lower case original package name
+\item
+version
+\item
+source
+\begin {itemize}
+\item
+uri: Possibility of \texttt {mirror://xxx/...} with \texttt {xxx} $\in$
+
+\texttt {gnu, sourceforge, savannah, cpan, kernel.org, gnome, apache, xorg, imagemagick}
+\item
+sha256: Hash of tarball
+\item
+build-system:
+\texttt {gnu-build-system, trivial-build-system, python-build-system, perl-build-system,
+cmake-build-system}
+\end {itemize}
+\item
+synopsis: As in GNU Womb, \textcolor {orange}{not repeating the package name}
+\item
+description: Usually taken from web page, two spaces at end of sentence
+\item
+\textcolor {orange}{license}; see \texttt {guix/licenses.scm}
+\item
+home-page
+\end {itemize}
+\end {frame}
+
+
+\begin{frame}[fragile]{Guix architecture}{Courtesy of Ludovic Courtès}
+\begin {center}
+  \begin{tikzpicture}[tools/.style = {
+                        text width=2.5cm,
+                        draw=black, very thick, dashed,
+                        rounded corners=2mm
+                      },
+                      daemon/.style = {
+                        rectangle, text width=6.5cm,
+                        draw=black, very thick, dashed,
+                        rounded corners=2mm, minimum height=15mm
+                      },
+                      builders/.style = {
+                        draw=black, very thick, dashed,
+                        text width=4.5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=black, thick, rectangle,
+                        rotate=90
+                      }]
+    \matrix[row sep=0.8cm, column sep=1cm] {
+      \node(tools)[tools]{
+          \centerline {\large{\textbf{User tools}}} \\
+          \texttt{guix build} \\
+          \texttt{guix package} \\
+          \texttt{guix gc}}; &
+      \node(builders)[builders, text height=4cm]{}
+          node at (0, 1.5) {\large{\textbf{Build processes}}}
+          node at (0, 1) {chroot, separate UID}
+          node[builder] at (-1,-0.5) {make, gcc, \ldots}
+          node[builder] at ( 0,-0.5) {make, gcc, \ldots}
+          node[builder] at ( 1,-0.5) {make, gcc, \ldots};
+      \\
+      &
+      \node(daemon)[daemon]{\centerline {\large{\textbf{Nix build daemon}}} \\
+         \texttt {sudo guix-daemon --build-users-group=guix-builder}};
+      \\
+    };
+
+    \path[very thick]
+      (tools) edge [out=-90, in=180, ->] node[below, sloped]{RPC} (daemon.west);
+    \path[->, very thick]
+      (daemon) edge (builders);
+  \end{tikzpicture}
+\end {center}
+\end{frame}
+
+
+\begin {frame}{Let's scheme, at least a little bit!}
+\begin {itemize}
+\item
+Scheme is functional: There are \textcolor {blau}{functions} \ldots
+
+\begin {tabular}{>{\tt}p{4.5cm} >{\tt}p{5.5cm}}
+2 + 3; &
+\textcolor {rot}{(+} 2 3\textcolor {rot}{)}
+\end {tabular}
+\item
+\ldots\ and \textcolor {blau}{user-defined functions} \ldots
+
+\begin {tabular}{>{\tt}p{4.5cm} >{\tt}p{5.5cm}}
+int f (int x, int y) & (\textcolor {rot}{lambda} (x y) (+ x y)) \\
+\quad return x+y;    & \\
+f (2, 3);            & \textcolor {rot}{(}(lambda (x y) (+ x y)) 2 3\textcolor {rot}{)}
+\end {tabular}
+
+\item
+\ldots\ but also \textcolor {blau}{global variables} \ldots
+
+\begin {tabular}{>{\tt}p{4.5cm} >{\tt}p{5.5cm}}
+a = 5; &
+(\textcolor {rot}{define} a 5) \\
+2 * a; &
+(* 2 a)
+\end {tabular}
+\item
+\ldots\ that can hold functions
+
+\begin {tabular}{>{\tt}p{4.5cm} >{\tt}p{5.5cm}}
+int f (int x, int y) & (\textcolor {rot}{define (}f x y\textcolor {rot}{)} (+ x y)) \\
+\quad return x+y;    & \\
+f (2, 3);            & (f 2 3)
+\end {tabular}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{Let's list and quote}
+\begin {itemize}
+\item
+\textcolor {blau}{Linked lists}
+
+{
+\tt
+(define a 1) (define b 2) (define c 3)
+(\textcolor {rot}{list} a b c)
+
+$\Rightarrow$ (1 2 3)
+}
+\item
+Constant lists / \textcolor {blau}{quote}
+
+{
+\tt
+'(1 2 3)
+
+$\Rightarrow$ (1 2 3)
+
+(define a 1) (define b 2) (define c 3)
+\textcolor {rot}{'}(a b c)
+
+$\Rightarrow$ (a b c)
+}
+\item \textcolor {blau}{Quasiquote}
+
+{
+\tt
+(define a 1) (define b 2) (define c 3)
+\textcolor {rot}{`}(a b c)
+
+$\Rightarrow$ (a b c)
+}
+\item \textcolor {blau}{Unquote}
+
+{
+\tt
+(define a 1) (define b 2) (define c 3)
+`(\textcolor {rot}{,}a b \textcolor {rot}{,}c)
+
+$\Rightarrow$ (1 b 3)
+}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{Let's let}
+\begin {itemize}
+\item
+\textcolor {blau}{Local variables}
+
+{
+\tt
+(define x 10)
+
+(\textcolor {rot}{let} ((x 2) (y 3)) (list x y))
+
+$\Rightarrow$ (2 3)
+
+x
+
+$\Rightarrow$ 10
+
+y
+
+$\Rightarrow$ ERROR: Unbound variable: y
+}
+\item
+\textcolor {rot}{Let's stop!}
+\begin {itemize}
+\item
+H. Abelson, G. Sussman, J. Sussman: \textcolor {blau}{Structure and Interpretation
+of Computer Programs}, MIT Press, 2nd ed. 1996,
+\url {http://mitpress.mit.edu/sicp/}
+\item
+D. Sitaram: \textcolor {blau}{Teach Yourself Scheme in Fixnum Days},
+\url {http://www.ccs.neu.edu/home/dorai/t-y-scheme/t-y-scheme.html}
+\end {itemize}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{A simple GNU package: units}
+\begin {itemize}
+\item
+\textcolor {blau}{Copy} \texttt {gnu/packages/indent.scm} into
+a new source file.
+\pause
+\item
+Modify \textcolor {blau}{copyright},
+\textcolor {blau}{module name},
+\textcolor {blau}{name} (twice),
+\textcolor {blau}{version},
+\textcolor {blau}{uri},
+\textcolor {blau}{description}.
+\item
+Add module to \textcolor {blau}{\texttt {gnu-system.am}}.
+\pause
+\item
+\textcolor {blau}{Download} tarball:
+
+\texttt{guix download mirror://gnu/units/units-2.01.tar.gz}
+\pause
+\item
+Modify \textcolor {blau}{hash} and \textcolor {blau}{license}.
+\pause
+\item
+\textcolor {blau}{Check gpg signature.}
+\pause
+\item
+Modify \textcolor {blau}{synopsis}:
+
+\texttt {make sync-synoses}
+\pause
+\item
+\textcolor {blau}{Build}:
+
+\texttt {./pre-inst-env guix build units -K}
+\pause
+\item
+Optionally: Cross-build
+
+\texttt {./pre-inst-env guix build units --target=mips64el-linux-gnuabi64}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{Update a GNU package}
+\begin {itemize}
+\item
+\textcolor {blau}{Check} for new version:
+
+\texttt {./pre-inst-env guix refresh units}
+\item
+\textcolor {blau}{Update} package to new version:
+
+\texttt {./pre-inst-env guix refresh units -u}
+\end {itemize}
+\end {frame}
+
+
+\begin {frame}{A GNU package with inputs: pspp}
+\begin {itemize}
+\item
+\textcolor {blau}{Copy-paste} a package and modify as before,
+try to build.
+\pause
+\item
+Add \textcolor {blau}{inputs}, \textcolor {blau}{native-inputs},
+\textcolor {blau}{propagated-inputs}.
+\item
+Add \textcolor {blau}{configure flags}, try to build.
+\pause
+\item
+Work around \textcolor {blau}{problems}.
+Here: Add missing input gettext.
+Try to build.
+\pause
+\item
+Despair. Write a bug report.
+\begin {itemize}
+\item
+Missing dependency on gnumeric?
+\item
+Something related to libreoffice?
+\item
+\texttt {--without-gui} not tested?
+\end {itemize}
+\item
+Solution (thanks to John Darrington): \\
+\texttt {libxml2} was not found; add input \texttt {pkg-config}
+\end {itemize}
+\end {frame}
+
+
+\begin{frame}[fragile]{A non-GNU package with build problems: gkrellm}
+\begin {itemize}
+\item
+Dependencies according to
+\url {http://members.dslextreme.com/users/billw/gkrellm/gkrellm.html}:
+gtk, gdk, glib.
+
+Try build without inputs.
+\pause
+\item
+Following INSTALL, drop configure phase:
+\begin{verbatim}
+(arguments
+`(#:phases
+   (alist-delete
+   'configure
+   %standard-phases)))
+\end{verbatim}
+There is also \texttt {alist-replace}, \texttt {alist-cons-before},
+\texttt {alist-cons-after}.
+\end {itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{A non-GNU package with build problems: gkrellm}
+\begin {itemize}
+\item
+We need to install into store, not \texttt {/usr/local}; \\
+and use \texttt {gcc} instead of \texttt {cc}.
+\begin{verbatim}
+#:make-flags
+(let ((out (assoc-ref %outputs "out")))
+  (list (string-append "INSTALLROOT=" out)
+        "CC=gcc"))
+\end{verbatim}
+\pause
+\item
+Add inputs: gettext, gtk+, libsm, libice; native-inputs pkg-config
+\pause
+\item
+Missing \texttt {-lgmodule-2.0} at final link. \\
+Solution here: Additional make flag, see \texttt {src/Makefile} \\
+\texttt {X11\_LIBS = -lX11 -lSM -lICE -lgmodule-2.0}
+\pause
+\item
+No check phase:
+
+\texttt {\#:tests? \#f}
+
+Sometimes: \texttt {\#:test-target "test"}
+\pause
+\item
+\textcolor {gruen}{Success!}
+\end {itemize}
+\end{frame}
+
+
+\begin {frame}{Your turn!}
+\begin {itemize}
+\item
+GNUnet
+\item
+Improvements to python build system
+\item
+Firefox
+\item
+GNOME, and other Gtk+ applications
+\item
+Qt (4.8 and 5.1)
+\item
+KDE
+\item
+OpenJDK
+\item
+LibreOffice
+\item
+Fonts
+\item
+Games
+\item
+\textcolor {gruen}{Your favourite \textcolor {rot}{free} package!}
+\end {itemize}
+
+Subscribe to \texttt {guix-devel@gnu.org}.
+
+Send your patches: \\
+\qquad \texttt {git format-patch}
+\end {frame}
+
+
+\begin {frame}
+\small
+Copyright \\
+© 2013 Andreas Enge \texttt {andreas@enge.fr}
+
+Copyright of diagram on page 5 \\
+© 2013 Ludovic Courtès \texttt {ludo@gnu.org},
+Andreas Enge \texttt {andreas@enge.fr}
+
+Copyright of GNU Guix logo on title page \\
+© 2013 Nikita Karetnikov \texttt {nikita@karetnikov.org}
+
+\vspace {3mm}
+This work is licensed under the \textcolor {blau}{Creative Commons
+   Attribution-Share Alike 3.0} License. To view a copy of this
+license, visit
+\url{http://creativecommons.org/licenses/by-sa/3.0/} or send a
+letter to Creative Commons, 171 Second Street, Suite 300, San
+Francisco, California, 94105, USA.
+
+\vspace {2mm}
+At your option, you may instead copy, distribute and/or modify
+this document under the terms of the \textcolor {blau}{GNU Free Documentation
+   License, Version 1.3 or any later version} published by the Free
+Software Foundation; with no Invariant Sections, no Front-Cover
+Texts, and no Back-Cover Texts. A copy of the license is
+available at \url{http://www.gnu.org/licenses/gfdl.html}.
+
+\vspace {2mm}
+% Give a link to the 'Transparent Copy', as per Section 3 of the GFDL.
+The source of this document is available from
+\url{http://git.sv.gnu.org/cgit/guix/maintenance.git}.
+\end {frame}
+
+\end {document}
