@@ -1,0 +1,27 @@
+#+TITLE: List of reviews, articles, and blog posts about GNU Guix
+
+* Dec. 2012
+
+http://www.reddit.com/r/linux/comments/13nzg9/introducing_gnu_guix_a_purely_functional_package/
+http://lwn.net/Articles/526822/
+http://news.ycombinator.com/item?id=4821488
+http://www.phoronix.com/scan.php?page=news_item&px=MTIzNjY
+http://sandervanderburg.blogspot.fr/2012/11/on-nix-and-gnu-guix.html
+http://www.pro-linux.de/news/1/19158/gnu-guix-paketmanager-mit-interessanten-moeglichkeiten.html
+http://www.reddit.com/r/archlinux/comments/13v7e8/guix_a_new_package_manager_gnu_distribution/
+http://de.reddit.com/r/programming/comments/13nzcy/introducing_gnu_guix/
+http://www.h-online.com/open/news/item/Open-Recall-10-PRINT-GNU-Guix-and-Doom-3-BFG-1762155.html
+http://ostatic.com/blog/theres-a-new-package-manager-in-town
+
+* Feb. 2013
+
+https://news.ycombinator.com/item?id=5272930
+
+* June 2013
+
+http://www.linux-magazin.de/NEWS/Paketmanager-GNU-Guix-kann-cross-kompilieren
+
+* July 2013
+
+https://lwn.net/Articles/560760/
+http://lwn.net/Articles/560857/
