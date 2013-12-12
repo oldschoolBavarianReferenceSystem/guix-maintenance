@@ -25,3 +25,16 @@ http://www.linux-magazin.de/NEWS/Paketmanager-GNU-Guix-kann-cross-kompilieren
 
 https://lwn.net/Articles/560760/
 http://lwn.net/Articles/560857/
+
+* Sep. 2013
+
+http://www.opennet.ru/opennews/art.shtml?num=38024
+http://www.linux.org.ru/news/gnu/8505731
+https://lwn.net/Articles/569231/
+http://www.linuxplanet.com/news/gnu-at-30-gnome-at-3-10-guix-at-0-4.html
+http://www.linuxtoday.com/it_management/gnu-at-30-gnome-at-3-10-guix-at-0-4.html
+http://hup.hu/cikkek/20130930/gnu_guix_0_4
+http://www.examiner.com/article/gnu-guix-the-most-important-free-software-project-you-ve-never-heard-of-1
+http://www.linuxtoday.com/upload/gnu-guix-the-most-important-free-software-project-youve-never-heard-of-131001155506.html
+http://www.linuxadictos.com/gnu-guix-un-inmenso-y-revolucionario-desconocido.html?utm_source=rss&utm_medium=rss&utm_campaign=gnu-guix-un-inmenso-y-revolucionario-desconocido
+http://www.reddit.com/r/linux/comments/1nebpg/
