@@ -38,3 +38,15 @@ http://www.examiner.com/article/gnu-guix-the-most-important-free-software-projec
 http://www.linuxtoday.com/upload/gnu-guix-the-most-important-free-software-project-youve-never-heard-of-131001155506.html
 http://www.linuxadictos.com/gnu-guix-un-inmenso-y-revolucionario-desconocido.html?utm_source=rss&utm_medium=rss&utm_campaign=gnu-guix-un-inmenso-y-revolucionario-desconocido
 http://www.reddit.com/r/linux/comments/1nebpg/
+
+* Oct. 2013
+
+http://www.examiner.com/article/what-is-the-gnu-system
+
+* Dec. 2013
+
+https://news.ycombinator.com/item?id=6891214
+http://lwn.net/Articles/576569/
+http://www.linux-magazin.de/NEWS/GNU-Guix-in-Version-0.5-erschienen
+http://linuxos.sk/spravy/detail/vysla-nova-verzia-gnu-guix-05-cisto-funkciona/
+http://www.oschina.net/news/46771/gnu-guix-0-5
