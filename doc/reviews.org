@@ -50,3 +50,38 @@ http://lwn.net/Articles/576569/
 http://www.linux-magazin.de/NEWS/GNU-Guix-in-Version-0.5-erschienen
 http://linuxos.sk/spravy/detail/vysla-nova-verzia-gnu-guix-05-cisto-funkciona/
 http://www.oschina.net/news/46771/gnu-guix-0-5
+http://automatazero.readthedocs.org/es/latest/2013/hola-gnu-guix.html
+
+* Feb. 2014
+
+http://www.phoronix.com/scan.php?page=news_item&px=MTYwMjA
+http://introsmedia.wordpress.com/2014/02/17/gnu-guix-hola-mundo/
+
+* Mar. 2014
+
+https://news.ycombinator.com/item?id=7420349
+
+* Apr. 2014
+
+http://linuxfr.org/users/enclair/journaux/sortie-de-gnu-guix-0-6
+http://www.reddit.com/r/linux/comments/22mr6l/gnu_guix_06_released/
+http://www.reddit.com/r/gnu/comments/22mr6d/gnu_guix_06_released/
+http://lwn.net/Articles/595073/
+https://news.ycombinator.com/item?id=7639170
+http://www.ict-fire.eu/news/view/article/heterogeneous-testbeds-tools-and-experiments-1.html
+
+* May 2014
+
+http://linuxfr.org/news/nix-1-7-nixpkgs-et-nixos-14-04-guix-0-6
+* July 2014
+
+http://www.root.cz/zpravicky/init-v-podani-gnu-dmd-0-2/
+http://www.root.cz/zpravicky/guix-operacni-system-gnu-vysel-ve-verzi-0-7/
+http://www.abclinuxu.cz/zpravicky/gnu-guix-0.7
+http://www.admin-magazin.de/News/Paketmanager-Guix-0.7-veroeffentlicht
+http://www.phoronix.com/scan.php?page=news_item&px=MTc0OTU
+http://www.linux.com/news/software/applications/781838-guix-07-can-now-install-the-gnu-operating-system
+http://www.opennet.ru/opennews/art.shtml?num=40278
+http://www.reddit.com/r/linux/comments/2boh5w/guix_07_released/
+https://news.ycombinator.com/item?id=8096913
+http://www.meneame.net/m/GNU/gestor-paquetes-gnu-guix-ya-puede-instalar-gnu-ing
