@@ -1,0 +1,57 @@
+#+TITLE: We're building the GNU system!
+
+GNU hackers have been building it for three decades, and now GNU Guix is
+bundling it up together!  Two years ago in Düsseldorf Guix was
+introduced as a possible way to build the GNU system distribution.  Lots
+have been done since then!  We'll present that and showcase the nifty
+system configuration and installation tools that have landed recently.
+We'll talk about the road to version 1.0 of the GNU system and beyond.
+
+This talk is also a call to GNU hackers to unite and shape up the
+system.  Let's GNU things together!
+
+* images
+
+  - dog food
+
+* demo
+
+  - build emacs pre-release:
+    guix build emacs --with-source=ftp://alpha.gnu.org/gnu/emacs/pretest/emacs-24.3.92.tar.xz
+
+* things for GNU maintainers
+
+  - pre-release testing with --with-source
+  - provide .scm with package definition
+  - could publish .scm files to build the latest & greatest
+  - could provide (gnu service ...) modules for their own stuff
+
+* coolness
+
+** guix-web (demo)
+
+** guix.el (demo)
+
+* road map
+
+  - FSDG-approved
+  - integration
+    + GNU Name System
+    + Tor
+  - grow build infrastructure
+  - guix pull
+    + signed commits (?)
+    + git-based pull (?)
+  - release mode
+    + periodic releases
+    + and rolling release using "guix pull"
+    + stable branch w/ only security updates
+  - GNU/Hurd support
+  - binary origin tracking
+    + keep signatures in sqlite.db
+    + preserve signatures upon import/export
+  - p2p distribution
+  - GUIs
+    + Emacs UI (Alex Kost)
+    + Web UI (Dave Thompson)
+    + guile-ncurses installer?
