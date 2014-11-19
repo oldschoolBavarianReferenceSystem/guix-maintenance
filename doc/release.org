@@ -1,0 +1,219 @@
+#+TITLE: Release Process for GNU Guix
+#+AUTHOR: Ludovic Courtès
+#+STARTUP: content hidestars
+#+EMAIL: ludo@gnu.org
+
+This document describes the typical release process for Guix.
+
+* Update NEWS
+
+** Update the list fixed bugs, with bugs.gnu.org URL
+
+Run "git log" and search for "^Fixes".
+
+** Update the list of new packages
+
+Typically, you already have a list of package/version pairs from the
+previous version.  And then you build one for the new version:
+
+#+BEGIN_SRC scheme
+  (use-modules (gnu) (guix)
+               (srfi srfi-1))
+
+  (define old
+    ;; Get the list of packages of the previous release.
+    (call-with-input-file "/home/ludo/src/guix/packages-0.7.txt"
+      read))
+
+  ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
+  ;; assume that the last item in (%package-module-path) is the distro
+  ;; directory.
+  (%package-module-path (list (last (%package-module-path))))
+
+  (define new
+    ;; List of package/version pairs for the new Guix version.
+    (fold-packages (lambda (p r)
+                     (alist-cons (package-name p) (package-version p)
+                                 r))
+                   '()))
+
+#+END_SRC
+
+From there, compute the list of packages that were added:
+
+#+BEGIN_SRC scheme
+  (define added
+    ;; List of packages present in NEW and not in OLD.
+    (lset-difference string=? (map car new) (map car old)))
+
+#+END_SRC
+
+Make that list "camera-ready":
+
+#+BEGIN_SRC scheme
+  (string-join (sort added string<?) ", ")
+#+END_SRC
+
+... and paste it into 'NEWS'.
+
+** Update the list of upgraded packages
+
+Same idea: identify what's been updated:
+
+#+BEGIN_SRC scheme
+  (use-modules (ice-9 match))
+
+  (define upgraded
+    ;; List of package/version pairs for packages that were upgraded.
+    (filter-map (match-lambda
+                 ((package . new-version)
+                  (match (assoc package old)
+                    ((_ . old-version)
+                     (and (version>? new-version old-version)
+                          (cons package new-version)))
+                    (_ #f))))
+                new))
+#+END_SRC
+
+Make that list "camera-ready":
+
+#+BEGIN_SRC scheme
+  (string-join (sort (map (match-lambda
+                           ((package . version)
+                            (string-append package "-" version)))
+                          upgraded)
+                     string<?)
+               ", ")
+#+END_SRC
+
+... and paste it into NEWS.
+
+* Prepare & upload tarball
+
+** Add a Git tag
+
+Create a signed Git tag, like this:
+
+  $ git tag -s -u MY-KEY -m "GNU Guix X.Y." vX.Y
+
+The tag must be `vX.Y'.  For the sake of consistency, always use
+"GNU Guix X.Y." as the tag comment.
+
+** Push the tag and changes
+
+  $ git push && git push --tags
+
+Normally nobody committed in the meantime.  ;-)
+
+** Run "make distcheck"
+
+After "make distcheck", double-check that `./configure --version'
+reports the new version number.
+
+** Upload
+
+  $ ./build-aux/gnupload --to alpha.gnu.org:guix guix-X.Y.tar.gz
+
+You'll get an email soon after when the upload is complete.
+
+Your GPG public key must be registered for this to work (info
+"(maintain) Automated Upload Registration").
+
+Make sure to publish your public key on public OpenPGP servers
+(keys.gnupg.net, pgp.mit.edu, etc.), so that people can actually use it
+to check the authenticity and integrity of the tarball.
+
+** Download
+
+Make sure the file was uploaded and is available for download as
+expected:
+
+  $ mkdir t && cd t && \
+    wget alpha.gnu.org/gnu/guile/guix-X.Y.tar.gz
+  $ diff guix-X.Y.tar.gz ../guix-X.Y.tar.gz
+
+* Prepare & upload bootable USB image
+
+** Update (gnu packages package-management)
+
+  1. Change the stable Guix to refer to the just-uploaded tarball, and
+     change the 'guix' binding to refer to 'guix-X.Y'.  Push that
+     commit.
+  2. Change the 'guix-devel' package to refer to the above
+     commit---i.e., the commit right after version X.Y.
+
+You're now all set to build the bootable images.
+
+That way, the bootable image will run Guix X.Y + 1 commit, and running
+'guix system init' in the bootable image will install exactly Guix X.Y.
+
+** Build for all the supported architectures
+
+  $ ./pre-inst-env guix system disk-image \
+       --image-size=800MiB gnu/system/install.scm
+  $ xz < /gnu/store/...-disk-image > gnu-usb-install-X.Y.x86_64.xz
+
+  $ ./pre-inst-env guix system disk-image -s i686-linux \
+       --image-size=800MiB gnu/system/install.scm
+  $ xz < /gnu/store/...-disk-image > gnu-usb-install-X.Y.i686.xz
+
+** Upload
+
+  $ ./build-aux/gnupload --to alpha.gnu.org:guix gnu-usb-install-X.Y.*.xz
+
+* Announcements
+
+First, re-read the GNU Maintainers Guide [[info:maintain.info#Announcements][on this topic]].
+
+** Update web pages
+
+  - Replace any references to the previous version number and replace it
+    with the new one.
+
+** Update the on-line copy of the manual
+
+Use Gnulib's `gendocs' script, add to the manual/ directory of the web site.
+
+  $ cd doc
+  $ ~/src/gnulib/build-aux/gendocs.sh guix "GNU Guix X.Y Reference Manual"
+
+** Prepare the email announcement
+
+  $ build-aux/announce-gen --release-type=alpha --package-name=guix \
+      --previous-version=A.B --current-version=X.Y \
+      --gpg-key-id=MY-KEY --url-directory=ftp://alpha.gnu.org/gnu/guix \
+      --bootstrap-tools=autoconf,automake,makeinfo
+
+The subject must be "GNU Guix X.Y released".  The text should remain
+formal and impersonal (it is sent on behalf of the Guix and GNU
+projects.)  It must include a description of what Guix is (not everyone
+reading info-gnu may know about it.)  Use the text of previous
+announcements as a template.
+
+Below the initial boilerplate that describes Guile should come the
+output of `announce-gen', and then the `NEWS' file excerpt in its
+entirety (don't call it a change log since that's not what it is.)
+
+** Send the email announcement
+
+Send to these places, preferably in the morning on a working day (UTC):
+
+  - guix-devel@gnu.org, gnu-system-discuss@gnu.org, info-gnu@gnu.org
+  - guile-user@gnu.org, nix-dev@cs.uu.nl
+  - comp.lang.scheme
+  - comp.lang.functional
+
+** Post a news item on [[http://sv.gnu.org/p/guile/][Savannah]]
+
+The news will end up on planet.gnu.org and [[http://scheme.dk/planet/][Planet Scheme]].  The text can
+be shorter and more informal, with a link to the email announcement for
+details.
+
+
+
+Copyright © 2014 Ludovic Courtès <ludo@gnu.org>
+Copyright © 2011, 2012, 2013 Free Software Foundation, Inc.
+
+  Copying and distribution of this file, with or without modification,
+  are permitted in any medium without royalty provided the copyright
+  notice and this notice are preserved.
