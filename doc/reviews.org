@@ -85,3 +85,41 @@ http://www.opennet.ru/opennews/art.shtml?num=40278
 http://www.reddit.com/r/linux/comments/2boh5w/guix_07_released/
 https://news.ycombinator.com/item?id=8096913
 http://www.meneame.net/m/GNU/gestor-paquetes-gnu-guix-ya-puede-instalar-gnu-ing
+http://www.lowlevel.cz/log/cats/linux/Installing%20GNU%20system%20with%20guix%200.7.html
+
+* Sept. 2014
+
+https://news.ycombinator.com/item?id=8246029
+http://www.reddit.com/r/emacs/comments/2g0nqa/gnu_guix_emacs_as_a_generalpurpose_package_manager/
+http://www.reddit.com/r/linux/comments/2glsti/gnu_guix_join_us_for_a_guix_hackathon_on_sep_2728/
+https://lists.debian.org/debian-user/2014/09/msg01016.html
+http://elbinario.net/2014/09/17/unete-a-la-hackathon-guix-del-27-al-28-de-septiembre/
+http://sfw.libernil.net/view/welcome-visitors/view/rootwork/view/2014-09-28
+https://www.fsf.org/free-software-supporter/2014/september
+http://expressit.celisdelafuente.net/
+
+* Nov. 2014
+
+http://dthompson.us/reproducible-development-environments-with-gnu-guix.html
+http://thetrendythings.com/read/12974
+https://news.ycombinator.com/item?id=8616918
+http://www.reddit.com/r/linux/comments/2mnjp5/gnu_guix_the_gnu_os_alpha_08_released/
+http://www.reddit.com/r/programming/comments/2mnzog/gnu_guix_08_released/
+http://www.reddit.com/r/gnu/comments/2mo79d/gnu_guix_08_released/
+http://www.reddit.com/r/scheme/comments/2moph6/gnu_guix_08_released/
+http://www.opennet.ru/opennews/art.shtml?num=41083
+http://www.phoronix.com/scan.php?page=news_item&px=MTg0MzI
+https://news.ycombinator.com/item?id=8623762
+http://www.pcprofessionale.it/category/come-fare-2/linux/
+
+* Dec. 2014
+
+http://www.phoronix.com/scan.php?page=news_item&px=MTg3NDI
+http://lwn.net/Articles/628548/ (in comment)
+
+* Jan. 2015
+
+https://news.ycombinator.com/item?id=8861657
+http://www.reddit.com/r/linux/comments/2ryor1/gnu_guix_ported_to_arm/
+http://www.linux-magazin.de/NEWS/Guix-erhaelt-ARM-Support
+http://www.root.cz/clanky/the-gnu-system-s-pomoci-guix/
