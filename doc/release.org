@@ -22,7 +22,7 @@ previous version.  And then you build one for the new version:
 
   (define old
     ;; Get the list of packages of the previous release.
-    (call-with-input-file "/home/ludo/src/guix/packages-0.7.txt"
+    (call-with-input-file "packages-0.8.txt"
       read))
 
   ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
@@ -88,6 +88,17 @@ Make that list "camera-ready":
 
 ... and paste it into NEWS.
 
+** Save the current list of packages for later
+
+#+BEGIN_SRC scheme
+  (use-modules (ice-9 pretty-print))
+
+  (call-with-output-file "packages-0.8.1.txt"
+    (lambda (port)
+      (pretty-print new port)))
+
+#+END_SRC
+
 * Prepare & upload tarball
 
 ** Add a Git tag
@@ -112,7 +123,8 @@ reports the new version number.
 
 ** Upload
 
-  $ ./build-aux/gnupload --to alpha.gnu.org:guix guix-X.Y.tar.gz
+  $ /path/to/gnulib/build-aux/gnupload \
+     --to alpha.gnu.org:guix guix-X.Y.tar.gz
 
 You'll get an email soon after when the upload is complete.
 
@@ -129,7 +141,7 @@ Make sure the file was uploaded and is available for download as
 expected:
 
   $ mkdir t && cd t && \
-    wget alpha.gnu.org/gnu/guile/guix-X.Y.tar.gz
+    wget ftp://alpha.gnu.org/gnu/guix/guix-X.Y.tar.gz
   $ diff guix-X.Y.tar.gz ../guix-X.Y.tar.gz
 
 * Prepare & upload bootable USB image
@@ -150,12 +162,12 @@ That way, the bootable image will run Guix X.Y + 1 commit, and running
 ** Build for all the supported architectures
 
   $ ./pre-inst-env guix system disk-image \
-       --image-size=800MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.x86_64.xz
+       --image-size=850MiB gnu/system/install.scm
+  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.x86_64-linux.xz
 
   $ ./pre-inst-env guix system disk-image -s i686-linux \
-       --image-size=800MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.i686.xz
+       --image-size=850MiB gnu/system/install.scm
+  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.i686-linux.xz
 
 ** Upload
 
@@ -199,7 +211,7 @@ entirety (don't call it a change log since that's not what it is.)
 Send to these places, preferably in the morning on a working day (UTC):
 
   - guix-devel@gnu.org, gnu-system-discuss@gnu.org, info-gnu@gnu.org
-  - guile-user@gnu.org, nix-dev@cs.uu.nl
+  - guile-user@gnu.org, nix-dev@lists.science.uu.nl
   - comp.lang.scheme
   - comp.lang.functional
 
