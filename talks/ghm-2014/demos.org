@@ -8,10 +8,11 @@ export HOME=/home/ludo/src/guix-maintenance/demo-home
 cd
 unset GUILE_LOAD_PATH
 unset GUILE_LOAD_COMPILED_PATH
-export PATH=$HOME/.guix-profile/bin:/var/run/current-system/sw/bin:$HOME/local/bin
+export PATH=$HOME/.guix-profile/bin:/run/current-system/profile/bin:$HOME/local/bin:/run/setuid-programs
 rm -f /var/guix/profiles/per-user/demo/guix-profile*
 rm -f ~/.guix-profile
 rm -f old-times*
+unset LANGUAGE
 
 ** first
 
