@@ -123,3 +123,38 @@ https://news.ycombinator.com/item?id=8861657
 http://www.reddit.com/r/linux/comments/2ryor1/gnu_guix_ported_to_arm/
 http://www.linux-magazin.de/NEWS/Guix-erhaelt-ARM-Support
 http://www.root.cz/clanky/the-gnu-system-s-pomoci-guix/
+
+https://news.ycombinator.com/item?id=8965257
+http://www.reddit.com/r/linux/comments/2u3665/guix_081_released/
+
+* Feb. 2015
+
+http://boards.4chan.org/g/thread/46380473/gnu-guix
+http://www.fsf.org/news/fsf-adds-guix-system-distribution-to-list-of-endorsed-distributions
+http://lwn.net/Articles/631871/
+http://d4n1.org/guix-system-install/
+http://www.boycottdocker.org/
+http://www.abclinuxu.cz/zpravicky/guix-system-distribution-na-seznamu-svobodnych-distribuci-gnu-linuxu
+https://www.reddit.com/r/gnu/comments/2uqu2k/fsf_adds_guix_system_distribution_to_list_of/
+http://www.phoronix.com/scan.php?page=news_item&px=GNU-Guix-2015-Distribution
+http://www.muylinux.com/2015/02/04/guix-distro-libre
+http://www.diariotecnologia.es/guix-nueva-distro-gnulinux-100-libre-avalada-por-la-fsf/
+http://dustycloud.org/blog/guix-package-manager-without-make-install/
+https://news.ycombinator.com/item?id=9127679
+
+* Mar. 2015
+
+http://www.phoronix.com/scan.php?page=news_item&px=gsoc-2015-exciting-ideas
+
+* Apr. 2015
+
+http://elephly.net/posts/2015-04-17-gnu-guix.html
+https://news.ycombinator.com/item?id=9396960
+http://www.reddit.com/r/linux/comments/33atao/gnu_guix_in_an_hpc_environment/
+http://boards.4chan.org/g/thread/47629253/andy-wingo-of-guile-fame-and-an-influential-gnu
+
+* May 2015
+
+http://dustycloud.org/blog/javascript-packaging-dystopia/
+https://news.ycombinator.com/item?id=9475696
+http://askubuntu.com/questions/583889/snappy-ubuntu-how-does-it-relate-to-nix-and-guix
