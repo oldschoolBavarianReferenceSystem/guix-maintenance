@@ -163,15 +163,15 @@ That way, the bootable image will run Guix X.Y + 1 commit, and running
 
   $ ./pre-inst-env guix system disk-image \
        --image-size=850MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.x86_64-linux.xz
+  $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.x86_64-linux.xz
 
   $ ./pre-inst-env guix system disk-image -s i686-linux \
        --image-size=850MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > gsd-usb-install-X.Y.i686-linux.xz
+  $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.i686-linux.xz
 
 ** Upload
 
-  $ ./build-aux/gnupload --to alpha.gnu.org:guix gsd-usb-install-X.Y.*.xz
+  $ ./build-aux/gnupload --to alpha.gnu.org:guix guixsd-usb-install-X.Y.*.xz
 
 * Announcements
 
