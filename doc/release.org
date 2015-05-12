@@ -238,7 +238,7 @@ Send to these places, preferably in the morning on a working day (UTC):
 
 The news will end up on planet.gnu.org and [[http://scheme.dk/planet/][Planet Scheme]].  The text can
 be shorter and more informal, with a link to the email announcement for
-details.
+details.  Add the [[./announcements/savannah/about.txt]["About" footer]] at the bottom of the announcement.
 
 
 
