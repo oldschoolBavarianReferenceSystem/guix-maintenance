@@ -22,7 +22,7 @@ previous version.  And then you build one for the new version:
 
   (define old
     ;; Get the list of packages of the previous release.
-    (call-with-input-file "packages-0.8.txt"
+    (call-with-input-file "packages-0.8.1.txt"
       read))
 
   ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
@@ -93,7 +93,7 @@ Make that list "camera-ready":
 #+BEGIN_SRC scheme
   (use-modules (ice-9 pretty-print))
 
-  (call-with-output-file "packages-0.8.1.txt"
+  (call-with-output-file "packages-0.8.2.txt"
     (lambda (port)
       (pretty-print new port)))
 
@@ -162,7 +162,8 @@ expected:
      change the 'guix' binding to refer to 'guix-X.Y'.  Push that
      commit.
   2. Change the 'guix-devel' package to refer to the above
-     commit---i.e., the commit right after version X.Y.
+     commit---i.e., the commit right after version X.Y---and change the
+     'guix' binding to refer to 'guix-devel'.
 
 Both commits go to the 'version-X.Y.Z' branch.
 
