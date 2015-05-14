@@ -1,0 +1,95 @@
+We are pleased to announce the release of GNU Guix version X.Y.Z,
+representing XXX commits by XXX people over XXX months.
+
+
+• About
+
+  GNU Guix is a functional package manager for the GNU system.
+  The Guix System Distribution is (GuixSD) an advanced distribution
+  of the GNU system.
+
+  In addition to standard package management features, Guix supports
+  transactional upgrades and roll-backs, unprivileged package
+  management, and per-user profiles.  GuixSD offers a declarative
+  approach to operating system configuration management and is highly
+  hackable.  Guix uses low-level mechanisms from the Nix package
+  manager, except that packages are defined as native Guile modules,
+  using extensions to the Scheme language.
+
+  The operating system uses the Linux-Libre kernel and the GNU dmd init
+  system.  At this stage it can be used on an i686 or x86_64 machine.
+
+  It is also possible to use Guix on top of an already installed
+  GNU/Linux system, including on mips64el and armv7.
+
+  http://www.gnu.org/software/guix/
+
+
+• Download
+
+  Here are the compressed sources and a GPG detached signature[*]:
+    ftp://alpha.gnu.org/gnu/guix/guix-X.Y.Z.tar.gz
+    ftp://alpha.gnu.org/gnu/guix/guix-X.Y.Z.tar.gz.sig
+
+  Here are the bootable USB installation images and their signatures[*]:
+    ftp://alpha.gnu.org/gnu/guix/guixsd-usb-install-X.Y.Z.i686-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guixsd-usb-install-X.Y.Z.i686-linux.xz.sig
+    ftp://alpha.gnu.org/gnu/guix/guixsd-usb-install-X.Y.Z.x86_64-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guixsd-usb-install-X.Y.Z.x86_64-linux.xz.sig
+
+  Here are the binary tarballs and their signatures[*]:
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.i686-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.i686-linux.xz.sig
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.x86_64-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.x86_64-linux.xz.sig
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.mips64el-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.mips64el-linux.xz.sig
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.armhf-linux.xz
+    ftp://alpha.gnu.org/gnu/guix/guix-binary-X.Y.Z.armhf-linux.xz.sig
+
+
+  Use a mirror for higher download bandwidth:
+    http://www.gnu.org/order/ftp.html
+
+  Here are the SHA1 checksums:
+
+  XXX  guix-X.Y.Z.tar.gz
+  XXX  guixsd-usb-install-X.Y.Z.i686-linux.xz
+  XXX  guixsd-usb-install-X.Y.Z.x86_64-linux.xz
+
+  [*] Use a .sig file to verify that the corresponding file (without the
+  .sig suffix) is intact.  First, be sure to download both the .sig file
+  and the corresponding tarball.  Then, run a command like this:
+
+    gpg --verify guix-X.Y.Z.tar.gz.sig
+
+  If that command fails because you don't have the required public key,
+  then run this command to import it:
+
+    gpg --keyserver keys.gnupg.net --recv-keys 3D9AEBB5
+
+  and rerun the 'gpg --verify' command.
+
+  This release was bootstrapped with the following tools:
+    Autoconf 2.69
+    Automake 1.15
+    Makeinfo 5.2
+
+
+  To install the Guix System Distribution, please see “System
+  Installation” in the manual.  To install Guix on a running
+  system, see “Installation” in the manual.
+
+
+• Changes since version P.Q.R (excerpt from the NEWS file)
+
+  [NEWS excerpt here]
+
+Please report bugs to bug-guix@gnu.org.
+Join guix-devel@gnu.org and #guix on Freenode for discussions.
+
+Thanks to everyone who contributed to this release:
+
+  [output of "git shortlog -s vP.Q.R..vX.Y.Z"]
+
+Ludovic, on behalf of the Guix team.
