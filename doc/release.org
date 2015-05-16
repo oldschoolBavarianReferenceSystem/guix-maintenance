@@ -174,6 +174,8 @@ That way, the bootable image will run Guix X.Y + 1 commit, and running
 
 ** Build USB images for all the supported architectures
 
+Start from commit vX.Y.Z + 2, as explained above.
+
   $ ./pre-inst-env guix system disk-image \
        --image-size=850MiB gnu/system/install.scm
   $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.x86_64-linux.xz
@@ -182,7 +184,10 @@ That way, the bootable image will run Guix X.Y + 1 commit, and running
        --image-size=850MiB gnu/system/install.scm
   $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.i686-linux.xz
 
-** Build the binary tarballs
+** Build the binary tarballs using commit vX.Y.Z + 1
+
+Start from the commit right after vX.Y.Z so that the Guix included in
+the tarball is exactly vX.Y.Z.
 
   $ for i in x86_64-linux i686-linux mips64el-linux armhf-linux ; \
     do make guix-binary.$i.tar.xz && \
