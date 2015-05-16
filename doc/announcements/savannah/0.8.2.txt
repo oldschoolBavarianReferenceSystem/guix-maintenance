@@ -1,0 +1,23 @@
+We are pleased to announce the next alpha release of GNU Guix, version 0.8.2.
+
+The release comes both with tarballs, which allow you to install it on top of a running GNU/Linux system, either [http://www.gnu.org/software/guix/manual/html_node/Requirements.html from source] or [http://www.gnu.org/software/guix/manual/html_node/Binary-Installation.html from a binaries], and a USB installation image to install the standalone [http://www.gnu.org/software/guix/manual/html_node/System-Installation.html Guix System Distribution] (GuixSD).
+
+The highlights for this release include:
+
+* The [http://www.gnu.org/software/guix/manual/html_node/Binary-Installation.html new method] to install Guix on a running system from binaries, which can greatly simplify installation.
+* GuixSD has new configuration interfaces for things like the [http://www.gnu.org/software/guix/manual/html_node/Name-Service-Switch.html name service switch], new [http://www.gnu.org/software/guix/manual/html_node/Services.html service definitions], easier [http://www.gnu.org/software/guix/manual/html_node/Using-the-Configuration-System.html desktop-style configuration], and many tweaks and fixes.
+* A new [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-publish.html guix publish command] allowing everyone to publish their own binaries.
+* 718 new [http://www.gnu.org/software/guix/package-list.html packages] (including "big ones" like GnuCash, IcedTea, and GHC) and 189 package updates
+* Countless [http://bugs.gnu.org/guix bug fixes] and usability improvements.
+
+See http://lists.gnu.org/archive/html/guix-devel/2015-05/msg00195.html for details.
+
+Special thanks go to [http://sirgazil.bitbucket.org/ Luis Felipe López Acevedo], the incredible designer of the [http://www.gnu.org/software/guix new web site] and GuixSD logo!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
