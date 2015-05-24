@@ -1,0 +1,144 @@
+* Outline
+** Package management is a good idea
+*** easy to install, upgrade, remove software
+*** dependency resolution
+*** centrally maintained
+so no need to scour the Internet for installers or sources
+
+** Problems
+But with traditional means there are still annoyances probably many of
+us have run into:
+
+*** outdated packages
+The application you want to use is too old in the official
+repositories.
+
+*** version conflicts
+You can't have two versions of an application installed at the same
+time.  Most package systems won't accomodate this need for arbitrary
+versions.
+
+*** changes affect all users
+On a shared system a package upgrade affects everyone on the system.
+It happened often that I would accidentally break the system for other
+users on the same machine after an upgrade even though everything
+worked fine for me.  It would have been nice if I could have only
+updated the applications I was using.  These problems get a lot worse
+in big shared environments like clusters.
+
+*** potentially dangerous
+When a package is installed, system files are overwritten one by one.
+When this process is aborted you end up with a system in an
+inconsistent state.
+
+There is also another potential danger: binary packages are
+inscrutable blobs.  Reproducible builds are near-impossible with
+binary maintainer uploads.  How can we really trust?
+
+** Partial solutions
+*** third-party repositories
+They may solve the problem of outdated packages, but sufficiently
+large repositories such as EPEL may aggravate version conflicts.  They
+all share the problem of trust.
+*** manual compilation
+You say you don't want to trust other people's binary packages so you
+compile software manually.  This is not very practical as we lose all
+the benefits of package management: no more easy upgrades, no easy
+removal, no dependency tracking.
+*** language-specific package systems
+This just dilutes the problem and makes it all the more challenging to
+properly *manage* software.  These package systems often don't even
+have feature parity with established system package managers as they
+aren't made for general package management.
+*** build your own system package
+This is rather hard for users because of arcane description languages
+and package formats, special build tools and directory structures,
+etc.  It is uncomfortable even when you are trained to do this and do
+it somewhat regularly.
+*** meta-package managers
+The frustration with traditional packaging procedures has resulted in
+the rise of meta-package managers that generate low-quality but
+installable RPMs, debs or gems.  Using them may simplify getting
+software installed and tracked by the system package manager, but it
+does not solve any of the other problems and is actually equal to
+admitting that packaging is hard.
+*** giving up
+You could also just shrug and deploy software by downloading an
+"appliance" or by using disk snapshots.  There are very popular
+variations on this theme now but they all have in common that they are
+rather blunt and undisciplined.  They ignore the problem and abstract
+it away with another level of binary indirection.
+
+** Guix
+Another approach is functional package management, and GNU Guix is my
+functional package manager of choice.  What *is* functional package
+management?
+
+** Functional?
+Well, what is a function?  This slide shows a pure function g that
+takes red discs and outputs green stars.  That's *all* it can do.  It
+cannot turn off the lights or eat all your candy.  This means it has
+no side-effects.
+
+It performs its task no matter the environment in which it operates.
+It does not depend on anything except the red disc, its input.
+
+Given a certain input it always returns the same output; the result is
+immutable.
+
+** Functional packages
+Mapping this to package management, we want the output of a package
+recipe to be solely determined by its inputs, i.e. its bag of
+dependencies.  These inputs may be development headers, compilers and
+other build tools, and libraries, and their dependencies as well.  The
+output is an immutable package.
+
+** Functional package management
+We want a package definition to behave like a pure function; nothing
+in the environment (no other installed libraries, applications or
+headers) should affect it.  It should only depend on declared and
+inherited inputs.
+
+This leads to reproducible results, so we can cache results and even
+offload the build process to other machines.
+
+The output should be immutable.  It may not be changed by any other
+package evaluation.  Any package built must be side-effect free.
+
+** Build process
+In the case of Guix these properties are achieved by isolating each
+build.  An unprivileged user communicates with the build daemon to
+make it build software.  Each build is performed by one of the
+unprivileged build users in a chroot in which only the declared inputs
+are available.  The results of each build are placed in their own,
+separate, unique directory in a cache called the store.
+
+* Demos
+** preparation
+cd ./demo-home
+./start.sh
+
+** installing a package
+which hello                   # does not exist
+guix package -i hello  
+guix package --list-installed # shows hello in store
+which hello                   # shows hello in PATH
+
+switch to other user, show that "hello" only exists
+
+** profiles
+guix package -i guile
+guile --version
+
+guix package -i python -r guile
+guix package --list-generations
+guix package --roll-back
+
+guix package -p old-times -i guile-1.8.8
+./old-times/bin/guile --version
+
+** reusing recipes for testing pre-releases or custom modifications
+tar xf $(guix build -S hello) && \
+             sed -i -e 's/Welt/Open Tech Summit/' hello-2.10/po/de.gmo && \
+             tar czf hello-3.tar.gz hello-2.10 && \
+             guix build --with-source=$HOME/hello-3.tar.gz hello
