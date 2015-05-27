@@ -158,3 +158,12 @@ http://boards.4chan.org/g/thread/47629253/andy-wingo-of-guile-fame-and-an-influe
 http://dustycloud.org/blog/javascript-packaging-dystopia/
 https://news.ycombinator.com/item?id=9475696
 http://askubuntu.com/questions/583889/snappy-ubuntu-how-does-it-relate-to-nix-and-guix
+http://www.reddit.com/r/linux/comments/35xuki/gnu_guix_082_released/
+https://www.phoronix.com/scan.php?page=news_item&px=GNU-Guix-0.8.2
+http://www.root.cz/zpravicky/vysel-gnu-system-guix-0-8-2/
+https://www.linux.com/news/software/applications/830595-gnu-guix-082-adds-718-new-packages
+https://news.ycombinator.com/item?id=9544737
+http://gnulinuxvagos.es/topic/4673-guixsd-una-nueva-distro-con-kernel-libre/
+http://www.oneopensource.it/15/05/2015/gnu-guix-0-8-2/
+https://d4n1.org/guix-install/
+https://www.reddit.com/r/emacs/comments/36na9o/guileemacs_available_in_guix/
