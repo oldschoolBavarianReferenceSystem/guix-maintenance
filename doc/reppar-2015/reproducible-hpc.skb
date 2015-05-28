@@ -1,0 +1,441 @@
+(eval-when (expand load eval)
+  ;; Augment the search path so that both the examples and the Guix
+  ;; modules are found.
+  (let ((file (assoc-ref (current-source-location) 'filename)))
+    (for-each (lambda (dir)
+                (set! %load-path (cons dir %load-path))
+                (set! %load-compiled-path
+                      (cons dir %load-compiled-path)))
+              (list (string-append (getenv "HOME") "/.config/guix/latest")
+                    (string-append (dirname file) "/code")))))
+
+(use-modules (skribilo package lncs)
+	     (skribilo engine latex)
+	     (skribilo biblio author)
+             (skribilo source)
+             (skribilo source lisp)
+	     (skribilo engine)
+	     (skribilo writer)
+	     (skribilo ast)
+	     (skribilo evaluator)
+             (guix packages) (guix derivations)
+             ((guix store) #:prefix guix:)
+             (my-openmpi))
+
+(define %store
+  ;; Connection to the Guix build daemon.  Is that reasonable to do
+  ;; it here?  Are we supposed to be reasonable anyway?
+  (guix:open-connection))
+
+(define (---) ; emdash
+  (resolve (lambda (n e env)
+             (if (engine-format? "html" e)
+                 (! "&mdash;")
+                 "---"))))
+
+(define (--) ; endash
+  (resolve (lambda (n e env)
+             (if (engine-format? "html" e)
+                 (! "&ndash;")
+                 "--"))))
+
+(define (include-latex file)
+  (! (format #f "\n\\input{~a}\n" file)))
+
+;; Abbreviate author first names.
+(markup-writer '&bib-entry-author
+   :action (lambda (n e)
+	     (let ((names (markup-body n)))
+	       (evaluate-document
+	         (if (string? names)
+		     (abbreviate-first-names names)
+		     names)
+		 e))))
+
+(bibliography "../els-2013/guix.sbib")
+(bibliography "reppar.sbib")
+              
+(let* ((latex (find-engine 'latex))
+       (usep  (engine-custom latex 'usepackage)))
+  (engine-custom-set! latex 'usepackage
+                      (string-append usep "
+\\usepackage{tikz}
+\\usetikzlibrary{arrows,shapes,trees,shadows,positioning}
+\\usepackage{fancyvrb}
+
+% Remember the position of every picture.
+\\tikzstyle{every picture}+=[remember picture]
+")))
+
+
+(document :title [Reproducible and User-Controlled
+Software Environments in HPC with Guix]
+   :author (list (author :name "Ludovic Courtès"
+		    :affiliation "Inria"
+		    :address (list "Bordeaux, France"))
+		 (author :name "Ricardo Wurmus"
+		    :affiliation "Max Delbrück Center for Molecular
+		    Medicine in the Helmholtz Association"
+		    :address (list "Berlin, Germany"))
+                 ;; + others...
+		    )
+   
+   (abstract
+    [Support teams of high-performance computing (HPC) systems often
+find themselves between a rock and hard place: on one hand, they
+understandably administrate these large systems in a conservative way,
+but on the other hand, they try to satisfy their users by deploying
+up-to-date tool chains as well as libraries and scientific software.
+HPC system users often have no guarantee that they will be able to
+reproduce results at a later point in time, even on the same
+system,(---)software may have been upgraded, removed, or recompiled
+under their feet,(---), and they have little hope of being able to
+reproduce the same software environment elsewhere.  We present
+GNU,(~)Guix and the functional package management paradigm and claim
+that it can improve reproducibility and sharing among researchers,
+illustrating with representative use cases.])
+   
+   (chapter :title [Introduction]
+      
+      (p [HPC system administration has to satisfy two seemingly
+contradictory demands: on one hand administrators seek stability, which
+leads to a very conservative approach to software management, and on the
+other users demand recent tool chains and huge scientific software
+stacks.  In addition, users often need different versions and different
+variants of a given software package.  To satisfy both, support teams
+always play the role of ``distribution maintainers'': they build and
+install tool chains, libraries, and scientific software packages
+manually,(---)multiple variants thereof,(---)and make them available
+,(it [via]) ``environment modules'',(ref :bib 'furlani91:modules), which
+allows users to pick the specific packages they want.])
+      (p [Unfortunately, software is often built and installed in an
+,(it [ad hoc]) fashion, leaving users little hope of redeploying the
+same software environment on another system.  Worse, support teams
+occasionally have to remove installed software or to upgrade it in
+place, which means that users may eventually find themselves unable to
+reproduce their software environment, ,(emph [even on the same
+system]).])
+      (p [Recently-developed tools such as EasyBuild ,(ref :bib
+'geimer2014:easybuild) address part of the problem by automating package
+builds, enforcing some conventions on installation directories, and
+integrating with environment modules.  Spack ,(ref :bib
+'gamblin:spack-web) goes further by seeking usability by unprivileged
+users and by adding facilities to create package variants.  However,
+these tools fall short when it comes to build reproducibility.  First,
+the build environment is loosely controlled by environment variables,
+and build processes can trivially refer to tools or libraries available
+in the surrounding environment, which defeats reproducibility.  Second,
+the ,(it [ad hoc]) naming conventions they rely on to identify builds
+fail to capture the directed acyclic graph (DAG) of dependencies that
+led to this particular build (see ,(numref :text [Section] :ident
+"related")).])
+      (p [GNU,(~)Guix is a general-purpose package manager that
+implements the functional package management paradigm pioneered by Nix
+,(ref :bib '(dolstra2004:nix courtes2013:functional)).  Many of its
+properties and features make it attractive in a multi-user HPC context:
+per-user profiles, transactional upgrades and roll-backs, and, more
+importantly, a controlled build environment to maximize reproducibility.
+,(numref :text [Section] :ident "rationale") details our motivations.
+,(numref :text [Section] :ident "functional") describes the functional
+package management paradigm, its implementation in Guix, its impact on
+reproducibility, and how it can be applied to HPC systems.  ,(numref
+:text [Section] :ident "use-cases") gives concrete use cases where Guix
+empowers users while guaranteeing reproducibility and sharing, while
+,(numref :text [Section] :ident "limitations") discusses limitations and
+remaining challenges.  Finally, ,(numref :text [Section] :ident
+"related") compares to related work, and ,(numref :text [Section] :ident
+"conclusion") concludes.]))
+   
+   (chapter :title [Rationale] :ident "rationale"
+      
+      (p [Recent work on reproducible research insufficiently takes
+software environment reproducibility into account.  For example, the
+approach for verifiable computational results described in ,(ref :bib
+'gavish2011:universal) focuses on workflows and conventions but does not
+mention the difficulty of reproducing full software environments.
+Likewise, the authors of ,(ref :bib 'stanisic2014:effective) propose a
+methodology for reproducible research experiments in HPC.  To address
+the software-environment reproducibility problem they propose two
+extreme and equally unsatisfying approaches: one is to write down the
+version numbers of the dependencies being used, which is insufficient,
+and the other is to save and reuse full virtual machines, which poses a
+real challenge for performance.])
+      (p [Yet, common practices on HPC systems hinder reproducibility.
+The vast majority of HPC systems run GNU/Linux but for understandable
+stability reasons, they often run old distributions that are rarely
+updated.  Thus, packages provided by the distribution are largely
+dismissed, and instead support teams install packages by
+themselves,(---)from scientific software, to HPC libraries, to compiler
+tool chains,(---)and make them available through environment modules
+,(ref :bib 'furlani91:modules).  Modules allow users to choose different
+versions or variants of the packages they use without interfering with
+each others.  However, when installed software is updated in place or
+removed, users suddenly find themselves unable to reproduce the software
+environment they were using.  Given these practices, reproducing the
+exact same software environment on a ,(emph [different]) HPC system
+seems out of reach.  It is nonetheless a very important property: it
+would allow users to assess the impact of the hardware on the software's
+performance,(---)something that is very valuable in particular for
+developers of run-time systems such as StarPU ,(ref :bib
+'augonnet2009:starpu),(---), and it would allow other researchers to
+reproduce experiments on their system.])
+      (p [Essentially, by deploying software and environment modules,
+HPC support teams find themselves duplicating the work of GNU/Linux
+distributions, but why is that?  Historical package managers such as
+Debian's APT were introduced as a way to (1) allow distribution makers
+to describe the dependencies and ``build recipe'' of a package to
+automate builds, and (2) to allow users to easily install, upgrade, and
+remove packages without having to worry about dependencies and build
+systems.  However, these traditional package managers suffer from
+several limitations.])
+      (p [First, package binaries that every user installs (for
+instance, the ,(code [.deb]) files) are actually built on the package
+maintainer's machine, which then uploads it.  Because the package's
+build process has access to all the machine's file system and resources,
+details may leak into the binary that is uploaded.  Thus, chances are
+than another user would not be able to reproduce the exact same binary.
+It is worth noting that this particular issue is being addressed in the
+context of Debian by the Reproducible project ,(ref :bib
+'debian-reproducible-web).])
+      (p [Second, while it is in theory possible for a user to define
+their own variant of a package, as is often needed in HPC, this happens
+to be often difficult in practice.  ,(bold [FIXME: Expound.])])
+      (p [Third, APT, RPM, and similar tools implement an ,(emph
+[imperative]) and ,(emph [stateful]) package management model, as Doltra
+et al. rightfully explained in ,(ref :bib 'dolstra2004:nix).  It is
+imperative in the sense that it modifies the set of available packages
+in place.  For example, upgrading libc means that suddenly all the
+installed packages start using the new libc version; switching to an
+alternative MPI implementation, or upgrading the OpenMP run-time library
+means that suddenly all the installed applications and libraries start
+using them.  It is stateful in the sense that the system state after a
+package management operation depends on its previous state.  Namely, the
+system state at a given point in time is the result of the series of
+installation and upgrade operations that have been made over time, and
+there may be no way to reproduce the exact same state elsewhere.  These
+properties are a serious hindrance to reproducibility.]))
+
+   (chapter :title [Functional Package Management] :ident "functional"
+      
+      (p [,(it [Functional paradigm.]) Functional package management is
+a discipline that transcribes the functional programming paradigm to
+software deployment: build and installation processes are viewed as pure
+functions in the mathematical sense,(---)whose result depends
+exclusively on the inputs,(---), and their result is a value,(---)that
+is, an immutable directory.  Since build and installation processes are
+pure functions, their results can effectively be ``cached'' on
+disk,(---)just like one can ``memoize'' pure functions.  Likewise, two
+independent runs of a given build process for a given set of inputs
+should return the same value,(---),(it [i.e.]), a set of bit-identical
+files.  This approach was first described and implemented in the Nix
+package manager ,(ref :bib 'dolstra2004:nix).  Guix reuses low-level
+mechanism from Nix to implement the same paradigm, but offers a unified
+interface for package definitions and their implementation, all embedded
+in a single programming language ,(ref :bib 'courtes2013:functional).])
+      (p [An obvious challenge is the implementation of this paradigm:
+how can build and install processes be viewed as pure?  To obtain that
+property, Nix and Guix ensure tight control over the build environment.
+In both cases, build processes are started by a privileged daemon that
+always runs them in ``containers'' as implemented by the kernel Linux;
+that is, they run in a chroot environment, under a dedicated user ID,
+with separate name spaces for PIDs, inter-process communication (IPC),
+networking, and so on.  The chroot environment is prepared to contained
+only the directories corresponding to the inputs that the build process
+explicitly declared.  This ensures that the build process cannot
+inadvertently end up using tools or libraries that it is not supposed to
+use.  The separate name spaces ensure that the build process cannot
+communicate with the outside world.  And of course, the set of
+environment variables visible in the build processes is well-defined.
+Although it is not perfect as we will see in ,(numref :text [Section]
+:ident "limitations"), this technique gives us confidence that builds
+processes can be viewed as pure functions, with reproducible results.])
+      
+      (figure
+	 :legend [Invocation of the ,(tt [guix build]) command returning
+	 the resulting file name in the store.]
+	 :ident "fig-build"
+	 
+	 ;;(include-latex "fig-build.tex")
+         (bold [FIXME: imagine a figure here]))
+
+      (p [Each build process produces one or more files in directories
+stored in a common place called ,(emph [the store]), typically the ,(tt
+[/gnu/store]) directory.  Each file in ,(tt [/gnu/store]) has a name
+that includes a hash of all the inputs of the build process that led to
+it, as shown in ,(numref :text [Figure] :ident "fig-build").  By ``all
+the inputs'', we really mean all of them: this includes of course
+compilers and libraries (including the C library), but also build
+scripts and environment variable values.  And this is recursive, the
+compiler's own directory name is a hash of the tools and libraries used
+to build, and so on and so forth, until a set a pre-built binaries used
+for bootstrapping purposes,(---)and which can in turn be rebuilt using
+Guix ,(ref :bib 'courtes2013:functional).  Thus, for each package that
+is built, the system has access to the ,(emph [complete DAG]) of
+dependencies used to build it, recursively.])
+      
+      (figure
+         :legend [Guix package recipe of Open,(~)MPI.]
+         :ident "fig-recipe"
+         
+         (prog
+            (source :language scheme :file "code/my-openmpi.scm"
+               :definition 'openmpi)))
+
+      (p [Package recipes in Guix are written in a domain-specific
+language (DSL) embedded in the Scheme programming language.  ,(numref
+:text [Figure] :ident "fig-recipe") shows, as an example, the recipe to
+build the Open,(~)MPI library, which should be intelligible to the
+reader.  The ,(tt [package]) form evaluates to a ,(emph [package
+object]), which is just a ``regular'' Scheme object; the ,(tt [define])
+form defines the ,(tt [openmpi]) variable to hold that value.  Because
+this is a standard Scheme object, we can query it programmatically, as
+shown in ,(numref :text [Figure] :ident "fig-query").])
+      
+      (figure
+         :legend [Querying a package object using the programming interface.]
+         :ident "fig-query"
+         
+         (prog :mark #f
+            (source :language scheme :file "code/query-package.scm"
+                :start ";;!start"))
+
+         (p [... yields:])
+
+         (prog :line #f
+            (source :language scheme
+               (object->string (primitive-load "code/query-package.scm")))))
+            
+      (p [Important parts include line ,(ref :line
+"recipe-build-system"), which specifies that the package is to be built
+according to the GNU build system convention,(---),(it [i.e.]), using
+the well-known ,(tt [./configure && make && make install]) sequence.
+The ,(tt [inputs]) field on line ,(ref :line "recipe-inputs") specifies
+the direct dependencies of the package (the difference between these two
+fields is only relevant when cross-compiling.)  The field refers to the
+,(tt [hwloc]), ,(tt [gfortran-4.8]), and ,(tt [pkg-config]) variables,
+which are also bound to package objects (their definition is not shown
+here.)  It would be inconvenient to specify all the standard inputs,
+such as GNU,(~)Make, GCC, GNU,(~)Binutils so these are implicit here.
+Since we are manipulating ``normal'' Scheme objects, we can use the API
+of Guix to query those package objects, as illustrated with the code in
+,(numref :text [Figure] :ident "fig-query"), which queries the name and
+version of the direct and indirect dependencies of our package,(footnote
+[This code is actually run as we build this document, as we will see in
+,(numref :text [Section] :ident "active").]).])
+      (p [With that definition in place, running ,(tt [guix build
+openmpi]) returns the directory name
+,(tt (derivation->output-path (package-derivation %store openmpi))).  If
+that directory did not already exist, then the daemon spawns the build
+process in its isolated environment with write access to this directory.
+Of course users never have to type these long ,(tt [/gnu/store]) file
+names.  They can install the package in their ,(emph [profile]) using
+the ,(tt [guix package]) command, which essentially installs symbolic
+links under ,(tt [~/.guix-profile]).  It is then a matter of defining
+the search paths for the compiler, linker, and other tools ,(tt [via])
+environment variables.  Fortunately, Guix keeps track of that and the
+,(tt [guix package --search-paths]) command returns all the necessary
+environment variable definitions in Bourne shell syntax.  For example,
+when both the GCC tool chain and Open,(~)MPI are installed, the command
+returns definitions for the ,(tt [PATH]), ,(tt [CPATH]), and ,(tt
+[LIBRARY_PATH]) environment variables, and these definitions can be
+passed to the ,(tt [eval]) shell built-in command.]))
+   
+   (chapter :title [Use Cases] :ident "use-cases"
+
+      (p [We explore practical use cases where the availability of Guix
+can improve experimentation reproducibility for a user of a given
+system, support the deployment of complex software stacks, allow a
+software environment to be replicated on another system, and allow
+fine customization of the software environment, and finally integrate
+tightly with the production of research papers.])
+
+      (section :title [Usage Patterns on an HPC Cluster] ;MDC Berlin
+
+         (p [One of the key features of Guix and Nix is that they
+securely permit unprivileged users to install packages in the store
+,(ref :bib 'dolstra2004:nix).  To build a package, the ,(tt [guix])
+commands connect to the build daemon, which then performs the build (if
+needed) on their behalf, in the isolated, unprivileged environment.
+When two users build the exact same package, both end up using the exact
+same ,(tt [/gnu/store]) file name and storage is shared.  If a user
+tries to build, say, a malicious version of the C library, then the
+other users on the system will not use it, simply because they cannot
+guess its ,(tt [/gnu/store]) file name in the first place,(---)unless
+they themselves explicitly build the very same modified C library.])
+         (p (bold [FIXME: insert MDC experience report here?]))
+
+         (figure
+            :legend [Declaring the set of packages to be installed in a
+            profile.]
+            :ident "fig-manifest"
+            
+            (prog :line #f
+               (source :language scheme :file "code/manifest.scm")))
+
+         (p [Guix users have a default profile in ,(tt
+[~/.guix-profile]),(---)essentially a tree of symlinks to selected items
+in ,(tt [/gnu/store]),(---)but they can create independent profiles in
+arbitrary places of the file system.  Guix supports two ways to manage a
+profile.  The first one is to make transactions that add, upgrade, or
+remove packages in the profile: ,(tt [guix package --install openmpi
+--remove mpich2]) installs Open,(~)MPI and remove MPICH2 from ,(tt
+[~/.guix-profile]) in a single transaction that can be rolled back.  The
+second approach is to ,(emph [declare]) the desired contents of the
+profile and make that effective: the user writes in a file a code
+snippet that lists the requested packages (see ,(numref :text [Figure]
+:ident "fig-manifest")) and then runs ,(tt [guix package
+--manifest=my-packages.scm]).])
+         (p [This declarative profile management makes it easy to
+replicate a profile, but it is symbolic: it uses whatever package
+objects the variables are bound to (,(tt [gnu-make]), ,(tt
+[gcc-toolchain]), etc.), but these variables are typically defined in
+the ,(tt [(gnu packages ...)]) modules that Guix comes with.  Thus the
+precise packages being installed depend on the revision of Guix that is
+available.  Specifying the Guix revision,(footnote [Guix itself is
+versioned-controlled using Git.]) in addition to the declaration in
+,(numref :text [Figure] :ident "fig-manifest") is all it takes to
+reproduce the exact same ,(tt [/gnu/store]) items.])
+         (p [Another approach to achieve bit-identical reproduction of a
+user's profile is by saving the contents of its closure using ,(tt [guix
+archive --export]).  The resulting archive can be transferred to another
+system and restored at any point in time using ,(tt [guix archive
+--import]).  This should significantly facilitate experimentation and
+sharing among peers.]))
+
+      (section :title [Customizing Packages]  ;MORSE
+         
+         )
+
+      (section :title [Going Further]  ;active papers
+         :ident "active"))
+
+   (chapter :title [Limitations and Challenges]
+      :ident "limitations"
+      
+      (p [Nix and Guix address many of the reproducibility issues
+encountered in package deployment, and Guix provides APIs and a
+programming environment aiming to facilitate the development of package
+variants as is useful in HPC.  Yet, to our knowledge, neither Guix nor
+Nix are widely deployed on HPC systems.  An obvious reason that limits
+adoption is the requirement to have the build daemon run with root
+privileges,(---)without which it would not be able to use the Linux
+kernel container facilities that allow it to isolate build processes and
+maximize build reproducibility.  System administrators are wary of
+installing privileged daemons, and so HPC system users trade
+reproducibility for practical approaches.])
+      )
+
+   (chapter :title [Related Work] :ident "related")
+   
+   (chapter :title [Conclusion] :ident "conclusion")
+   
+   (references)
+   )
+   
+;; Local Variables:
+;; compile-command: "skribilo -t latex -o reproducible-hpc.tex reproducible-hpc.skb && pdflatex reproducible-hpc.tex"
+;; ispell-local-dictionary: "american"
+;; indent-tabs-mode: nil
+;; End:
+
+;; LocalWords:  reproducibility workflows

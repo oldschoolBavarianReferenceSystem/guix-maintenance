@@ -1,0 +1,168 @@
+#+TITLE: Free and Happy Users --- Reproducible and User-Controlled Package Management in HPC with GNU Guix
+
+* Introduction
+
+** Idea
+
+  1. HPC cluster distros are old, not customizable, and sysadmin policy
+     is often conservative ("don't touch anything")
+  2. users resort to manual or "overlay" package management -> badly
+     affects reproducibility
+  3. solutions being developed don't guarantee reproducibility, prevent
+     sharing among users, which in turn prevents reproducibility
+  4. use of Guix helps maximize reproducibility while allowing sharing
+     among users, both on the same cluster on in different environments
+  5. we present concrete use cases
+  6. define reproducibility:
+     1. for one user at different times
+     2. among users of a cluster at a given time
+     3. among users on different machines, at different times
+
+* Common HPC Practice Hinders Reproducibility
+
+ - reproducible research approaches don't address this
+   + "A Universal Identifier for Computational Results" doesn't take
+     reproducibility into account
+   + "Effective Reproducible Research with Org-Mode and Git"
+     (Section 4) suggests either a vague approach (record version
+     numbers of a few packages) or a heavyweight approach (use VMs)
+   + some give up too easily: cf. [[https://www.xsede.org/documents/659353/703287/xsede14_fahey.pdf][Reproducibility responsibilities in the HPC arena]]
+ - single HPC users may find themselves unable to reproduce their own
+   results
+   + sysadmin-managed "modules", can disappear/change anytime
+   + thus, keeping binaries in $HOME isn't enough
+ - cluster users can hardly share with other users on the same cluster
+   + copy binaries? fragile, and prevents customization
+   + hard to have shared deployments
+ - HPC users can hardly share the software with other clusters
+   + different cluster means different software (compilers, libraries,
+     etc.)
+   + makes it difficult to assess the impact of a given architecture on
+     the software
+
+* Related Work
+
+** historical package managers
+
+  - dpkg, apt, rpm, etc.
+    + not flexible (hard to write or customize recipes)
+    + binaries uploaded by maintainers (optional)
+    + package databases cannot be composed in the case of rpm ([[gnus:nnimap%2Binria:INBOX#idjr3q3h24r.fsf@bimsb-sys02.mdc-berlin.net][see email
+      from Ricardo]])
+
+** at the other end of the spectrum: VMs & containers
+
+  - full deployments: G5K/Kadeploy
+    + slow, does not compose
+    + imposes a significant burden on users: choosing and preparing
+      complete images
+  - VMs (cf. "SHARE: a web portal for creating and sharing executable
+    research papers")
+    + heavyweight
+    + unsuitable for HPC
+  - containers (Docker et al.)
+    + unavailable to unprivileged users in HPC
+    + heavyweight, coarse-grain, not composable
+    + yet: [[http://www.hpcadvisorycouncil.com/events/2015/swiss-workshop/pdf/day1/7_QNIB.pdf]["Immutable Application Containers"]] by "HPC Advisory Council"
+      (cf. http://doc.qnib.org/HPCAC2015.pdf)
+
+** unprivileged package management & customizability
+
+  - GNU Stow
+  - Conda & [[https://github.com/hpcugent/easybuild][EasyBuild]]
+    + co-existence of versions/builds via different prefixes
+    + EasyBuild: lots of efforts spent on ad hoc module naming convention
+    + recipes are Python objects, eases customization
+    + EasyBuild is mostly for "HPC support teams"
+  - [[http://scalability-llnl.github.io/spack/][Spack]]
+    + highly customizable from the command line + API
+    + thought with HPC-style usage in mind
+    + uses external tools, which prevents reproducibility ([[https://groups.google.com/forum/#!topic/spack/NxyNTAZyMQg][example]])
+  - Gitian, reproducible.debian.net
+
+* Functional Package Managers
+
+  - Nix & Guix
+  - reproducibility is goal #1
+    + containers, etc.
+    + (cite that paper on influence of env. vars on OpenMP performance?)
+    + reproducibility implies free software
+  - usual stuff
+
+* Use Cases
+
+  - reproducible profiles: different levels
+    + symbolic: 'guix package --manifest'
+    + binary: 'guix archive --export'
+  - reproducibility
+    + users choose when and what to upgrade
+    + whole DAG can be saved/restored anytime
+    + contrast with sysadmin-managed packages & modules
+    + storage resources shared
+      - contrast with Spack, EasyBuild, etc.
+    + build environment tightly controlled (containers)
+    + rollback, etc.
+    + different levels of reproducibility:
+      * exact: a specific branch of Guix
+      * symbolic: an externally-maintained package set
+    + workflow: publish Guix branch or external package set
+  - deployment of complex stacks
+    + example1: bioinfo at U. Berlin
+    + example2: [[http://www.ict-openlab.eu/fileadmin/documents/public_deliverables/OpenLab_Deliverable_D2_9.pdf][OpenLab deliverable D.29]] (GNUnet)
+    + describe specific challenges...
+  - deployment + customization of the software stack (off topic?)
+    + example: [[http://icl.cs.utk.edu/projectsdev/morse/][MORSE]]
+    + 12+ actively developed, tightly-integrated packages
+    + people want to be able to the specific part they work on (hwloc,
+      StarPU, solver, etc.) while still being able to deploy the whole
+      stack
+    + makes it easy to assess the performance impact of a specific part
+      of the stack (e.g., StarPU)
+    + 'guix environment'
+  - "active/executable papers" (?)
+    + integrate with Skribilo or Org-mode (cf. "The Collage Authoring
+      Environment", 2011)
+
+* Limitations & Challenges
+
+  - needs to be installed by cluster sysadmin
+  - remaining sources of non-determinism
+    + cpuid, /proc/cpuinfo, etc.
+    + profile-driven optimization
+    + build system non-determinism ("make -j" with broken makefiles)
+    + non-determinism due to scheduling (cf. "Determinism and
+      Reproducibility in Large-Scale HPC Systems")
+  - numerical library tuning (ATLAS, etc.)
+    + configured on the build machine, which may undermine
+      reproducibility (see above)
+    + binaries become non-portable
+    + tweaking the recipe of say, ATLAS, means rebuilding a large part
+      of the DAG
+  - software "archeology" is limited
+    + reusing specific, old versions of compilers or libraries means
+      rewriting those recipes (they may have never existed in Guix
+      itself since it's relatively young)
+  - use of Guix on all cluster nodes?
+    + daemon, substitutes, network access, etc.
+  - numerical reproducibility? (cf. "Designing Bit-Reproducible Portable
+    High-Performance Applications")
+  - no proprietary software
+    + but this is a strength: reproducible science cannot be built on
+      black boxes, and experimentation needs the ability to fiddle with
+      the software
+
+* Conclusion
+
+  - functional package management & Guix make users happy
+
+* References
+
+  - https://khinsen.wordpress.com/category/science/reproducible-research/
+    + [[https://dirac.cnrs-orleans.fr/plone/software/activepapers][ActivePapers]] (CNRS Orléans, Konrad Hinsen)
+      * refers to [[http://www.executablepapers.com/][Elsevier's executable papers]]
+    + [[https://khinsen.wordpress.com/2012/05/14/the-nix-package-manager-in-computational-science/][Nix in computational science]]
+  - [[http://hpcugent.github.io/easybuild/files/hust14_paper.pdf][Modern Scientific Software Management Using EasyBuild and Lmod]]
+
+* COMMENT Emacs stuff
+
+LocalWords:  reproducibility workflow
