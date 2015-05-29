@@ -1,0 +1,87 @@
+;; -*- Skribe -*- bibliography.
+;;
+
+(inproceedings courtes2013:functional
+  (url "https://hal.inria.fr/hal-00824004/en")
+  (title "Functional Package Management with Guix")
+  (author "Ludovic Courtès")
+  (booktitle "European Lisp Symposium")
+  (year "2013")
+  (month "June")
+  (address "Madrid, Spain"))
+
+;; http://dl.acm.org/citation.cfm?id=2691141&CFID=514978226&CFTOKEN=55834927
+(inproceedings geimer2014:easybuild
+  (url "https://hpcugent.github.io/easybuild/files/hust14_paper.pdf")
+  (title "Modern Scientific Software Management Using EasyBuild and
+Lmod")
+  (author "Markus Geimer, Kenneth Hoste, Robert McLay")
+  (year "2014")
+  (booktitle "Proceedings of the First Workshop on HPC User Support
+Tools (HUST`14)")
+  (pages "41--51")
+  (isbn "978-1-4673-6755-4")
+  (location "New Orleans, Louisiana, USA")
+  (publisher "IEEE Press")
+  (address "Piscataway, NJ, USA"))
+
+;; http://link.springer.com/chapter/10.1007%2F978-3-319-14325-5_41
+(inbook stanisic2014:effective
+  (url "https://hal.inria.fr/hal-01083205/en")
+  (title "Effective Reproducible Research with Org-Mode and Git")
+  (author "Luka Stanisic, Arnaud Legrand")
+  (year "2014")
+  (booktitle "Euro-Par 2014: Parallel Processing Workshops")
+  (pages "475--486")
+  (series "Lecture Notes in Computer Science")
+  (volume "8805")
+  (publisher "Springer International Publishing"))  
+
+(article gavish2011:universal
+  (url "http://dx.doi.org/10.1016/j.procs.2011.04.067")
+  (title "A Universal Identifier for Computational Results")
+  (author "Matan Gavish, David Donoho")
+  (journal "Procedia Computer Science")
+  (note "Proceedings of the International Conference on
+Computational Science, ICCS")
+  (year "2011")
+  (volume "4")
+  (number "0")
+  (pages "637--647")
+  (issn "1877-0509"))
+
+(misc debian-reproducible-web
+  (year "2015")
+  (author (noabbrev "Debian Project"))
+  (title "Debian Reproducible Web Site")
+  (url "http://reproducible.debian.net/"))
+
+(misc gamblin:spack-web
+  (year "2015")
+  (author "Todd Gamblin")
+  (title "Spack Web Site")
+  (url "http://scalability-llnl.github.io/spack/"))
+
+(inbook augonnet2009:starpu
+  (year "2009")
+  (month "August")
+  (author "Cédric Augonnet, Samuel Thibault, Raymond Namyst,
+Pierre-André Wacrenier")
+  (title "StarPU: A Unified Platform for Task Scheduling on
+  Heterogeneous Multicore Architectures")
+  (booktitle "Proceedings of the 15th International Euro-Par
+  Conference")
+  (volume "5704")
+  (series "Lecture Notes in Computer Science")
+  (publisher "Springer International Publishing")
+  (url "http://hal.inria.fr/inria-00384363/en"))
+
+(inproceedings furlani1991:modules
+  (year "1991")
+  (month "June")
+  (author "John L. Furlani")
+  (title "Providing a Flexible User Environment")
+  (booktitle "Proceedings of the Fifth Large Installation System
+Administration (LISA V)")
+  (pages "141--152")
+  (url "http://modules.sourceforge.net/docs/Modules-Paper.pdf"))

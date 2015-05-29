@@ -111,7 +111,7 @@ variants of a given software package.  To satisfy both, support teams
 always play the role of ``distribution maintainers'': they build and
 install tool chains, libraries, and scientific software packages
 manually,(---)multiple variants thereof,(---)and make them available
-,(it [via]) ``environment modules'',(ref :bib 'furlani91:modules), which
+,(it [via]) ``environment modules'',(ref :bib 'furlani1991:modules), which
 allows users to pick the specific packages they want.])
       (p [Unfortunately, software is often built and installed in an
 ,(it [ad hoc]) fashion, leaving users little hope of redeploying the
@@ -172,7 +172,7 @@ updated.  Thus, packages provided by the distribution are largely
 dismissed, and instead support teams install packages by
 themselves,(---)from scientific software, to HPC libraries, to compiler
 tool chains,(---)and make them available through environment modules
-,(ref :bib 'furlani91:modules).  Modules allow users to choose different
+,(ref :bib 'furlani1991:modules).  Modules allow users to choose different
 versions or variants of the packages they use without interfering with
 each others.  However, when installed software is updated in place or
 removed, users suddenly find themselves unable to reproduce the software
