@@ -198,7 +198,7 @@ instance, the ,(code [.deb]) files) are actually built on the package
 maintainer's machine, which then uploads it.  Because the package's
 build process has access to all the machine's file system and resources,
 details may leak into the binary that is uploaded.  Thus, chances are
-than another user would not be able to reproduce the exact same binary.
+that another user would not be able to reproduce the exact same binary.
 It is worth noting that this particular issue is being addressed in the
 context of Debian by the Reproducible project ,(ref :bib
 'debian-reproducible-web).])
@@ -234,7 +234,7 @@ independent runs of a given build process for a given set of inputs
 should return the same value,(---),(it [i.e.]), a set of bit-identical
 files.  This approach was first described and implemented in the Nix
 package manager ,(ref :bib 'dolstra2004:nix).  Guix reuses low-level
-mechanism from Nix to implement the same paradigm, but offers a unified
+mechanisms from Nix to implement the same paradigm, but offers a unified
 interface for package definitions and their implementation, all embedded
 in a single programming language ,(ref :bib 'courtes2013:functional).])
       (p [An obvious challenge is the implementation of this paradigm:
@@ -244,7 +244,7 @@ In both cases, build processes are started by a privileged daemon that
 always runs them in ``containers'' as implemented by the kernel Linux;
 that is, they run in a chroot environment, under a dedicated user ID,
 with separate name spaces for PIDs, inter-process communication (IPC),
-networking, and so on.  The chroot environment is prepared to contained
+networking, and so on.  The chroot environment is prepared to contain
 only the directories corresponding to the inputs that the build process
 explicitly declared.  This ensures that the build process cannot
 inadvertently end up using tools or libraries that it is not supposed to
@@ -252,7 +252,7 @@ use.  The separate name spaces ensure that the build process cannot
 communicate with the outside world.  And of course, the set of
 environment variables visible in the build processes is well-defined.
 Although it is not perfect as we will see in ,(numref :text [Section]
-:ident "limitations"), this technique gives us confidence that builds
+:ident "limitations"), this technique gives us confidence that build
 processes can be viewed as pure functions, with reproducible results.])
       
       (figure
