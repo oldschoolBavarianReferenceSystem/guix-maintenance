@@ -65,6 +65,7 @@
     + heavyweight, coarse-grain, not composable
     + yet: [[http://www.hpcadvisorycouncil.com/events/2015/swiss-workshop/pdf/day1/7_QNIB.pdf]["Immutable Application Containers"]] by "HPC Advisory Council"
       (cf. http://doc.qnib.org/HPCAC2015.pdf)
+    + [[http://www.banyanops.com/blog/analyzing-docker-hub/][vulnerabilities at DockerHub]]
 
 ** unprivileged package management & customizability
 
@@ -147,9 +148,12 @@
   - numerical reproducibility? (cf. "Designing Bit-Reproducible Portable
     High-Performance Applications")
   - no proprietary software
+    + common in HPC (GPUs, linear algebra)
     + but this is a strength: reproducible science cannot be built on
       black boxes, and experimentation needs the ability to fiddle with
       the software
+  - no "virtual dependencies" like "mpi", "runtime system" à la Spack
+  - no command-line interface (yet) to tweak the DAG à la Spack
 
 * Conclusion
 
