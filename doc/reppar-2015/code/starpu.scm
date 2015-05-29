@@ -52,9 +52,9 @@
               ,@(package-inputs starpu)))))
 ;!end-starpu-variants
 
-(define (package-with-different-input original label replacement)
+(define (override-input original label replacement)
   ;; Return a variant of ORIGINAL where inputs corresponding
-  ;; to LABEL are replaced with REPLACEMENT.
+  ;; to LABEL are replaced by REPLACEMENT, recursively.
   (package (inherit original)
     (inputs (map (lambda (input)
                    (match input
@@ -62,34 +62,63 @@
                       (if (string=? input-label label)
                           `(,label ,replacement)
                           `(,label
-                            ,(package-with-different-input
-                              package label replacement))))))
+                            ,(override-input package
+                                             label replacement))))))
                  (package-inputs original)))))
 
-(define chameleon
+'(begin                                        ;incomplete code follows
+;;!begin-chameleon
+   (define (make-chameleon name starpu)
+     (package
+       (name name)
+       (version "0.9")
+       ;; [other fields omitted]
+       (inputs `(("starpu" ,starpu)
+                 ("blas" ,atlas)
+                 ("lapack" ,lapack)
+                 ("gfortran" ,gfortran-4.8)
+                 ("python" ,python-2)))))
+
+   (define chameleon
+     (make-chameleon "chameleon" starpu))
+
+   (define chameleon/starpu-simgrid
+     (make-chameleon "chameleon-simgrid" starpu-with-simgrid))
+;;!end-chameleon
+   )
+
+
+
+(define real-chameleon
   (package
-    (name "chameleon")
-    (version "0.9")
-    (source (origin
-             (method url-fetch)
-             (uri (string-append
-                   "https://project.inria.fr/chameleon/files/2015/02/"
-                   "chameleon-" version ".tar_.gz"))
-             (sha256
-              (base32
-               "0zglkqazx5r5r60w881x3ksws96f304k24d0h3ixml1rrrnxrgl1"))
-             (file-name (string-append name "-" version
-                                       ".tar.gz"))))
-    (build-system cmake-build-system)
-    (arguments
-     '(#:configure-flags '("-DMORSE_VERBOSE_FIND_PACKAGE=ON"
-                           "-DBLAS_VERBOSE=ON")))
-    (inputs `(("starpu" ,starpu)
-              ("blas" ,atlas)
-              ("lapack" ,lapack)))
-    (native-inputs `(("gfortran" ,gfortran-4.8)
-                     ("python" ,python-2)))
-    (home-page "https://project.inria.fr/chameleon/")
-    (synopsis "Dense linear algebra solver")
-    (description "Blah...")
-    (license #f)))
+   (name "chameleon")
+   (version "0.9")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://project.inria.fr/chameleon/files/2015/02/"
+                  "chameleon-" version ".tar_.gz"))
+            (sha256
+             (base32
+              "0zglkqazx5r5r60w881x3ksws96f304k24d0h3ixml1rrrnxrgl1"))
+            (file-name (string-append name "-" version
+                                      ".tar.gz"))))
+   (build-system cmake-build-system)
+   (arguments
+    '(#:configure-flags (list "-DMORSE_VERBOSE_FIND_PACKAGE=ON"
+                              ;; "-DBLAS_VERBOSE=ON"
+                              "-DBLA_VENDOR=ATLAS"
+                              "-DLAPACK_VERBOSE=ON"
+                              (string-append "-DLAPACK_DIR="
+                                             (assoc-ref
+                                              %build-inputs
+                                              "lapack")))))
+   (inputs `(("starpu" ,starpu)
+             ("blas" ,atlas)
+             ("lapack" ,lapack)))
+   (native-inputs `(("gfortran" ,gfortran-4.8)
+                    ("python" ,python-2)))
+   (home-page "https://project.inria.fr/chameleon/")
+   (synopsis "Dense linear algebra solver")
+   (description "Blah...")
+   (license #f)))

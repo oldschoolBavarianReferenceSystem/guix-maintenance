@@ -460,8 +460,46 @@ defined to refer precisely to the inputs specified in the recipe.  This
 amounts to creating a profile on the fly, containing only the tools and
 libraries necessary when developing StarPU.  This is notably useful when
 dealing with build systems that support optional dependencies.])
-         (p (bold [TODO: something about rewriting the Chameleon DAG]))
-         )
+         
+         (figure
+            :legend [Defining a function that returns a package object
+for the Chameleon solver.]
+            :ident "fig-chameleon"
+
+            (prog :line #f :mark #f
+               (source :language scheme :file "code/starpu.scm"
+                  :start ";;!begin-chameleon"
+                  :stop ";;!end-chameleon")))
+
+         (p [Now that we have several StarPU variants, we allow direct
+and indirect uses to select the variant that they want.  A simple way to
+do that is to write, say, a ,(tt [make-chameleon]) function that takes a
+,(tt [starpu]) parameter and uses it as its input.  As ,(numref :text
+[Figure] :ident "fig-chameleon") shows, we can then call that function
+to create the relevant variants of Chameleon.  To allow users to refer
+to one or the other variant at the command line, we use different
+values for the ,(tt [name]) field.])
+         
+         (figure
+            :legend [Rewriting a package DAG by changing a specific input.]
+            :ident "fig-override"
+            
+            (prog :line #f :mark #f
+               (source :language scheme :file "code/starpu.scm"
+                  :definition 'override-input)))
+
+         (p [This approach is reasonable when there is a small number of
+variants, but it does not scale to more complex DAGs.  As an example,
+StarPU can be built with MPI support, in which case Chameleon also needs
+to be explicitly linked against the same MPI implementation.  Users may
+want to replace all occurrences of an MPI implementation in the DAG
+rooted at Chameleon with a different implementation.  One way to do that
+is by writing a function that recursively adjusts the package labeled
+,(tt ["mpi"]) in the ,(tt [inputs]) field of packages.  This is what the
+,(tt [override-input]) function in ,(numref :text [Figure] :ident
+"fig-override") does.])
+         (p [No matter how complex the transformations are, a package
+object unambiguously represents a reproducible build process.]))
 
       (section :title [Going Further]  ;active papers
          :ident "active"))
