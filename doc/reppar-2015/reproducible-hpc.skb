@@ -308,7 +308,8 @@ shown in ,(numref :text [Figure] :ident "fig-query").])
       (p [Important parts include line ,(ref :line
 "recipe-build-system"), which specifies that the package is to be built
 according to the GNU build system convention,(---),(it [i.e.]), using
-the well-known ,(tt [./configure && make && make install]) sequence.
+the well-known ,(tt [./configure && make && make install]) sequence
+(similarly, Guix defines ,(tt [cmake-build-system]), and so on.)
 The ,(tt [inputs]) field on line ,(ref :line "recipe-inputs") specifies
 the direct dependencies of the package (the difference between these two
 fields is only relevant when cross-compiling.)  The field refers to the
