@@ -501,24 +501,74 @@ is by writing a function that recursively adjusts the package labeled
          (p [No matter how complex the transformations are, a package
 object unambiguously represents a reproducible build process.]))
 
-      (section :title [Going Further]  ;active papers
+      (section :title [Going Further]  ;active papers + gexps
          :ident "active"))
 
    (chapter :title [Limitations and Challenges]
       :ident "limitations"
       
-      (p [Nix and Guix address many of the reproducibility issues
-encountered in package deployment, and Guix provides APIs and a
-programming environment aiming to facilitate the development of package
-variants as is useful in HPC.  Yet, to our knowledge, neither Guix nor
-Nix are widely deployed on HPC systems.  An obvious reason that limits
-adoption is the requirement to have the build daemon run with root
-privileges,(---)without which it would not be able to use the Linux
-kernel container facilities that allow it to isolate build processes and
-maximize build reproducibility.  System administrators are wary of
-installing privileged daemons, and so HPC system users trade
-reproducibility for practical approaches.])
-      )
+      (p (emph [Privileged daemon.]) [ Nix and Guix address many of the
+reproducibility issues encountered in package deployment, and Guix
+provides APIs and a programming environment aiming to facilitate the
+development of package variants as is useful in HPC.  Yet, to our
+knowledge, neither Guix nor Nix are widely deployed on HPC systems.  An
+obvious reason that limits adoption is the requirement to have the build
+daemon run with root privileges,(---)without which it would not be able
+to use the Linux kernel container facilities that allow it to isolate
+build processes and maximize build reproducibility.  System
+administrators are wary of installing privileged daemons, and so HPC
+system users trade reproducibility for practical approaches.])
+
+      (p (emph [Cluster setup.])[ All the ,(tt [guix]) commands are
+actually clients of the daemon.  In a typical cluster setup, system
+administrators may want to run a single daemon on one specific node and
+to share ,(tt [/gnu/store]) among all the nodes.  At the time of
+writing, Guix does not yet allow communication with a remote daemon.
+For this reason, Guix users at the MDC are required to manage their
+profiles from a specific node; other nodes can use the profiles, but not
+modify them.  Allowing the ,(tt [guix]) commands to communicate with a
+remote daemon will address this issue.])
+      (p [In a typical cluster setup, compute nodes completely lack
+access to the Internet.  Yet, the daemon needs to be able to download
+source code tarballs or pre-built binaries from external server.  Thus,
+the daemon must run on a node with Internet access, which could be
+contrary to the policy on some clusters.])
+
+      (p (emph [Remaining non-determinism.])[ Despite the use of
+isolated containers to run build processes, there are still a few source
+of non-determinism that can impede reproducibility.  In particular,
+details about the operating system kernel and the hardware begin used
+can ``leak'' to build processes.  For example, the kernel Linux provides
+system calls such as ,(tt [uname]) and file system interfaces such as
+,(tt [/proc/cpuinfo]) that leak information about the host; independent
+builds on different hosts could lead to different results if this
+information is used.  Likewise, the ,(tt [cpuid]) instruction leaks
+hardware details.])
+      (p [Fortunately, few software packages depend on this information.
+Yet, the proportion of packages depending on it is higher in the HPC
+world.  A notable example is the ATLAS linear algebra system, which
+fine-tunes itself based on details about the CPU micro-architectures.
+Similarly, profile-guided optimization (PGO), where the compiler
+optimizes code based on a profile gathered in a previous run, undermines
+reproducibility.  Running build processes in full-blown virtual machines
+would help address some of these issues, but with a potentially
+significant impact on build performance, and possibly preventing
+important optimization techniques in the HPC context.])
+
+      (p (emph [Proprietary software.])[ GNU,(~)Guix does not provide
+proprietary software packages.  Unfortunately, proprietary software is
+still relatively common in HPC, be it linear algebra libraries or GPU
+support.  Yet, we see it as a strength more than a limitation.  Often,
+these ``black boxes'' inherently limit reproducibility,(---)how is one
+going to reproduce a software environment if they are not given the
+right to run the software in the first place?  What if the software
+depends on the ability to ``call home'' to function at all?  More
+importantly, we view reproducible software environments and reproducible
+science as a tool towards the goal of improved and shared knowledge;
+developers who deny the freedom to study and modify their code work
+against this goal.])
+      
+      (p (bold [FIXME: Anything else?])))
 
    (chapter :title [Related Work] :ident "related")
    

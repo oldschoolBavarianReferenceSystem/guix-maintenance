@@ -139,6 +139,13 @@
     + binaries become non-portable
     + tweaking the recipe of say, ATLAS, means rebuilding a large part
       of the DAG
+  - no proprietary software
+    + common in HPC (GPUs, linear algebra)
+    + but this is a strength: reproducible science cannot be built on
+      black boxes, and experimentation needs the ability to fiddle with
+      the software
+  - no "virtual dependencies" like "mpi", "runtime system" à la Spack
+  - no command-line interface (yet) to tweak the DAG à la Spack
   - software "archeology" is limited
     + reusing specific, old versions of compilers or libraries means
       rewriting those recipes (they may have never existed in Guix
@@ -147,13 +154,6 @@
     + daemon, substitutes, network access, etc.
   - numerical reproducibility? (cf. "Designing Bit-Reproducible Portable
     High-Performance Applications")
-  - no proprietary software
-    + common in HPC (GPUs, linear algebra)
-    + but this is a strength: reproducible science cannot be built on
-      black boxes, and experimentation needs the ability to fiddle with
-      the software
-  - no "virtual dependencies" like "mpi", "runtime system" à la Spack
-  - no command-line interface (yet) to tweak the DAG à la Spack
 
 * Conclusion
 
