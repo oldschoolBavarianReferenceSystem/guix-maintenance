@@ -42,6 +42,10 @@
 (define (include-latex file)
   (! (format #f "\n\\input{~a}\n" file)))
 
+(define (url url)
+  ;; Return a URL typeset in a fixed-with font.
+  (ref :url url :text (tt url)))
+
 ;; Abbreviate author first names.
 (markup-writer '&bib-entry-author
    :action (lambda (n e)
@@ -77,6 +81,7 @@ Software Environments in HPC with Guix]
 		    :affiliation "Max Delbrück Center for Molecular
 		    Medicine in the Helmholtz Association"
 		    :address (list "Berlin, Germany"))
+                 (author :name "Your Name Here!")
                  ;; + others...
 		    )
    
@@ -405,6 +410,57 @@ sharing among peers.]))
 
       (section :title [Customizing Packages]  ;MORSE
          
+         (p [Our colleagues at Inria in the HiePACS and Runtime teams
+develop a complete linear algebra software stack going from sparse
+solvers such as PaStiX and dense solvers such as Chameleon,(footnote
+[See ,(url "https://team.inria.fr/hiepacs/software/"), for details.]),
+to run-time support libraries and compiler extensions such as StarPU
+,(ref :bib 'augonnet2009:starpu) and hwloc,(footnote [See ,(url
+"http://runtime.bordeaux.inria.fr/Runtime/software.html").]).  While
+developers of simulations want to be able to deploy the whole stack,
+developers of solvers want to be able to deploy just their project's
+dependencies, possibly several variants thereof.  For instance,
+developers of Chameleon may want to test their software again several
+versions of StarPU, or against variants of StarPU built with different
+compile-time options.  Finally, developers of the lower-level layers,
+such as StarPU, may want to test the effect of changes they make on
+higher-level layers.])
+         
+         (figure
+            :legend [Defining variants of the default recipe for
+            StarPU.]
+            :ident "fig-variants"
+            
+            (prog :line #f :mark #f
+               (source :language scheme :file "code/starpu.scm"
+                  :start ";!begin-starpu-variants"
+                  :stop ";!end-starpu-variants")))
+
+         (p [This use case leads to two requirements: that users be able
+to customize and non-ambiguously specify a package DAG, and that they be
+able to reproduce any variant of their package DAG.  Guix allows them to
+define variants; the code for these variants can be stored in a
+repository of their own, and then made visible to the ,(tt [guix])
+commands by defining the ,(tt [GUIX_PACKAGE_PATH]) environment variable.
+,(numref :text [Figure] :ident "fig-variants") shows an example of such
+package variants: based on the pre-existing ,(tt [starpu]) variable, the
+first variant defines a package for a new StarPU release candidate,
+simply by changing its ,(tt [source]) field, while the second variant
+adds the optional dependency on the SimGrid simulator,(---)a variant
+useful to scheduling practitioners, but not necessarily to solver
+developers.])
+         (p [These StarPU package definitions are obviously useful to
+users of StarPU: they can install them with ,(tt [guix package -i
+starpu]) and similar commands.  But they are also useful to StarPU
+developers: they can enter a ``pristine'' development environment
+corresponding to the dependencies given in the recipe by running ,(tt
+[guix environment starpu --pure]).  This command spawns a shell where
+the usual ,(tt [PATH]), ,(tt [CPATH]) etc. environment variables are
+defined to refer precisely to the inputs specified in the recipe.  This
+amounts to creating a profile on the fly, containing only the tools and
+libraries necessary when developing StarPU.  This is notably useful when
+dealing with build systems that support optional dependencies.])
+         (p (bold [TODO: something about rewriting the Chameleon DAG]))
          )
 
       (section :title [Going Further]  ;active papers
