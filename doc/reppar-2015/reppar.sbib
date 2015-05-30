@@ -183,3 +183,9 @@ Administration (LISA V)")
   (title "Over 30% of Official Images in Docker Hub Contain High
 Priority Security Vulnerabilities")
   (url "http://www.banyanops.com/blog/analyzing-docker-hub/"))
+
+(misc fedora-mock-web
+  (url "https://fedoraproject.org/wiki/Mock")
+  (title "Web Site of Fedora's Mock")
+  (year "2015")
+  (author (noabbrev "Fedora Project")))

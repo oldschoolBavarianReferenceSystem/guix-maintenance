@@ -181,7 +181,7 @@ mention the difficulty of reproducing full software environments.
 Likewise, the authors of ,(ref :bib 'stanisic2014:effective) propose a
 methodology for reproducible research experiments in HPC.  To address
 the software-environment reproducibility problem they propose two
-extreme and equally unsatisfying approaches: one is to write down the
+unsatisfying approaches: one is to write down the
 version numbers of the dependencies being used, which is insufficient,
 and the other is to save and reuse full virtual machines, which poses a
 real challenge for performance.])
@@ -189,8 +189,11 @@ real challenge for performance.])
 The vast majority of HPC systems run GNU/Linux but for understandable
 stability reasons, they often run old distributions that are rarely
 updated.  Thus, packages provided by the distribution are largely
-dismissed, and instead support teams install packages by
-themselves,(---)from scientific software, to HPC libraries, to compiler
+dismissed.  Instead support teams install packages from third-party
+repositories,(---)but then they clobber the global ,(tt [/usr])
+prefix, which sysadmins may want to keep under control,(---), or install
+them from source by
+themselves,(---)going from scientific software, to HPC libraries, to compiler
 tool chains,(---)and make them available through environment modules
 ,(ref :bib 'furlani1991:modules).  Modules allow users to choose different
 versions or variants of the packages they use without interfering with
@@ -217,11 +220,13 @@ several limitations.])
 instance, the ,(code [.deb]) files) are actually built on the package
 maintainer's machine, which then uploads it.  Because the package's
 build process has access to all the machine's file system and resources,
-details may leak into the binary that is uploaded.  Thus, chances are
+details of the build environment and host machine
+may leak into the binary that is uploaded.  Thus, chances are
 that another user would not be able to reproduce the exact same binary.
 It is worth noting that this particular issue is being addressed in the
 context of Debian by the Reproducible project ,(ref :bib
-'debian-reproducible-web).])
+'debian-reproducible-web), and by tools such as Fedora's Mock ,(ref :bib
+'fedora-mock-web).])
       (p [Second, while it is in theory possible for a user to define
 their own variant of a package, as is often needed in HPC, this happens
 to be often difficult in practice.  ,(bold [FIXME: Expound.])])
@@ -263,14 +268,14 @@ property, Nix and Guix ensure tight control over the build environment.
 In both cases, build processes are started by a privileged daemon that
 always runs them in ``containers'' as implemented by the kernel Linux;
 that is, they run in a chroot environment, under a dedicated user ID,
+with a well-defined set of environment variables,
 with separate name spaces for PIDs, inter-process communication (IPC),
 networking, and so on.  The chroot environment is prepared to contain
 only the directories corresponding to the inputs that the build process
 explicitly declared.  This ensures that the build process cannot
 inadvertently end up using tools or libraries that it is not supposed to
 use.  The separate name spaces ensure that the build process cannot
-communicate with the outside world.  And of course, the set of
-environment variables visible in the build processes is well-defined.
+communicate with the outside world.
 Although it is not perfect as we will see in ,(numref :text [Section]
 :ident "limitations"), this technique gives us confidence that build
 processes can be viewed as pure functions, with reproducible results.])
@@ -336,12 +341,13 @@ according to the GNU build system convention,(---),(it [i.e.]), using
 the well-known ,(tt [./configure && make && make install]) sequence
 (similarly, Guix defines ,(tt [cmake-build-system]), and so on.)
 The ,(tt [inputs]) field on line ,(ref :line "recipe-inputs") specifies
-the direct dependencies of the package (the difference between these two
-fields is only relevant when cross-compiling.)  The field refers to the
+the direct dependencies of the package.  The field refers to the
 ,(tt [hwloc]), ,(tt [gfortran-4.8]), and ,(tt [pkg-config]) variables,
 which are also bound to package objects (their definition is not shown
 here.)  It would be inconvenient to specify all the standard inputs,
-such as GNU,(~)Make, GCC, GNU,(~)Binutils so these are implicit here.
+such as GNU,(~)Make, GCC, GNU,(~)Binutils so these are implicit here;
+they are provided by ,(tt [gnu-build-system]), which is responsible for
+compiling package objects to an intermediate representation.
 Since we are manipulating ``normal'' Scheme objects, we can use the API
 of Guix to query those package objects, as illustrated with the code in
 ,(numref :text [Figure] :ident "fig-query"), which queries the name and
