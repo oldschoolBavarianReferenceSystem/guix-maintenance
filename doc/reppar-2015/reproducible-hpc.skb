@@ -183,8 +183,10 @@ methodology for reproducible research experiments in HPC.  To address
 the software-environment reproducibility problem they propose two
 unsatisfying approaches: one is to write down the
 version numbers of the dependencies being used, which is insufficient,
-and the other is to save and reuse full virtual machines, which poses a
-real challenge for performance.])
+and the other is to save and reuse full virtual machines (VMs), which poses a
+real challenge for performance and make verifiability
+impractical,(---)peers would have to download large images and would be
+unable to combine them with their own software environment.])
       (p [Yet, common practices on HPC systems hinder reproducibility.
 The vast majority of HPC systems run GNU/Linux but for understandable
 stability reasons, they often run old distributions that are rarely
@@ -422,13 +424,13 @@ replicate a profile, but it is symbolic: it uses whatever package
 objects the variables are bound to (,(tt [gnu-make]), ,(tt
 [gcc-toolchain]), etc.), but these variables are typically defined in
 the ,(tt [(gnu packages ...)]) modules that Guix comes with.  Thus the
-precise packages being installed depend on the revision of Guix that is
+precise packages being installed depend on the version of Guix that is
 available.  Specifying the Guix revision,(footnote [Guix itself is
 versioned-controlled using Git.]) in addition to the declaration in
 ,(numref :text [Figure] :ident "fig-manifest") is all it takes to
 reproduce the exact same ,(tt [/gnu/store]) items.])
          (p [Another approach to achieve bit-identical reproduction of a
-user's profile is by saving the contents of its closure using ,(tt [guix
+user's profile is by saving the contents of its transitive closure using ,(tt [guix
 archive --export]).  The resulting archive can be transferred to another
 system and restored at any point in time using ,(tt [guix archive
 --import]).  This should significantly facilitate experimentation and
@@ -483,7 +485,7 @@ developers: they can enter a ``pristine'' development environment
 corresponding to the dependencies given in the recipe by running ,(tt
 [guix environment starpu --pure]).  This command spawns a shell where
 the usual ,(tt [PATH]), ,(tt [CPATH]) etc. environment variables are
-defined to refer precisely to the inputs specified in the recipe.  This
+redefined to refer precisely to the inputs specified in the recipe.  This
 amounts to creating a profile on the fly, containing only the tools and
 libraries necessary when developing StarPU.  This is notably useful when
 dealing with build systems that support optional dependencies.])
@@ -513,7 +515,8 @@ values for the ,(tt [name]) field.])
             
             (prog :line #f :mark #f
                (source :language scheme :file "code/starpu.scm"
-                  :definition 'override-input)))
+                  :start ";;!begin-override-input"
+                  :stop ";;!end-override-input")))
 
          (p [This approach is reasonable when there is a small number of
 variants, but it does not scale to more complex DAGs.  As an example,
@@ -597,9 +600,10 @@ source code tarballs or pre-built binaries from external server.  Thus,
 the daemon must run on a node with Internet access, which could be
 contrary to the policy on some clusters.])
 
-      (p (emph [Remaining non-determinism.])[ Despite the use of
+      (p (emph [Non-determinism.])[ Despite the use of
 isolated containers to run build processes, there are still a few source
-of non-determinism that can impede reproducibility.  In particular,
+of non-determinism that build systems of packages might use and
+that can impede reproducibility.  In particular,
 details about the operating system kernel and the hardware begin used
 can ``leak'' to build processes.  For example, the kernel Linux provides
 system calls such as ,(tt [uname]) and file system interfaces such as
@@ -613,7 +617,7 @@ world.  A notable example is the ATLAS linear algebra system, which
 fine-tunes itself based on details about the CPU micro-architectures.
 Similarly, profile-guided optimization (PGO), where the compiler
 optimizes code based on a profile gathered in a previous run, undermines
-reproducibility.  Running build processes in full-blown virtual machines
+reproducibility.  Running build processes in full-blown VMs
 would help address some of these issues, but with a potentially
 significant impact on build performance, and possibly preventing
 important optimization techniques in the HPC context.])
@@ -652,14 +656,14 @@ proved to be a serious barrier to reproducibility in practice ,(ref :bib
       (p [More recently, Debian's Reproducible project ,(ref :bib
 'debian-reproducible-web) has developed tools to perform isolated builds
 and identify sources of non-determinism.  Gitian ,(ref :bib 'gitian-web)
-is a tool initially developed by the Tor Project that uses virtual
-machines to perform isolated builds.  Google's recently-unveiled Bazel
+is a tool initially developed by the Tor Project that uses VMs
+to perform isolated builds.  Google's recently-unveiled Bazel
 build tool relies on container facilities provided by the kernel Linux,
 similar to the Nix/Guix daemon, and provides another DSL to describe
 build operations ,(ref :bib 'bazel-web).])
       (p [At the other end of the spectrum, reproducibility can be
 achieved with more heavyweight approaches such as full operating system
-deployments ,(ref :bib 'jeanvoine2013:kadeploy3), virtual machine (VM)
+deployments ,(ref :bib 'jeanvoine2013:kadeploy3), VM
 deployments ,(ref :bib 'vangorp2011:share), and full-system
 container-based deployments ,(ref :bib 'kniep2015:reproducibility).  In
 addition to being resource-hungry, these approaches is are coarse-grain
@@ -728,4 +732,4 @@ Spack?])]))
 ;; End:
 
 ;; LocalWords:  reproducibility workflows installable stateful
-;; LocalWords:  expressivity
+;; LocalWords:  expressivity verifiability
