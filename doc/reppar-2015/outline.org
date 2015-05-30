@@ -50,6 +50,22 @@
     + package databases cannot be composed in the case of rpm ([[gnus:nnimap%2Binria:INBOX#idjr3q3h24r.fsf@bimsb-sys02.mdc-berlin.net][see email
       from Ricardo]])
 
+** unprivileged package management & customizability
+
+  - GNU Stow
+  - Conda & [[https://github.com/hpcugent/easybuild][EasyBuild]]
+    + co-existence of versions/builds via different prefixes
+    + EasyBuild: lots of efforts spent on ad hoc module naming convention
+    + recipes are Python objects, eases customization
+    + EasyBuild is mostly for "HPC support teams"
+  - [[http://scalability-llnl.github.io/spack/][Spack]]
+    + highly customizable from the command line + API
+    + thought with HPC-style usage in mind
+    + uses external tools, which prevents reproducibility ([[https://groups.google.com/forum/#!topic/spack/NxyNTAZyMQg][example]])
+  - Gitian, reproducible.debian.net
+  - Vesta
+  - Google's Bezel
+
 ** at the other end of the spectrum: VMs & containers
 
   - full deployments: G5K/Kadeploy
@@ -66,20 +82,6 @@
     + yet: [[http://www.hpcadvisorycouncil.com/events/2015/swiss-workshop/pdf/day1/7_QNIB.pdf]["Immutable Application Containers"]] by "HPC Advisory Council"
       (cf. http://doc.qnib.org/HPCAC2015.pdf)
     + [[http://www.banyanops.com/blog/analyzing-docker-hub/][vulnerabilities at DockerHub]]
-
-** unprivileged package management & customizability
-
-  - GNU Stow
-  - Conda & [[https://github.com/hpcugent/easybuild][EasyBuild]]
-    + co-existence of versions/builds via different prefixes
-    + EasyBuild: lots of efforts spent on ad hoc module naming convention
-    + recipes are Python objects, eases customization
-    + EasyBuild is mostly for "HPC support teams"
-  - [[http://scalability-llnl.github.io/spack/][Spack]]
-    + highly customizable from the command line + API
-    + thought with HPC-style usage in mind
-    + uses external tools, which prevents reproducibility ([[https://groups.google.com/forum/#!topic/spack/NxyNTAZyMQg][example]])
-  - Gitian, reproducible.debian.net
 
 * Functional Package Managers
 

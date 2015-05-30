@@ -409,6 +409,7 @@ system and restored at any point in time using ,(tt [guix archive
 sharing among peers.]))
 
       (section :title [Customizing Packages]  ;MORSE
+         :ident "customizing"
          
          (p [Our colleagues at Inria in the HiePACS and Runtime teams
 develop a complete linear algebra software stack going from sparse
@@ -570,7 +571,76 @@ against this goal.])
       
       (p (bold [FIXME: Anything else?])))
 
-   (chapter :title [Related Work] :ident "related")
+   (chapter :title [Related Work] :ident "related"
+      
+      (p (emph [Reproducible builds.]) [ Reproducible software
+environments has traditionally not been a major concern until recently.
+One of the oldest work in this area is the Vesta software configuration
+system ,(ref :bib 'heydon2000:caching).  Vesta provides a DSL that
+allows users to describe build operations.  The Nix package manager
+takes a similar approach ,(ref :bib 'dolstra2004:nix).  Guix reuses the
+Nix build daemon, but instead provides a set of embedded DSLs and to
+describe both high-level package recipes and fine-grain build
+operations, as well as a unified programming framework ,(ref :bib
+'courtes2013:functional).  Guix also goes a bit further by having
+completely pure build environments, without ,(tt [/bin/sh]).  While
+this may sound like a detail, adding ,(tt [/bin/sh]) to the chroot has
+proved to be a serious barrier to reproducibility in practice ,(ref :bib
+'courtes2013:functional).])
+      (p [More recently, Debian's Reproducible project ,(ref :bib
+'debian-reproducible-web) has developed tools to perform isolated builds
+and identify sources of non-determinism.  Gitian ,(ref :bib 'gitian-web)
+is a tool initially developed by the Tor Project that uses virtual
+machines to perform isolated builds.  Google's recently-unveiled Bazel
+build tool relies on container facilities provided by the kernel Linux,
+similar to the Nix/Guix daemon, and provides another DSL to describe
+build operations ,(ref :bib 'bazel-web).])
+      (p (emph [HPC package management.]) [ In the HPC community,
+efforts have focused primarily on the automation of software deployment
+and the ability for users to customize their build environment
+independently of each other.  The latter has been achieved by
+``environment modules'', a simple but efficient tool set that is still
+widely used today ,(ref :bib 'furlani1991:modules).  Build and
+deployment automation is more recent with the development of specialized
+package management tools such as EasyBuild ,(ref :bib
+'geimer2014:easybuild) and Spack ,(ref :bib 'gamblin:spack-web).])
+      (p [Both EasyBuild and Spack have the advantage of being
+installable by unprivileged users since they do not rely on privileged
+components, unlike Guix and Nix.  The downside is that they cannot use
+the kernel's container facilities, which seriously hinders
+build reproducibility.  When used in the user's home directories, these
+tools have the inconvenient of disallowing sharing: each user may end up
+rebuilding the same compiler, libraries, etc., which can be costly in
+terms of CPU, bandwidth, and disk usage.  Conversely, Nix and Guix
+support safe sharing of builds.])
+      (p [EasyBuild aims to support multiple package variants, such as
+packages built with different compilers, or linked against different MPI
+implementations.  To achieve that, it relies on directory naming
+conventions; for instance, ,(tt [OpenMPI/1.7.3-GCC-4.8.2]) contains
+packages built with the specified MPI implementation and compiler.  Such
+conventions fail to capture all the complexity of the DAG and
+configuration space.  For instance, the convention arbitrarily omits the
+C library being used, linker, or configuration flags; contrast this with
+the hashes used by the functional package managers (,(numref :text
+[Section] :ident "functional")).])
+      (p [EasyBuild is tightly integrated with environment modules ,(ref
+:bib 'furlani1991:modules), which are familiar to most users of HPC
+systems.  While modules provide users with flexible environments, they
+implement an imperative, stateful paradigm: users run a sequence of ,(tt
+[module load]) and ,(tt [module unload]) commands that ,(emph [alter])
+the current environment.  This can make it much harder to reason about
+and reproduce an environment, as opposed to the declarative approaches
+implemented by ,(tt [guix package --manifest]) and ,(tt [guix
+environment]).])
+      (p [Like EasyBuild and similarly to Guix, Spack implements build
+recipes as first-class objects in a general-purpose language, Python,
+which facilitates customization and the creation of package variants.
+In addition, Spack provides a rich command-line interface that allows
+users to express variants similar to those discussed in ,(numref :text
+[Section] :ident "customizing").  This appears to be very convenient for
+common cases, although there are limits to the expressivity and
+readability of such a compact syntax. ,(bold [FIXME: What else about
+Spack?])]))
    
    (chapter :title [Conclusion] :ident "conclusion")
    
@@ -583,4 +653,5 @@ against this goal.])
 ;; indent-tabs-mode: nil
 ;; End:
 
-;; LocalWords:  reproducibility workflows
+;; LocalWords:  reproducibility workflows installable stateful
+;; LocalWords:  expressivity

@@ -85,3 +85,15 @@ Pierre-André Wacrenier")
 Administration (LISA V)")
   (pages "141--152")
   (url "http://modules.sourceforge.net/docs/Modules-Paper.pdf"))
+
+(misc gitian-web
+  (year "2015")
+  (author (noabbrev "Gitian contributors"))
+  (title "Gitian Web Site")
+  (url "https://gitian.org/"))
+
+(misc bazel-web
+  (year "2015")
+  (author (noabbrev "Google, Inc."))
+  (title "Bazel Web Site")
+  (url "http://bazel.io/"))
