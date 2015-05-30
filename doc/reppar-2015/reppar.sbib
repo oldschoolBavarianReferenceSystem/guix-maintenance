@@ -49,6 +49,20 @@ Computational Science, ICCS")
   (number "0")
   (pages "637--647")
   (issn "1877-0509"))
+  
+(article vangorp2011:share
+  (url "http://dx.doi.org/10.1016/j.procs.2011.04.062")
+  (title "SHARE: a web portal for creating and sharing executable
+  research papers")
+  (author "Pieter Van Gorp, Steffen Mazanek")
+  (journal "Procedia Computer Science")
+  (note "Proceedings of the International Conference on
+Computational Science, ICCS")
+  (year "2011")
+  (volume "4")
+  (number "0")
+  (pages "589--597")
+  (issn "1877-0509"))
 
 (misc debian-reproducible-web
   (year "2015")
@@ -97,3 +111,28 @@ Administration (LISA V)")
   (author (noabbrev "Google, Inc."))
   (title "Bazel Web Site")
   (url "http://bazel.io/"))
+
+(article jeanvoine2013:kadeploy3
+  (title "Kadeploy3: Efficient and Scalable Operating System Provisioning")
+  (author "Emmanuel Jeanvoine, Luc Sarzyniec, Lucas Nussbaum")
+  (journal "USENIX ;login:")
+  (volume "38")
+  (number "1")
+  (year "2013")
+  (pages "38--44")
+  (month "February")
+  (url "https://hal.inria.fr/hal-00710638/en"))
+
+(misc kniep2015:reproducibility
+  (author "Christian Kniep")
+  (title "Reproducability of CAE-computations through Immutable
+  Application Containers")
+  (url "http://doc.qnib.org/HPCAC2015.pdf"))
+
+(misc gummaraju2015:docker
+  (author "Jayanth Gummaraju, Tarun Desikan, Yoshio Turner")
+  (year "2015")
+  (month "May")
+  (title "Over 30% of Official Images in Docker Hub Contain High
+Priority Security Vulnerabilities")
+  (url "http://www.banyanops.com/blog/analyzing-docker-hub/"))

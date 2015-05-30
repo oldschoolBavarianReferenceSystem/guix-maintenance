@@ -595,6 +595,18 @@ machines to perform isolated builds.  Google's recently-unveiled Bazel
 build tool relies on container facilities provided by the kernel Linux,
 similar to the Nix/Guix daemon, and provides another DSL to describe
 build operations ,(ref :bib 'bazel-web).])
+      (p [At the other end of the spectrum, reproducibility can be
+achieved with more heavyweight approaches such as full operating system
+deployments ,(ref :bib 'jeanvoine2013:kadeploy3), virtual machine (VM)
+deployments ,(ref :bib 'vangorp2011:share), and full-system
+container-based deployments ,(ref :bib 'kniep2015:reproducibility).  In
+addition to being resource-hungry, these approaches is are coarse-grain
+and do not compose: if two different VM or Docker images provide useful
+features or packages, one essentially has to make a binary choice and
+cannot combine the features or packages they offer.  A side issue is
+security: it was recently reported that many official Docker images are
+plagued with serious unfixed security vulnerabilities ,(ref :bib
+'gummaraju2015:docker).])
       (p (emph [HPC package management.]) [ In the HPC community,
 efforts have focused primarily on the automation of software deployment
 and the ability for users to customize their build environment
@@ -648,7 +660,7 @@ Spack?])]))
    )
    
 ;; Local Variables:
-;; compile-command: "skribilo -t latex -o reproducible-hpc.tex reproducible-hpc.skb && pdflatex reproducible-hpc.tex"
+;; compile-command: "skribilo -t latex -o reproducible-hpc.tex reproducible-hpc.skb && rubber --pdf reproducible-hpc.tex"
 ;; ispell-local-dictionary: "american"
 ;; indent-tabs-mode: nil
 ;; End:
