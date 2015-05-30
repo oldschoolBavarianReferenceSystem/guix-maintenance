@@ -1,3 +1,7 @@
+(define %document-url
+  ;; This the URL where the source of this document can be found.
+  "http://git.savannah.gnu.org/cgit/guix/maintenance.git/tree/doc/reppar-2015")
+
 (eval-when (expand load eval)
   ;; Augment the search path so that both the examples and the Guix
   ;; modules are found.
@@ -20,12 +24,28 @@
 	     (skribilo evaluator)
              (guix packages) (guix derivations)
              ((guix store) #:prefix guix:)
+             (guix hash) (guix base32)
+             ((guix serialization) #:select (write-file))
              (my-openmpi))
 
-(define %store
-  ;; Connection to the Guix build daemon.  Is that reasonable to do
-  ;; it here?  Are we supposed to be reasonable anyway?
-  (guix:open-connection))
+(define-values (%openmpi-path %openmpi-hash)
+  ;; Here we connect to the Guix build daemon to get information about
+  ;; the software environment we are talking about.
+  (guix:with-store store
+    (let ((drv (package-derivation store openmpi)))
+      (values
+        ;; Compute the /gnu/store file name of our Open MPI.
+        (derivation->output-path drv)
+
+        ;; Here we go as far as building it (if it's not already built)
+        ;; and computing its hash.
+        (parameterize ((guix:current-build-output-port (current-error-port)))
+          (build-derivations store (list (package-derivation store openmpi)))
+          (call-with-values open-sha256-port
+            (lambda (port get-hash)
+              (write-file (derivation->output-path drv) port)
+              (force-output port)
+              (get-hash))))))))
 
 (define (---) ; emdash
   (resolve (lambda (n e env)
@@ -330,7 +350,7 @@ version of the direct and indirect dependencies of our package,(footnote
 ,(numref :text [Section] :ident "active").]).])
       (p [With that definition in place, running ,(tt [guix build
 openmpi]) returns the directory name
-,(tt (derivation->output-path (package-derivation %store openmpi))).  If
+,(tt %openmpi-path).  If
 that directory did not already exist, then the daemon spawns the build
 process in its isolated environment with write access to this directory.
 Of course users never have to type these long ,(tt [/gnu/store]) file
@@ -503,7 +523,43 @@ is by writing a function that recursively adjusts the package labeled
 object unambiguously represents a reproducible build process.]))
 
       (section :title [Going Further]  ;active papers + gexps
-         :ident "active"))
+         :ident "active"
+         
+         (p [``Executable'' or ``active'' research papers have become an
+active research domain looking for tools to tightly make have
+experimental reproducibility ``built in'' papers themselves, with some
+focusing on ways to identify computational results ,(ref :bib
+'gavish2011:universal) and others focusing on the integration of the
+software and computational environments with authoring tools ,(ref :bib
+'(schulte2011:org-reproducible nowakowski2011:collage)).])
+         (p [This paper is written using Skribilo, a Scheme-based
+authoring tool based on Skribe ,(ref :bib 'gallesio2005:skribe).
+Because Guix is itself a Scheme library, we can easily insert
+information about the software environment as in ,(numref :text [Figure]
+:ident "fig-query"), or note that the recipe in ,(numref :text [Figure]
+:ident "fig-recipe") leads to ,(tt %openmpi-path) and that the SHA256
+hash of its content is ,(tt (bytevector->nix-base32-string
+%openmpi-hash)) ,(let ((here (current-source-location)))
+   (footnote [Check out the source code of this document at
+,(url %document-url), around line ,(assoc-ref here 'line) of file ,(tt
+(assoc-ref here 'filename)).])).  With a bit of ``plumbing'', authors
+could achieve similar results when using author document authoring
+systems, for instance with Org-Babel.])
+         (p [Our vision is that authors would integrate all the
+information necessary and sufficient to reproduce ,(emph [exactly]) the
+software environment described in their paper.  In practice that would
+include the Git commit of the Guix being used and the Git commits of
+additional repositories containing package recipes, if needed.
+Incorporating ,(tt [/gnu/store]) file names in the document would
+provide those interested in reproducing the software environment with a
+``check sum'' while the content hash constitutes a ``proof of build''.])
+         (p [We could go further an imagine papers that directly
+evaluate g-expressions,(---)Guix's DSL for primitive build expressions
+that use Guix packages,(---)to run the tool chain that produces results
+that appear in the paper.  The Guix daemon can delegate builds ,(it
+[via]) its offloading mechanism; this could perhaps be directly
+integrated with batch schedulers like Slurm to allow HPC applications to
+be not only built but also run ,(it [via]) Guix.])))
 
    (chapter :title [Limitations and Challenges]
       :ident "limitations"

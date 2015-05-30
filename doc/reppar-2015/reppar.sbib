@@ -64,6 +64,53 @@ Computational Science, ICCS")
   (pages "589--597")
   (issn "1877-0509"))
 
+(article nowakowski2011:collage
+  (url "http://dx.doi.org/10.1016/j.procs.2011.04.064")
+  (title "The Collage Authoring Environment")
+  (author "Piotr Nowakowskia et al.")  ;work around encoding issue
+;;  (author "Piotr Nowakowskia, Eryk Ciepielaa, Daniel Harężlaka, Joanna
+;;  Kocota, Marek Kasztelnika, Tomasz Bartyńskia, Jan Meiznera, Grzegorz
+;;  Dyka, Maciej Malawskib")
+  (journal "Procedia Computer Science")
+  (note "Proceedings of the International Conference on
+Computational Science, ICCS")
+  (year "2011")
+  (volume "4")
+  (number "0")
+  (pages "608--617")
+  (issn "1877-0509"))
+
+(article gallesio2005:skribe
+  (author "Érick Gallesio, Manuel Serrano")
+  (title "Skribe: A Functional Authoring Language")
+  (journal "Journal of Functional Programming")
+  (issue_date "September 2005")
+  (volume "15")
+  (number "5")
+  (month "September")
+  (year "2005")
+  (issn "0956-7968")
+  (pages "751--770")
+  (numpages "20")
+  (url "http://dx.doi.org/10.1017/S0956796805005575")
+  (doi "10.1017/S0956796805005575")
+  (acmid "1082046")
+  (publisher "Cambridge University Press")
+  (address "New York, NY, USA"))
+
+(article schulte2011:org-reproducible
+  (author	"Eric Schulte, Dan Davison, Thomas Dye, Carsten Dominik")
+  (title	"A Multi-Language Computing Environment for Literate Programming and Reproducible Research")
+  (journal	"Journal of Statistical Software")
+  (volume	"46")
+  (number	"3")
+  (pages	"1--24")
+  (day  	"25")
+  (month	"1")
+  (year 	"2012")
+  (issn 	"1548-7660")
+  (url  	"http://www.jstatsoft.org/v46/i03"))
+
 (misc debian-reproducible-web
   (year "2015")
   (author (noabbrev "Debian Project"))
