@@ -30,14 +30,18 @@
              (guix hash) (guix base32)
              ((guix serialization) #:select (write-file))
              (my-openmpi)
-             (gnu packages))
+             (gnu packages)
+             ((gnu packages base) #:select (canonical-package glibc)))
 
-(define-values (%openmpi-path %openmpi-hash)
+(define-values (%glibc-path %openmpi-path %openmpi-hash)
   ;; Here we connect to the Guix build daemon to get information about
   ;; the software environment we are talking about.
   (guix:with-store store
     (let ((drv (package-derivation store openmpi)))
       (values
+        (derivation->output-path
+          (package-derivation store (canonical-package glibc)))
+
         ;; Compute the /gnu/store file name of our Open MPI.
         (derivation->output-path drv)
 
@@ -286,19 +290,11 @@ Although it is not perfect as we will see in ,(numref :text [Section]
 :ident "limitations"), this technique gives us confidence that build
 processes can be viewed as pure functions, with reproducible results.])
       
-      (figure
-	 :legend [Invocation of the ,(tt [guix build]) command returning
-	 the resulting file name in the store.]
-	 :ident "fig-build"
-	 
-	 ;;(include-latex "fig-build.tex")
-         (bold [FIXME: imagine a figure here]))
-
       (p [Each build process produces one or more files in directories
 stored in a common place called ,(emph [the store]), typically the ,(tt
 [/gnu/store]) directory.  Each file in ,(tt [/gnu/store]) has a name
 that includes a hash of all the inputs of the build process that led to
-it, as shown in ,(numref :text [Figure] :ident "fig-build").  By ``all
+it, such as ,(tt %glibc-path).  By ``all
 the inputs'', we really mean all of them: this includes of course
 compilers and libraries (including the C library), but also build
 scripts and environment variable values.  And this is recursive, the
