@@ -115,7 +115,7 @@ Software Environments in HPC with Guix]
    
    (abstract
     [Support teams of high-performance computing (HPC) systems often
-find themselves between a rock and hard place: on one hand, they
+find themselves between a rock and a hard place: on one hand, they
 understandably administrate these large systems in a conservative way,
 but on the other hand, they try to satisfy their users by deploying
 up-to-date tool chains as well as libraries and scientific software.
@@ -372,13 +372,13 @@ version of the direct and indirect dependencies of our package,(footnote
       (p [With that definition in place, running ,(tt [guix build
 openmpi]) returns the directory name
 ,(tt %openmpi-path).  If
-that directory did not already exist, then the daemon spawns the build
+that directory did not already exist, the daemon spawns the build
 process in its isolated environment with write access to this directory.
 Of course users never have to type these long ,(tt [/gnu/store]) file
 names.  They can install the package in their ,(emph [profile]) using
 the ,(tt [guix package]) command, which essentially installs symbolic
 links under ,(tt [~/.guix-profile]).  It is then a matter of defining
-the search paths for the compiler, linker, and other tools ,(tt [via])
+the search paths for the compiler, linker, and other tools ,(it [via])
 environment variables.  Fortunately, Guix keeps track of that and the
 ,(tt [guix package --search-paths]) command returns all the necessary
 environment variable definitions in Bourne shell syntax.  For example,
@@ -655,8 +655,8 @@ proprietary software packages.  Unfortunately, proprietary software is
 still relatively common in HPC, be it linear algebra libraries or GPU
 support.  Yet, we see it as a strength more than a limitation.  Often,
 these ``black boxes'' inherently limit reproducibility,(---)how is one
-going to reproduce a software environment if they are not given the
-right to run the software in the first place?  What if the software
+going to reproduce a software environment without permission
+to run the software in the first place?  What if the software
 depends on the ability to ``call home'' to function at all?  More
 importantly, we view reproducible software environments and reproducible
 science as a tool towards the goal of improved and shared knowledge;
@@ -715,7 +715,7 @@ installable by unprivileged users since they do not rely on privileged
 components, unlike Guix and Nix.  The downside is that they cannot use
 the kernel's container facilities, which seriously hinders
 build reproducibility.  When used in the user's home directories, these
-tools have the inconvenient of disallowing sharing: each user may end up
+tools have the inconvenience of disallowing sharing: each user may end up
 rebuilding the same compiler, libraries, etc., which can be costly in
 terms of CPU, bandwidth, and disk usage.  Conversely, Nix and Guix
 support safe sharing of builds.])
