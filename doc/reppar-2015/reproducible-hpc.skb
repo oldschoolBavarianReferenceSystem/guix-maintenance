@@ -238,8 +238,21 @@ context of Debian by the Reproducible project ,(ref :bib
 'debian-reproducible-web), and by tools such as Fedora's Mock ,(ref :bib
 'fedora-mock-web).])
       (p [Second, while it is in theory possible for a user to define
-their own variant of a package, as is often needed in HPC, this happens
-to be often difficult in practice.  ,(bold [FIXME: Expound.])])
+their own variant of a package, as is often needed in HPC, this
+happens to be often difficult in practice.  On an RPM-based system,
+for example, a user may be able to customize a ,(code [.spec]) file to
+build a custom, relocatable RPM package, but only the super-user can
+install the package alongside its dependencies and register it in the
+central package database.  A user without super-user privileges cannot
+write to the central ,(code [yumdb]), and as ,(code [yum]) does not
+support per-user package databases, the user has to fall back to the
+lower-level ,(code [rpm]) tool to be able to use a separate package
+registry, losing higher-level package management features such as
+dependency analysis as a result.  Since RPM package databases cannot
+be composed, a user would need to manually track down and register the
+complete graph of dependencies with the separate, user-owned package
+database, a tedious process resulting in needless duplication and
+preventing sharing.])
       (p [Third, APT, RPM, and similar tools implement an ,(emph
 [imperative]) and ,(emph [stateful]) package management model, as Doltra
 et al. rightfully explained in ,(ref :bib 'dolstra2004:nix).  It is
@@ -324,7 +337,7 @@ this is a standard Scheme object, we can query it programmatically, as
 shown in ,(numref :text [Figure] :ident "fig-query").])
       
       (figure
-         :legend [Querying a package object using the programming interface.]
+         :legend [Querying the dependencies of a package object.]
          :ident "fig-query"
          
          (prog :mark #f
@@ -396,7 +409,22 @@ tries to build, say, a malicious version of the C library, then the
 other users on the system will not use it, simply because they cannot
 guess its ,(tt [/gnu/store]) file name in the first place,(---)unless
 they themselves explicitly build the very same modified C library.])
-         (p (bold [FIXME: insert MDC experience report here?]))
+         (p [At the MDC Berlin a common Guix store shared among cluster
+nodes and user workstations is now gradually replacing other methods
+of software distribution, such as statically linked binaries on group
+network shares, relocatable RPMs installed into group prefixes,
+one-off builds directly on the cluster, and user-built software
+installed into their home directories.  This proved particularly
+useful in the efforts to move users and their custom software
+environments from an older cluster running Ubuntu to a new cluster
+running a version of CentOS, because software packaged with Guix does
+not depend on any of the host system's libraries and thus can be used
+on very different systems without any changes to the packages.
+Research groups now have a shared Guix profile for common
+applications, whereas individual users can manage their very own
+profiles for custom software, legacy versions of bioinformatics tools
+to reproduce published results, bleeding-edge tool chains, or even for
+complete workflows.])
 
          (figure
             :legend [Declaring the set of packages to be installed in a
