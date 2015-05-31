@@ -13,6 +13,9 @@
               (list (string-append (getenv "HOME") "/.config/guix/latest")
                     (string-append (dirname file) "/code")))))
 
+;; Ignore the user-defined packages.
+(unsetenv "GUIX_PACKAGE_PATH")
+
 (use-modules (skribilo package lncs)
 	     (skribilo engine latex)
 	     (skribilo biblio author)
@@ -26,7 +29,8 @@
              ((guix store) #:prefix guix:)
              (guix hash) (guix base32)
              ((guix serialization) #:select (write-file))
-             (my-openmpi))
+             (my-openmpi)
+             (gnu packages))
 
 (define-values (%openmpi-path %openmpi-hash)
   ;; Here we connect to the Guix build daemon to get information about
@@ -720,10 +724,25 @@ common cases, although there are limits to the expressivity and
 readability of such a compact syntax. ,(bold [FIXME: What else about
 Spack?])]))
    
-   (chapter :title [Conclusion] :ident "conclusion")
+   (chapter :title [Conclusion] :ident "conclusion"
+      
+      (p [Functional package managers provide the foundations for
+reproducible software environments, while still allowing fine-grain
+software composition and not imposing high disk and RAM costs.
+GNU,(~)Guix builds on the foundations of Nix and provides a unified set
+of user and programming interfaces.  To date, it comes with
+,(fold-packages (lambda (p n) (+ 1 n)) 0) including many of the common
+HPC tools and libraries as well as around 40 bioinformatics packages.
+It is deployed on the cluster of the Max Delbrück Center for Molecular
+Medicine, Berlin, and being discussed as one of the packaging options by
+the Open Bioinformatics Foundation, a non-profit for the biological
+research community.  We hope to see more HPC deployments of Guix in the
+foreseeable future.])
+      (p [GNU,(~)Guix benefits from contributions by about 20 people
+each month.  It is the foundation of the Guix System Distribution, a
+standalone, reproducible GNU/Linux distribution.]))
    
-   (references)
-   )
+   (references))
    
 ;; Local Variables:
 ;; compile-command: "skribilo -t latex -o reproducible-hpc.tex reproducible-hpc.skb && rubber --pdf reproducible-hpc.tex"
