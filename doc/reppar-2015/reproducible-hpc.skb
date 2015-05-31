@@ -553,11 +553,11 @@ information about the software environment as in ,(numref :text [Figure]
 :ident "fig-recipe") leads to ,(tt %openmpi-path) and that the SHA256
 hash of its content is ,(tt (bytevector->nix-base32-string
 %openmpi-hash)) ,(let ((here (current-source-location)))
-   (footnote [Check out the source code of this document at
-,(url %document-url), around line ,(assoc-ref here 'line) of file ,(tt
+   (footnote [Check out the source code of this document at ,(url
+%document-url), around line ,(assoc-ref here 'line) of file ,(tt
 (assoc-ref here 'filename)).])).  With a bit of ``plumbing'', authors
-could achieve similar results when using author document authoring
-systems, for instance with Org-Babel.])
+could achieve similar results with other document authoring systems, for
+instance with Org-Babel ,(ref :bib 'schulte2011:org-reproducible).])
          (p [Our vision is that authors would integrate all the
 information necessary and sufficient to reproduce ,(emph [exactly]) the
 software environment described in their paper.  In practice that would
