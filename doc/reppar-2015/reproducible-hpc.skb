@@ -754,6 +754,13 @@ foreseeable future.])
       (p [GNU,(~)Guix benefits from contributions by about 20 people
 each month.  It is the foundation of the Guix System Distribution, a
 standalone, reproducible GNU/Linux distribution.]))
+      
+   (chapter :title [Acknowledgments] :number #f
+      
+      (p [We would like to thank colleagues at Inria for insightful
+discussions and comments on an earlier draft: Florent Pruvost, Emmanuel
+Agullo, and Andreas Enge.  We are grateful to the Guix contributors who
+keep improving the system.]))
    
    (references))
    
