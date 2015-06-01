@@ -670,23 +670,27 @@ against this goal.])
 environments has traditionally not been a major concern until recently.
 One of the oldest work in this area is the Vesta software configuration
 system ,(ref :bib 'heydon2000:caching).  Vesta provides a DSL that
-allows users to describe build operations.  The Nix package manager
-takes a similar approach ,(ref :bib 'dolstra2004:nix).  Guix reuses the
-Nix build daemon, but instead provides a set of embedded DSLs and to
-describe both high-level package recipes and fine-grain build
-operations, as well as a unified programming framework ,(ref :bib
-'courtes2013:functional).  Guix also goes a bit further by having
-completely pure build environments, without ,(tt [/bin/sh]).  While
-this may sound like a detail, adding ,(tt [/bin/sh]) to the chroot has
-proved to be a serious barrier to reproducibility in practice ,(ref :bib
-'courtes2013:functional).])
-      (p [More recently, Debian's Reproducible project
+allows users to describe build operations, similar to Nix
+,(ref :bib 'dolstra2004:nix). ]
+
+;; Guix reuses the
+;; Nix build daemon, but instead provides a set of embedded DSLs and to
+;; describe both high-level package recipes and fine-grain build
+;; operations, as well as a unified programming framework ,(ref :bib
+;; 'courtes2013:functional).  Guix also goes a bit further by having
+;; completely pure build environments, without ,(tt [/bin/sh]).  While
+;; this may sound like a detail, adding ,(tt [/bin/sh]) to the chroot has
+;; proved to be a serious barrier to reproducibility in practice ,(ref :bib
+;; 'courtes2013:functional).
+
+      [More recently, Debian's Reproducible project
 has developed tools to perform isolated builds
 and identify sources of non-determinism.  Gitian
 is a tool initially developed by the Tor Project that uses VMs
-to perform isolated builds.  Google's recently-unveiled Bazel
-build tool relies on container facilities provided by the kernel Linux,
-similar to the Nix/Guix daemon, and provides another DSL to describe
+to perform isolated builds.
+Google's recent Bazel
+build tool relies on container facilities provided by the kernel Linux
+and provides another DSL to describe
 build operations.])
       (p [At the other end of the spectrum, reproducibility can be
 achieved with more heavyweight approaches such as full operating system
@@ -770,6 +774,8 @@ standalone, reproducible GNU/Linux distribution.]))
 ;; Local Variables:
 ;; compile-command: "skribilo -t latex -o reproducible-hpc.tex reproducible-hpc.skb && rubber --pdf reproducible-hpc.tex"
 ;; ispell-local-dictionary: "american"
+;; comment-start: ";;"
+;; comment-end: ""
 ;; indent-tabs-mode: nil
 ;; End:
 
