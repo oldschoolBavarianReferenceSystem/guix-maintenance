@@ -67,7 +67,7 @@ Computational Science, ICCS")
 (article nowakowski2011:collage
   (url "http://dx.doi.org/10.1016/j.procs.2011.04.064")
   (title "The Collage Authoring Environment")
-  (author "Piotr Nowakowskia et al.")  ;work around encoding issue
+  (author (noabbrev "P. Nowakowskia et al."))  ;work around encoding issue
 ;;  (author "Piotr Nowakowskia, Eryk Ciepielaa, Daniel Harężlaka, Joanna
 ;;  Kocota, Marek Kasztelnika, Tomasz Bartyńskia, Jan Meiznera, Grzegorz
 ;;  Dyka, Maciej Malawskib")
