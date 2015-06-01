@@ -1,8 +1,5 @@
-;; This file can be passed to 'guix package --manifest' to
-;; reproduce a profile with the given list of packages.
-
-(use-modules (gnu packages base)
-             (gnu packages gcc)
+;; This file can be passed to 'guix package --manifest'.
+(use-modules (gnu packages base) (gnu packages gcc)
              (my-openmpi))
 
 (packages->manifest

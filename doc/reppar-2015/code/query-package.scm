@@ -5,8 +5,7 @@
 
 ;;!start
 ;; Query the direct and indirect inputs of Open MPI.
-;; Each input is represented by a label/package tuple;
-;; we are only interested in the package object here.
+;; Each input is represented by a label/package tuple.
 (map (match-lambda
        ((label package)
         (package-full-name package)))
