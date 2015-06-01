@@ -28,21 +28,17 @@
 	     (skribilo evaluator)
              (guix packages) (guix derivations)
              ((guix store) #:prefix guix:)
-             (guix hash) (guix base32)
+             (guix hash) (guix base64)
              ((guix serialization) #:select (write-file))
              (my-openmpi)
-             (gnu packages)
-             ((gnu packages base) #:select (canonical-package glibc)))
+             (gnu packages))
 
-(define-values (%glibc-path %openmpi-path %openmpi-hash)
+(define-values (%openmpi-path %openmpi-hash)
   ;; Here we connect to the Guix build daemon to get information about
   ;; the software environment we are talking about.
   (guix:with-store store
     (let ((drv (package-derivation store openmpi)))
       (values
-        (derivation->output-path
-          (package-derivation store (canonical-package glibc)))
-
         ;; Compute the /gnu/store file name of our Open MPI.
         (derivation->output-path drv)
 
@@ -125,7 +121,7 @@ Software Environments in HPC with Guix]
 		    :address (list "Bordeaux, France"))
 		 (author :name "Ricardo Wurmus"
 		    :affiliation "Max Delbrück Center for Molecular
-		    Medicine in the Helmholtz Association"
+		    Medicine"  ;;in the Helmholtz Association
 		    :address (list "Berlin, Germany"))
                  (author :name "Your Name Here!")
                  ;; + others...
@@ -150,7 +146,7 @@ illustrating with representative use cases.])
       
       (p [HPC system administration has to satisfy two seemingly
 contradictory demands: on one hand administrators seek stability, which
-leads to a very conservative approach to software management, and on the
+leads to a conservative approach to software management, and on the
 other users demand recent tool chains and huge scientific software
 stacks.  In addition, users often need different versions and different
 variants of a given software package.  To satisfy both, support teams
@@ -167,19 +163,16 @@ place, which means that users may eventually find themselves unable to
 reproduce their software environment, ,(emph [even on the same
 system]).])
       (p [Recently-developed tools such as EasyBuild ,(ref :bib
-'geimer2014:easybuild) address part of the problem by automating package
-builds, enforcing some conventions on installation directories, and
-integrating with environment modules.  Spack ,(ref :bib
-'gamblin:spack-web) goes further by seeking usability by unprivileged
-users and by adding facilities to create package variants.  However,
+'geimer2014:easybuild) and Spack ,(ref :bib
+'gamblin:spack-web) address part of the problem by automating package
+builds, supporting non-root users, and adding facilities to create
+package variants.  However,
 these tools fall short when it comes to build reproducibility.  First,
-the build environment is loosely controlled by environment variables,
-and build processes can trivially refer to tools or libraries available
-in the surrounding environment, which defeats reproducibility.  Second,
+build processes can trivially refer to tools or libraries already
+installed on the system.  Second,
 the ,(it [ad hoc]) naming conventions they rely on to identify builds
 fail to capture the directed acyclic graph (DAG) of dependencies that
-led to this particular build (see ,(numref :text [Section] :ident
-"related")).])
+led to this particular build.])
       (p [GNU,(~)Guix is a general-purpose package manager that
 implements the functional package management paradigm pioneered by Nix
 ,(ref :bib '(dolstra2004:nix courtes2013:functional)).  Many of its
@@ -221,8 +214,7 @@ dismissed.  Instead support teams install packages from third-party
 repositories,(---)but then they clobber the global ,(tt [/usr])
 prefix, which sysadmins may want to keep under control,(---), or install
 them from source by
-themselves,(---)going from scientific software, to HPC libraries, to compiler
-tool chains,(---)and make them available through environment modules
+themselves and make them available through environment modules
 ,(ref :bib 'furlani1991:modules).  Modules allow users to choose different
 versions or variants of the packages they use without interfering with
 each others.  However, when installed software is updated in place or
@@ -233,32 +225,22 @@ seems out of reach.  It is nonetheless a very important property: it
 would allow users to assess the impact of the hardware on the software's
 performance,(---)something that is very valuable in particular for
 developers of run-time systems such as StarPU ,(ref :bib
-'augonnet2009:starpu),(---), and it would allow other researchers to
+'augonnet2009:starpu),(---)and it would allow other researchers to
 reproduce experiments on their system.])
       (p [Essentially, by deploying software and environment modules,
 HPC support teams find themselves duplicating the work of GNU/Linux
 distributions, but why is that?  Historical package managers such as
-Debian's APT were introduced as a way to (1) allow distribution makers
-to describe the dependencies and ``build recipe'' of a package to
-automate builds, and (2) to allow users to easily install, upgrade, and
-remove packages without having to worry about dependencies and build
-systems.  However, these traditional package managers suffer from
-several limitations.])
-      (p [First, package binaries that every user installs (for
-instance, the ,(code [.deb]) files) are actually built on the package
-maintainer's machine, which then uploads it.  Because the package's
-build process has access to all the machine's file system and resources,
-details of the build environment and host machine
-may leak into the binary that is uploaded.  Thus, chances are
-that another user would not be able to reproduce the exact same binary.
-It is worth noting that this particular issue is being addressed in the
-context of Debian by the Reproducible project, and by tools such as
-Fedora's Mock.])
+APT and RPM suffer from
+several limitations.  First, package binaries that every user installs,
+such as ,(code [.deb]) files, are actually built on the package
+maintainer's machine, and details about the host
+may leak into the binary that is uploaded,(---)a shortcoming that is now
+being addressed (see ,(numref :text [Section] :ident "related").])
       (p [Second, while it is in theory possible for a user to define
 their own variant of a package, as is often needed in HPC, this
-happens to be often difficult in practice.  On an RPM-based system,
-for example, a user may be able to customize a ,(code [.spec]) file to
-build a custom, relocatable RPM package, but only the super-user can
+happens to be often difficult in practice.  Users of RPM-based systems,
+for example, may be able to customize a ,(code [.spec]) file to
+build a custom, relocatable RPM package, but only the administrator can
 install the package alongside its dependencies and register it in the
 central package database.  A user without super-user privileges cannot
 write to the central ,(code [yumdb]), and as ,(code [yum]) does not
@@ -270,9 +252,9 @@ be composed, a user would need to manually track down and register the
 complete graph of dependencies with the separate, user-owned package
 database, a tedious process resulting in needless duplication and
 preventing sharing.])
-      (p [Third, APT, RPM, and similar tools implement an ,(emph
-[imperative]) and ,(emph [stateful]) package management model, as Doltra
-et al. rightfully explained in ,(ref :bib 'dolstra2004:nix).  It is
+      (p [Third, these tools implement an ,(emph
+[imperative]) and ,(emph [stateful]) package management model, as Dolstra
+et al. explain in ,(ref :bib 'dolstra2004:nix).  It is
 imperative in the sense that it modifies the set of available packages
 in place.  For example, upgrading libc means that suddenly all the
 installed packages start using the new libc version; switching to an
@@ -294,9 +276,9 @@ functions in the mathematical sense,(---)whose result depends
 exclusively on the inputs,(---), and their result is a value,(---)that
 is, an immutable directory.  Since build and installation processes are
 pure functions, their results can effectively be ``cached'' on
-disk,(---)just like one can ``memoize'' pure functions.  Likewise, two
+disk.  Likewise, two
 independent runs of a given build process for a given set of inputs
-should return the same value,(---),(it [i.e.]), a set of bit-identical
+should return the same value,(---),(it [i.e.]), bit-identical
 files.  This approach was first described and implemented in the Nix
 package manager ,(ref :bib 'dolstra2004:nix).  Guix reuses low-level
 mechanisms from Nix to implement the same paradigm, but offers a unified
@@ -310,30 +292,31 @@ always runs them in ``containers'' as implemented by the kernel Linux;
 that is, they run in a chroot environment, under a dedicated user ID,
 with a well-defined set of environment variables,
 with separate name spaces for PIDs, inter-process communication (IPC),
-networking, and so on.  The chroot environment is prepared to contain
-only the directories corresponding to the inputs that the build process
-explicitly declared.  This ensures that the build process cannot
+networking, and so on.  The chroot environment contains
+only the directories corresponding to the explicitly declared inputs.
+This ensures that the build process cannot
 inadvertently end up using tools or libraries that it is not supposed to
 use.  The separate name spaces ensure that the build process cannot
 communicate with the outside world.
 Although it is not perfect as we will see in ,(numref :text [Section]
 :ident "limitations"), this technique gives us confidence that build
-processes can be viewed as pure functions, with reproducible results.])
+processes can indeed be viewed as pure functions, with 
+reproducible results.])
       
       (p [Each build process produces one or more files in directories
 stored in a common place called ,(emph [the store]), typically the ,(tt
-[/gnu/store]) directory.  Each file in ,(tt [/gnu/store]) has a name
-that includes a hash of all the inputs of the build process that led to
-it, such as ,(tt %glibc-path).  By ``all
+[/gnu/store]) directory.  Each entry in ,(tt [/gnu/store]) has a name
+that includes a hash of ,(emph [all the inputs]) of the build process
+that led to it.  By ``all
 the inputs'', we really mean all of them: this includes of course
-compilers and libraries (including the C library), but also build
+compilers and libraries, including the C library, but also build
 scripts and environment variable values.  And this is recursive, the
 compiler's own directory name is a hash of the tools and libraries used
-to build, and so on and so forth, until a set a pre-built binaries used
+to build, and so on, until a set a pre-built binaries used
 for bootstrapping purposes,(---)and which can in turn be rebuilt using
 Guix ,(ref :bib 'courtes2013:functional).  Thus, for each package that
 is built, the system has access to the ,(emph [complete DAG]) of
-dependencies used to build it, recursively.])
+dependencies used to build it.])
       
       (figure
          :legend [Guix package recipe of Open,(~)MPI.]
@@ -346,12 +329,9 @@ dependencies used to build it, recursively.])
       (p [Package recipes in Guix are written in a domain-specific
 language (DSL) embedded in the Scheme programming language.  ,(numref
 :text [Figure] :ident "fig-recipe") shows, as an example, the recipe to
-build the Open,(~)MPI library, which should be intelligible to the
-reader.  The ,(tt [package]) form evaluates to a ,(emph [package
-object]), which is just a ``regular'' Scheme object; the ,(tt [define])
-form defines the ,(tt [openmpi]) variable to hold that value.  Because
-this is a standard Scheme object, we can query it programmatically, as
-shown in ,(numref :text [Figure] :ident "fig-query").])
+build the Open,(~)MPI library.  The ,(tt [package]) form evaluates to a ,(emph [package
+object]), which is just a ``regular'' Scheme value; the ,(tt [define])
+form defines the ,(tt [openmpi]) variable to hold that value.])
       
       (figure
          :legend [Querying the dependencies of a package object.]
@@ -367,9 +347,9 @@ shown in ,(numref :text [Figure] :ident "fig-query").])
             (source :language scheme
                (object->string (primitive-load "code/query-package.scm")))))
             
-      (p [Important parts include line ,(ref :line
-"recipe-build-system"), which specifies that the package is to be built
-according to the GNU build system convention,(---),(it [i.e.]), using
+      (p [Line ,(ref :line
+"recipe-build-system") specifies that the package is to be built
+according to the GNU standards,(---),(it [i.e.]),
 the well-known ,(tt [./configure && make && make install]) sequence
 (similarly, Guix defines ,(tt [cmake-build-system]), and so on.)
 The ,(tt [inputs]) field on line ,(ref :line "recipe-inputs") specifies
@@ -377,7 +357,7 @@ the direct dependencies of the package.  The field refers to the
 ,(tt [hwloc]), ,(tt [gfortran-4.8]), and ,(tt [pkg-config]) variables,
 which are also bound to package objects (their definition is not shown
 here.)  It would be inconvenient to specify all the standard inputs,
-such as GNU,(~)Make, GCC, GNU,(~)Binutils so these are implicit here;
+such as Make, GCC, Binutils so these are implicit here;
 they are provided by ,(tt [gnu-build-system]), which is responsible for
 compiling package objects to an intermediate representation.
 Since we are manipulating ``normal'' Scheme objects, we can use the API
@@ -392,8 +372,8 @@ openmpi]) returns the directory name
 that directory did not already exist, the daemon spawns the build
 process in its isolated environment with write access to this directory.
 Of course users never have to type these long ,(tt [/gnu/store]) file
-names.  They can install the package in their ,(emph [profile]) using
-the ,(tt [guix package]) command, which essentially installs symbolic
+names.  They can install packages in their ,(emph [profile]) using
+the ,(tt [guix package]) command, which essentially creates symbolic
 links under ,(tt [~/.guix-profile]).  It is then a matter of defining
 the search paths for the compiler, linker, and other tools ,(it [via])
 environment variables.  Fortunately, Guix keeps track of that and the
@@ -419,26 +399,27 @@ tightly with the production of research papers.])
 securely permit unprivileged users to install packages in the store
 ,(ref :bib 'dolstra2004:nix).  To build a package, the ,(tt [guix])
 commands connect to the build daemon, which then performs the build (if
-needed) on their behalf, in the isolated, unprivileged environment.
+needed) on their behalf, in the isolated environment.
 When two users build the exact same package, both end up using the exact
 same ,(tt [/gnu/store]) file name and storage is shared.  If a user
 tries to build, say, a malicious version of the C library, then the
 other users on the system will not use it, simply because they cannot
-guess its ,(tt [/gnu/store]) file name in the first place,(---)unless
+guess its ,(tt [/gnu/store]) file name,(---)unless
 they themselves explicitly build the very same modified C library.])
-         (p [At the MDC Berlin a common Guix store shared among cluster
+         (p [At the Max Delbrück Center for Molecular Medicine (MDC),
+Berlin, the store is shared among cluster
 nodes and user workstations is now gradually replacing other methods
 of software distribution, such as statically linked binaries on group
 network shares, relocatable RPMs installed into group prefixes,
-one-off builds directly on the cluster, and user-built software
-installed into their home directories.  This proved particularly
+one-off builds on the cluster, and user-built software
+installed in home directories.  This proved particularly
 useful in the efforts to move users and their custom software
 environments from an older cluster running Ubuntu to a new cluster
 running a version of CentOS, because software packaged with Guix does
 not depend on any of the host system's libraries and thus can be used
 on very different systems without any changes to the packages.
 Research groups now have a shared Guix profile for common
-applications, whereas individual users can manage their very own
+applications, whereas individual users can manage their own
 profiles for custom software, legacy versions of bioinformatics tools
 to reproduce published results, bleeding-edge tool chains, or even for
 complete workflows.])
@@ -452,13 +433,12 @@ complete workflows.])
                (source :language scheme :file "code/manifest.scm")))
 
          (p [Guix users have a default profile in ,(tt
-[~/.guix-profile]),(---)essentially a tree of symlinks to selected items
-in ,(tt [/gnu/store]),(---)but they can create independent profiles in
+[~/.guix-profile]) but they can create independent profiles in
 arbitrary places of the file system.  Guix supports two ways to manage a
 profile.  The first one is to make transactions that add, upgrade, or
 remove packages in the profile: ,(tt [guix package --install openmpi
---remove mpich2]) installs Open,(~)MPI and remove MPICH2 from ,(tt
-[~/.guix-profile]) in a single transaction that can be rolled back.  The
+--remove mpich2]) installs Open,(~)MPI and removes MPICH2
+in a single transaction that can be rolled back.  The
 second approach is to ,(emph [declare]) the desired contents of the
 profile and make that effective: the user writes in a file a code
 snippet that lists the requested packages (see ,(numref :text [Figure]
@@ -468,10 +448,10 @@ snippet that lists the requested packages (see ,(numref :text [Figure]
 replicate a profile, but it is symbolic: it uses whatever package
 objects the variables are bound to (,(tt [gnu-make]), ,(tt
 [gcc-toolchain]), etc.), but these variables are typically defined in
-the ,(tt [(gnu packages ...)]) modules that Guix comes with.  Thus the
+the ,(tt [(gnu packages …)]) modules that Guix comes with.  Thus the
 precise packages being installed depend on the version of Guix that is
-available.  Specifying the Guix revision,(footnote [Guix itself is
-versioned-controlled using Git.]) in addition to the declaration in
+available.  Specifying the Git commit of Guix
+in addition to the declaration in
 ,(numref :text [Figure] :ident "fig-manifest") is all it takes to
 reproduce the exact same ,(tt [/gnu/store]) items.])
          (p [Another approach to achieve bit-identical reproduction of a
@@ -490,9 +470,9 @@ solvers such as PaStiX and dense solvers such as Chameleon,
 to run-time support libraries and compiler extensions such as StarPU
 ,(ref :bib 'augonnet2009:starpu) and hwloc.  While
 developers of simulations want to be able to deploy the whole stack,
-developers of solvers want to be able to deploy just their project's
+developers of solvers only need their project's
 dependencies, possibly several variants thereof.  For instance,
-developers of Chameleon may want to test their software again several
+developers of Chameleon may want to test their software against several
 versions of StarPU, or against variants of StarPU built with different
 compile-time options.  Finally, developers of the lower-level layers,
 such as StarPU, may want to test the effect of changes they make on
@@ -512,7 +492,7 @@ higher-level layers.])
 to customize and non-ambiguously specify a package DAG, and that they be
 able to reproduce any variant of their package DAG.  Guix allows them to
 define variants; the code for these variants can be stored in a
-repository of their own, and then made visible to the ,(tt [guix])
+repository of their own and made visible to the ,(tt [guix])
 commands by defining the ,(tt [GUIX_PACKAGE_PATH]) environment variable.
 ,(numref :text [Figure] :ident "fig-variants") shows an example of such
 package variants: based on the pre-existing ,(tt [starpu]) variable, the
@@ -543,12 +523,13 @@ for the Chameleon solver.]
                   :start ";;!begin-chameleon"
                   :stop ";;!end-chameleon")))
 
-         (p [Now that we have several StarPU variants, we allow direct
-and indirect uses to select the variant that they want.  A simple way to
-do that is to write, say, a ,(tt [make-chameleon]) function that takes a
-,(tt [starpu]) parameter and uses it as its input.  As ,(numref :text
-[Figure] :ident "fig-chameleon") shows, we can then call that function
-to create the relevant variants of Chameleon.  To allow users to refer
+         (p [Now that we have several StarPU variants, we
+want to allow direct
+and indirect users to select the variant that they want.  A simple way to
+do that is to write, say, a function that takes a
+,(tt [starpu]) parameter returns a package that uses it as its input
+as show in ,(numref :text
+[Figure] :ident "fig-chameleon").  To allow users to refer
 to one or the other variant at the command line, we use different
 values for the ,(tt [name]) field.])
          
@@ -570,8 +551,8 @@ rooted at Chameleon with a different implementation.  One way to do that
 is by writing a function that recursively adjusts the package labeled
 ,(tt ["mpi"]) in the ,(tt [inputs]) field of packages.  This is what the
 ,(tt [override-input]) function in ,(numref :text [Figure] :ident
-"fig-override") does.])
-         (p [No matter how complex the transformations are, a package
+"fig-override") does.
+ No matter how complex the transformations are, a package
 object unambiguously represents a reproducible build process.]))
 
       (section :title [Going Further]  ;active papers + gexps
@@ -590,7 +571,7 @@ Because Guix is itself a Scheme library, we can easily insert
 information about the software environment as in ,(numref :text [Figure]
 :ident "fig-query"), or note that the recipe in ,(numref :text [Figure]
 :ident "fig-recipe") leads to ,(tt %openmpi-path) and that the SHA256
-hash of its content is ,(tt (bytevector->nix-base32-string
+hash of its content is ,(tt (base64-encode
 %openmpi-hash)) ,(let ((here (current-source-location)))
    (footnote [Check out the source code of this document at ,(url
 %document-url), around line ,(assoc-ref here 'line) of file ,(tt
@@ -618,11 +599,11 @@ be not only built but also run ,(it [via]) Guix.])))
       
       (p (emph [Privileged daemon.]) [ Nix and Guix address many of the
 reproducibility issues encountered in package deployment, and Guix
-provides APIs and a programming environment aiming to facilitate the
+provides APIs that can facilitate the
 development of package variants as is useful in HPC.  Yet, to our
 knowledge, neither Guix nor Nix are widely deployed on HPC systems.  An
 obvious reason that limits adoption is the requirement to have the build
-daemon run with root privileges,(---)without which it would not be able
+daemon run with root privileges,(---)without which it would be unable
 to use the Linux kernel container facilities that allow it to isolate
 build processes and maximize build reproducibility.  System
 administrators are wary of installing privileged daemons, and so HPC
@@ -637,9 +618,9 @@ For this reason, Guix users at the MDC are required to manage their
 profiles from a specific node; other nodes can use the profiles, but not
 modify them.  Allowing the ,(tt [guix]) commands to communicate with a
 remote daemon will address this issue.])
-      (p [In a typical cluster setup, compute nodes completely lack
-access to the Internet.  Yet, the daemon needs to be able to download
-source code tarballs or pre-built binaries from external server.  Thus,
+      (p [Additionally, compute nodes typically lack
+access to the Internet.  However, the daemon needs to be able to download
+source code tarballs or pre-built binaries from external servers.  Thus,
 the daemon must run on a node with Internet access, which could be
 contrary to the policy on some clusters.])
 
@@ -649,7 +630,7 @@ of non-determinism that build systems of packages might use and
 that can impede reproducibility.  In particular,
 details about the operating system kernel and the hardware begin used
 can ``leak'' to build processes.  For example, the kernel Linux provides
-system calls such as ,(tt [uname]) and file system interfaces such as
+system calls such as ,(tt [uname]) and interfaces such as
 ,(tt [/proc/cpuinfo]) that leak information about the host; independent
 builds on different hosts could lead to different results if this
 information is used.  Likewise, the ,(tt [cpuid]) instruction leaks
@@ -657,11 +638,11 @@ hardware details.])
       (p [Fortunately, few software packages depend on this information.
 Yet, the proportion of packages depending on it is higher in the HPC
 world.  A notable example is the ATLAS linear algebra system, which
-fine-tunes itself based on details about the CPU micro-architectures.
+fine-tunes itself based on details about the CPU micro-architecture.
 Similarly, profile-guided optimization (PGO), where the compiler
 optimizes code based on a profile gathered in a previous run, undermines
 reproducibility.  Running build processes in full-blown VMs
-would help address some of these issues, but with a potentially
+would address some of these issues, but with a potentially
 significant impact on build performance, and possibly preventing
 important optimization techniques in the HPC context.])
 
@@ -674,17 +655,15 @@ going to reproduce a software environment without permission
 to run the software in the first place?  What if the software
 depends on the ability to ``call home'' to function at all?  More
 importantly, we view reproducible software environments and reproducible
-science as a tool towards the goal of improved and shared knowledge;
+science as a tool towards improved and shared knowledge;
 developers who deny the freedom to study and modify their code work
-against this goal.])
-      
-      (p (bold [FIXME: Anything else?])))
+against this goal.]))
 
    (chapter :title [Related Work] :ident "related"
       
       (p (emph [Reproducible builds.]) [ Reproducible software
-environments has traditionally not been a major concern until recently.
-One of the oldest work in this area is the Vesta software configuration
+environments have traditionally not been a major concern until recently.
+One of the earliest pieces of work in this area is the Vesta software configuration
 system ,(ref :bib 'heydon2000:caching).  Vesta provides a DSL that
 allows users to describe build operations, similar to Nix
 ,(ref :bib 'dolstra2004:nix). ]
@@ -701,21 +680,22 @@ allows users to describe build operations, similar to Nix
 
       [More recently, Debian's Reproducible project
 has developed tools to perform isolated builds
-and identify sources of non-determinism.  Gitian
+and identify sources of non-determinism; Fedora's Mock is another 
+tool to improve reproducibility of mainstream distribution packages.  Gitian
 is a tool initially developed by the Tor Project that uses VMs
 to perform isolated builds.
 Google's recent Bazel
 build tool relies on container facilities provided by the kernel Linux
 and provides another DSL to describe
 build operations.])
-      (p [At the other end of the spectrum, reproducibility can be
-achieved with more heavyweight approaches such as full operating system
+      (p [Reproducibility can be
+achieved with heavyweight approaches such as full operating system
 deployments ,(ref :bib 'jeanvoine2013:kadeploy3), VM
 deployments ,(ref :bib 'vangorp2011:share), and full-system
 container-based deployments ,(ref :bib 'kniep2015:reproducibility).  In
-addition to being resource-hungry, these approaches is are coarse-grain
+addition to being resource-hungry, these approaches are coarse-grain
 and do not compose: if two different VM or Docker images provide useful
-features or packages, one essentially has to make a binary choice and
+features or packages, one has to make a binary choice and
 cannot combine the features or packages they offer.  A side issue is
 security: it was recently reported that many official Docker images are
 plagued with serious unfixed security vulnerabilities ,(ref :bib
@@ -733,8 +713,8 @@ package management tools such as EasyBuild ,(ref :bib
 installable by unprivileged users since they do not rely on privileged
 components, unlike Guix and Nix.  The downside is that they cannot use
 the kernel's container facilities, which seriously hinders
-build reproducibility.  When used in the user's home directories, these
-tools have the inconvenience of disallowing sharing: each user may end up
+build reproducibility.  When used in the user's home directories, 
+each user may end up
 rebuilding the same compiler, libraries, etc., which can be costly in
 terms of CPU, bandwidth, and disk usage.  Conversely, Nix and Guix
 support safe sharing of builds.])
@@ -745,9 +725,7 @@ conventions; for instance, ,(tt [OpenMPI/1.7.3-GCC-4.8.2]) contains
 packages built with the specified MPI implementation and compiler.  Such
 conventions fail to capture all the complexity of the DAG and
 configuration space.  For instance, the convention arbitrarily omits the
-C library being used, linker, or configuration flags; contrast this with
-the hashes used by the functional package managers (,(numref :text
-[Section] :ident "functional")).])
+C library, linker, or configuration flags being used.])
       (p [EasyBuild is tightly integrated with environment modules ,(ref
 :bib 'furlani1991:modules), which are familiar to most users of HPC
 systems.  While modules provide users with flexible environments, they
@@ -764,8 +742,7 @@ In addition, Spack provides a rich command-line interface that allows
 users to express variants similar to those discussed in ,(numref :text
 [Section] :ident "customizing").  This appears to be very convenient for
 common cases, although there are limits to the expressivity and
-readability of such a compact syntax. ,(bold [FIXME: What else about
-Spack?])]))
+readability of such a compact syntax.]))
    
    (chapter :title [Conclusion] :ident "conclusion"
       
@@ -776,8 +753,8 @@ GNU,(~)Guix builds on the foundations of Nix and provides a unified set
 of user and programming interfaces.  To date, it comes with
 ,(fold-packages (lambda (p n) (+ 1 n)) 0) including many of the common
 HPC tools and libraries as well as around 40 bioinformatics packages.
-It is deployed on the cluster of the Max Delbrück Center for Molecular
-Medicine, Berlin, and being discussed as one of the packaging options by
+It is deployed on the cluster of the MDC Berlin, 
+and being discussed as one of the packaging options by
 the Open Bioinformatics Foundation, a non-profit for the biological
 research community.  We hope to see more HPC deployments of Guix in the
 foreseeable future.])
