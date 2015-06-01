@@ -34,7 +34,7 @@
     (license lgpl2.1+)))
 
 ;!begin-starpu-variants
-(define starpu-1.2rc           ;release candidate
+(define starpu-1.2rc              ;release candidate
   (package (inherit starpu)
     (version "1.2.0rc2")
     (source (origin
@@ -47,7 +47,7 @@
 
 (define starpu-with-simgrid
   (package (inherit starpu)
-    (name "starpu-with-simgrid") ;name that shows up in the user interface
+    (name "starpu-with-simgrid")  ;name shown the user interface
     (inputs `(("simgrid" ,simgrid)
               ,@(package-inputs starpu)))))
 ;!end-starpu-variants
@@ -115,9 +115,11 @@
    (define (make-chameleon name starpu)
      (package
        (name name)
-       (version "0.9")
        ;; [other fields omitted]
-       (home-page "https://project.inria.fr/chameleon/")))
+       (inputs `(("starpu" ,starpu)
+                 ("blas" ,atlas) ("lapack" ,lapack)
+                 ("gfortran" ,gfortran-4.8)
+                 ("python" ,python-2)))))
 
    (define chameleon
      (make-chameleon "chameleon" starpu))
