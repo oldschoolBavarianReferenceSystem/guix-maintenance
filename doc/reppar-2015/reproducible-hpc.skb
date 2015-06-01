@@ -527,7 +527,7 @@ for the Chameleon solver.]
 want to allow direct
 and indirect users to select the variant that they want.  A simple way to
 do that is to write, say, a function that takes a
-,(tt [starpu]) parameter returns a package that uses it as its input
+,(tt [starpu]) parameter and returns a package that uses it as its input
 as show in ,(numref :text
 [Figure] :ident "fig-chameleon").  To allow users to refer
 to one or the other variant at the command line, we use different
@@ -625,10 +625,10 @@ the daemon must run on a node with Internet access, which could be
 contrary to the policy on some clusters.])
 
       (p (emph [Non-determinism.])[ Despite the use of
-isolated containers to run build processes, there are still a few source
+isolated containers to run build processes, there are still a few sources
 of non-determinism that build systems of packages might use and
 that can impede reproducibility.  In particular,
-details about the operating system kernel and the hardware begin used
+details about the operating system kernel and the hardware being used
 can ``leak'' to build processes.  For example, the kernel Linux provides
 system calls such as ,(tt [uname]) and interfaces such as
 ,(tt [/proc/cpuinfo]) that leak information about the host; independent
@@ -747,9 +747,9 @@ reproducible software environments, while still allowing fine-grain
 software composition and not imposing high disk and RAM costs.
 GNU,(~)Guix builds on the foundations of Nix and provides a unified set
 of user and programming interfaces.  To date, it comes with
-,(number* (fold-packages (lambda (p n) (+ 1 n)) 0)) including many of the common
+,(number* (fold-packages (lambda (p n) (+ 1 n)) 0)) packages, including many of the common
 HPC tools and libraries as well as around 40 bioinformatics packages.
-It is deployed on the cluster of the MDC Berlin, 
+It is deployed on the clusters of the MDC Berlin, 
 and being discussed as one of the packaging options by
 the Open Bioinformatics Foundation, a non-profit for the biological
 research community.  We hope to see more HPC deployments of Guix in the
