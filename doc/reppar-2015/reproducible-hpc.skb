@@ -406,13 +406,14 @@ other users on the system will not use it, simply because they cannot
 guess its ,(tt [/gnu/store]) file name,(---)unless
 they themselves explicitly build the very same modified C library.])
          (p [At the Max Delbrück Center for Molecular Medicine (MDC),
-Berlin, the store is shared among cluster
-nodes and user workstations is now gradually replacing other methods
+Berlin, the store is shared among 250 cluster
+nodes and an increasing number of user workstations, and is now gradually
+replacing other methods
 of software distribution, such as statically linked binaries on group
 network shares, relocatable RPMs installed into group prefixes,
 one-off builds on the cluster, and user-built software
 installed in home directories.  This proved particularly
-useful in the efforts to move users and their custom software
+useful in the ongoing efforts to move dozens of users and their custom software
 environments from an older cluster running Ubuntu to a new cluster
 running a version of CentOS, because software packaged with Guix does
 not depend on any of the host system's libraries and thus can be used
