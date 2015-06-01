@@ -96,7 +96,7 @@ Computational Science, ICCS")
   (doi "10.1017/S0956796805005575")
   (acmid "1082046")
   (publisher "Cambridge University Press")
-  (address "New York, NY, USA"))
+  #;(address "New York, NY, USA"))
 
 (article schulte2011:org-reproducible
   (author	"Eric Schulte, Dan Davison, Thomas Dye, Carsten Dominik")

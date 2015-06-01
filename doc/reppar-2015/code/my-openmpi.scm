@@ -25,8 +25,7 @@
     (inputs `(("hwloc" ,hwloc)                ;!recipe-inputs
               ("gfortran" ,gfortran-4.8)
               ("pkg-config" ,pkg-config)))
-    (arguments '(#:configure-flags `("--enable-oshmem"
-                                     "--with-devel-headers")))
+    (arguments '(#:configure-flags `("--enable-oshmem")))
     (home-page "http://www.open-mpi.org")
     (synopsis "MPI-2 implementation")
     (description "This is an MPI-2 implementation etc.")

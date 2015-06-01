@@ -113,7 +113,6 @@ Software Environments in HPC with Guix]
 		    :affiliation "Max Delbrück Center for Molecular
 		    Medicine"  ;;in the Helmholtz Association
 		    :address (list "Berlin, Germany"))
-                 (author :name "Your Name Here!")
                  ;; + others...
 		    )
    
@@ -354,8 +353,9 @@ Since we are manipulating ``normal'' Scheme objects, we can use the API
 of Guix to query those package objects, as illustrated with the code in
 ,(numref :text [Figure] :ident "fig-query"), which queries the name and
 version of the direct and indirect dependencies of our package,(footnote
-[This code is actually run as we build this document, as we will see in
-,(numref :text [Section] :ident "active").]).])
+
+[This is an ``active paper'' written in Skribilo, a Scheme-based authoring
+tool, which allows us to use Guix and run this code from the document.]).])
       (p [With that definition in place, running ,(tt [guix build
 openmpi]) returns the directory name
 ,(tt %openmpi-path).  If
@@ -376,12 +376,11 @@ passed to the ,(tt [eval]) shell built-in command.]))
    
    (chapter :title [Use Cases] :ident "use-cases"
 
-      (p [We explore practical use cases where the availability of Guix
-can improve experimentation reproducibility for a user of a given
-system, support the deployment of complex software stacks, allow a
-software environment to be replicated on another system, and allow
-fine customization of the software environment, and finally integrate
-tightly with the production of research papers.])
+      (p [We explore practical use cases where Guix improves
+experimentation reproducibility for a user of a given system, supports
+the deployment of complex software stacks, allows a software environment
+to be replicated on another system, and finally allows fine
+customization of the software environment.])
 
       (section :title [Usage Patterns on an HPC Cluster] ;MDC Berlin
 
@@ -545,7 +544,7 @@ is by writing a function that recursively adjusts the package labeled
  No matter how complex the transformations are, a package
 object unambiguously represents a reproducible build process.]))
 
-      (section :title [Going Further]  ;active papers + gexps
+      #;(section :title [Going Further]  ;active papers + gexps
          :ident "active"
          
          (p [``Executable'' or ``active'' research papers have become an
@@ -668,16 +667,12 @@ allows users to describe build operations, similar to Nix
 ;; proved to be a serious barrier to reproducibility in practice ,(ref :bib
 ;; 'courtes2013:functional).
 
-      [More recently, Debian's Reproducible project
-has developed tools to perform isolated builds
-and identify sources of non-determinism; Fedora's Mock is another 
-tool to improve reproducibility of mainstream distribution packages.  Gitian
-is a tool initially developed by the Tor Project that uses VMs
-to perform isolated builds.
-Google's recent Bazel
-build tool relies on container facilities provided by the kernel Linux
-and provides another DSL to describe
-build operations.])
+      [More recently, projects such as Debian's Reproducible, Fedora's
+Mock, or Gitian have intended to improve reproducibility and
+verifiability of mainstream package distributions.
+Google's recent Bazel build tool relies on container facilities provided
+by the kernel Linux and provides another DSL to describe build
+operations.])
       (p [Reproducibility can be
 achieved with heavyweight approaches such as full operating system
 deployments ,(ref :bib 'jeanvoine2013:kadeploy3), VM
