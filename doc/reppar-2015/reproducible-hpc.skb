@@ -309,10 +309,10 @@ that includes a hash of ,(emph [all the inputs]) of the build process
 that led to it.  By ``all
 the inputs'', we really mean all of them: this includes of course
 compilers and libraries, including the C library, but also build
-scripts and environment variable values.  And this is recursive, the
+scripts and environment variable values.  This is recursive: the
 compiler's own directory name is a hash of the tools and libraries used
 to build, and so on, until a set a pre-built binaries used
-for bootstrapping purposes,(---)and which can in turn be rebuilt using
+for bootstrapping purposes,(---)which can in turn be rebuilt using
 Guix ,(ref :bib 'courtes2013:functional).  Thus, for each package that
 is built, the system has access to the ,(emph [complete DAG]) of
 dependencies used to build it.])
