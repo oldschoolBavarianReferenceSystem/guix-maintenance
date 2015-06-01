@@ -468,11 +468,9 @@ sharing among peers.]))
          
          (p [Our colleagues at Inria in the HiePACS and Runtime teams
 develop a complete linear algebra software stack going from sparse
-solvers such as PaStiX and dense solvers such as Chameleon,(footnote
-[See ,(url "https://team.inria.fr/hiepacs/software/"), for details.]),
+solvers such as PaStiX and dense solvers such as Chameleon,
 to run-time support libraries and compiler extensions such as StarPU
-,(ref :bib 'augonnet2009:starpu) and hwloc,(footnote [See ,(url
-"http://runtime.bordeaux.inria.fr/Runtime/software.html").]).  While
+,(ref :bib 'augonnet2009:starpu) and hwloc.  While
 developers of simulations want to be able to deploy the whole stack,
 developers of solvers want to be able to deploy just their project's
 dependencies, possibly several variants thereof.  For instance,

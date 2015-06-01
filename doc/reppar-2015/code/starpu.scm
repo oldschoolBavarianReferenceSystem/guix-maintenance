@@ -117,15 +117,10 @@
        (name name)
        (version "0.9")
        ;; [other fields omitted]
-       (inputs `(("starpu" ,starpu)
-                 ("blas" ,atlas)
-                 ("lapack" ,lapack)
-                 ("gfortran" ,gfortran-4.8)
-                 ("python" ,python-2)))))
+       (home-page "https://project.inria.fr/chameleon/")))
 
    (define chameleon
      (make-chameleon "chameleon" starpu))
-
    (define chameleon/starpu-simgrid
      (make-chameleon "chameleon-simgrid" starpu-with-simgrid))
 ;;!end-chameleon
