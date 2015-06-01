@@ -31,7 +31,8 @@
              (guix hash) (guix base64)
              ((guix serialization) #:select (write-file))
              (my-openmpi)
-             (gnu packages))
+             (gnu packages)
+             (ice-9 i18n))
 
 (define-values (%openmpi-path %openmpi-hash)
   ;; Here we connect to the Guix build daemon to get information about
@@ -67,6 +68,13 @@
 (define (url url)
   ;; Return a URL typeset in a fixed-with font.
   (ref :url url :text (tt url)))
+
+(define (number* number)
+  ;; Return NUMBER correctly formatting according to English conventions.
+  (number->locale-string number 0
+                         (or (false-if-exception
+                               (make-locale LC_ALL "en_US.utf8"))
+                             (make-locale LC_ALL "en_US.UTF-8"))))
 
 ;; Abbreviate author first names.
 (markup-writer '&bib-entry-author
@@ -736,7 +744,7 @@ reproducible software environments, while still allowing fine-grain
 software composition and not imposing high disk and RAM costs.
 GNU,(~)Guix builds on the foundations of Nix and provides a unified set
 of user and programming interfaces.  To date, it comes with
-,(fold-packages (lambda (p n) (+ 1 n)) 0) including many of the common
+,(number* (fold-packages (lambda (p n) (+ 1 n)) 0)) including many of the common
 HPC tools and libraries as well as around 40 bioinformatics packages.
 It is deployed on the cluster of the MDC Berlin, 
 and being discussed as one of the packaging options by
