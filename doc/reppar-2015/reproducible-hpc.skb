@@ -109,7 +109,9 @@
 \\usepackage{floatrow}
 \\floatsetup[figure]{font=footnotesize}
 \\setlength{\\intextsep}{5pt plus 1.0pt minus 2.0pt}
-")))
+"))
+  (engine-custom-set! latex 'source-comment-color
+                      "#776600"))
 
 
 (document :title [Reproducible and User-Controlled
