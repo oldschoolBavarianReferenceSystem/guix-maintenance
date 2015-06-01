@@ -64,9 +64,6 @@
                  (! "&ndash;")
                  "--"))))
 
-(define (include-latex file)
-  (! (format #f "\n\\input{~a}\n" file)))
-
 (define (url url)
   ;; Return a URL typeset in a fixed-with font.
   (ref :url url :text (tt url)))
@@ -104,13 +101,6 @@
 \\usepackage{floatrow}
 \\floatsetup[figure]{font=footnotesize}
 \\setlength{\\intextsep}{5pt plus 1.0pt minus 2.0pt}
-
-\\usepackage{tikz}
-\\usetikzlibrary{arrows,shapes,trees,shadows,positioning}
-\\usepackage{fancyvrb}
-
-% Remember the position of every picture.
-\\tikzstyle{every picture}+=[remember picture]
 ")))
 
 
