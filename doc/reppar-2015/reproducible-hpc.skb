@@ -19,6 +19,7 @@
 (use-modules (skribilo package lncs)
 	     (skribilo engine latex)
 	     (skribilo biblio author)
+	     (skribilo biblio abbrev)
              (skribilo source)
              (skribilo source lisp)
 	     (skribilo engine)
@@ -83,6 +84,19 @@
 		     (abbreviate-first-names names)
 		     names)
 		 e))))
+
+;; Abbreviate book titles in bibliography entries.
+(markup-writer '&bib-entry-booktitle
+   :action (lambda (n e)
+             (define %abbreviations
+               (append %cs-conference-abbreviations
+                       %ordinal-number-abbreviations
+                       %common-booktitle-abbreviations))
+
+             (let ((title (markup-body n)))
+               (evaluate-document
+                (it (abbreviate-markup %abbreviations
+                                        title)) e))))
 
 (bibliography "../els-2013/guix.sbib")
 (bibliography "reppar.sbib")
