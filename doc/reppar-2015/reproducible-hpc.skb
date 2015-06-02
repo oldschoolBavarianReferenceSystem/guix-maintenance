@@ -745,8 +745,7 @@ readability of such a compact syntax.]))
       (p [Functional package managers provide the foundations for
 reproducible software environments, while still allowing fine-grain
 software composition and not imposing high disk and RAM costs.
-GNU,(~)Guix builds on the foundations of Nix and provides a unified set
-of user and programming interfaces.  To date, it comes with
+Today, GNU,(~)Guix comes with
 ,(number* (fold-packages (lambda (p n) (+ 1 n)) 0)) packages, including many of the common
 HPC tools and libraries as well as around 40 bioinformatics packages.
 It is deployed on the clusters of the MDC Berlin, 
@@ -760,10 +759,10 @@ standalone, reproducible GNU/Linux distribution.]))
       
    (chapter :title [Acknowledgments] :number #f
       
-      (p [We would like to thank colleagues at Inria for insightful
-discussions and comments on an earlier draft: Florent Pruvost, Emmanuel
-Agullo, and Andreas Enge.  We are grateful to the Guix contributors who
-keep improving the system.]))
+      (p [We would like to thank Florent Pruvost, Emmanuel Agullo, and
+Andreas Enge at Inria and Eric Bavier at Cray, Inc. for insightful
+discussions and comments on an earlier draft.  We are grateful to the
+Guix contributors who keep improving the system.]))
    
    (references))
    
