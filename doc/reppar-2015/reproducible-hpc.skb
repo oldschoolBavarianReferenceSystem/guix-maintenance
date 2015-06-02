@@ -196,7 +196,11 @@ software environment reproducibility into account.  For example, the
 approach for verifiable computational results described in ,(ref :bib
 'gavish2011:universal) focuses on workflows and conventions but does not
 mention the difficulty of reproducing full software environments.
-Likewise, the authors of ,(ref :bib 'stanisic2014:effective) propose a
+Likewise, the new Replicated Computational Results (RCR) initiative of
+the ACM Transactions on Mathematical Software acknowledges the
+importance of reproducible results, but does not adequately address the
+issue of software environments, which is a prerequisite.
+The authors of ,(ref :bib 'stanisic2014:effective) propose a
 methodology for reproducible research experiments in HPC.  To address
 the software-environment reproducibility problem they propose two
 unsatisfying approaches: one is to write down the
