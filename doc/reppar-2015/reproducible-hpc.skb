@@ -336,7 +336,7 @@ form defines the ,(tt [openmpi]) variable to hold that value.])
          :legend [Querying the dependencies of a package object.]
          :ident "fig-query"
          
-         (prog :mark #f
+         (prog :mark #f :line #f
             (source :language scheme :file "code/query-package.scm"
                 :start ";;!start"))
 
