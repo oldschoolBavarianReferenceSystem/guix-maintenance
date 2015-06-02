@@ -234,7 +234,7 @@ several limitations.  First, package binaries that every user installs,
 such as ,(code [.deb]) files, are actually built on the package
 maintainer's machine, and details about the host
 may leak into the binary that is uploaded,(---)a shortcoming that is now
-being addressed (see ,(numref :text [Section] :ident "related").])
+being addressed (see ,(numref :text [Section] :ident "related").)])
       (p [Second, while it is in theory possible for a user to define
 their own variant of a package, as is often needed in HPC, this
 happens to be often difficult in practice.  Users of RPM-based systems,
