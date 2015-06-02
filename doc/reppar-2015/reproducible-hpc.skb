@@ -378,7 +378,13 @@ process in its isolated environment with write access to this directory.
 Of course users never have to type these long ,(tt [/gnu/store]) file
 names.  They can install packages in their ,(emph [profile]) using
 the ,(tt [guix package]) command, which essentially creates symbolic
-links under ,(tt [~/.guix-profile]).  It is then a matter of defining
+links to the selected ,(tt [/gnu/store]) items.   By default, the tree of
+symbolic links is rooted at ,(tt [~/.guix-profile]), but users
+can also create independent profiles in
+arbitrary places of the file system.  For instance, a user may choose to
+have GCC and Open,(~)MPI in the default profile, and to populate
+another profile with Clang and MPICH2.])
+      (p [It is then a matter of defining
 the search paths for the compiler, linker, and other tools ,(it [via])
 environment variables.  Fortunately, Guix keeps track of that and the
 ,(tt [guix package --search-paths]) command returns all the necessary
@@ -436,9 +442,7 @@ complete workflows.])
             (prog :line #f
                (source :language scheme :file "code/manifest.scm")))
 
-         (p [Guix users have a default profile in ,(tt
-[~/.guix-profile]) but they can create independent profiles in
-arbitrary places of the file system.  Guix supports two ways to manage a
+         (p [Guix supports two ways to manage a
 profile.  The first one is to make transactions that add, upgrade, or
 remove packages in the profile: ,(tt [guix package --install openmpi
 --remove mpich2]) installs Open,(~)MPI and removes MPICH2
