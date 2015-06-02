@@ -405,9 +405,9 @@ tries to build, say, a malicious version of the C library, then the
 other users on the system will not use it, simply because they cannot
 guess its ,(tt [/gnu/store]) file name,(---)unless
 they themselves explicitly build the very same modified C library.])
-         (p [At the Max Delbrück Center for Molecular Medicine (MDC),
-Berlin, the store is shared among 250 cluster
-nodes and an increasing number of user workstations, and is now gradually
+         (p [Guix is deployed at the Max Delbrück Center for Molecular Medicine (MDC),
+Berlin, where the store is shared among 250 cluster
+nodes and an increasing number of user workstations.  It is now gradually
 replacing other methods
 of software distribution, such as statically linked binaries on group
 network shares, relocatable RPMs installed into group prefixes,
@@ -418,7 +418,7 @@ environments from an older cluster running Ubuntu to a new cluster
 running a version of CentOS, because software packaged with Guix does
 not depend on any of the host system's libraries and thus can be used
 on very different systems without any changes to the packages.
-Research groups now have a shared Guix profile for common
+Research groups now have a shared profile for common
 applications, whereas individual users can manage their own
 profiles for custom software, legacy versions of bioinformatics tools
 to reproduce published results, bleeding-edge tool chains, or even for
