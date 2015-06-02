@@ -135,21 +135,21 @@ up-to-date tool chains as well as libraries and scientific software.
 HPC system users often have no guarantee that they will be able to
 reproduce results at a later point in time, even on the same
 system,(---)software may have been upgraded, removed, or recompiled
-under their feet,(---), and they have little hope of being able to
+under their feet, and they have little hope of being able to
 reproduce the same software environment elsewhere.  We present
-GNU,(~)Guix and the functional package management paradigm and claim
-that it can improve reproducibility and sharing among researchers,
-illustrating with representative use cases.])
+GNU,(~)Guix and the functional package management paradigm and show
+how it can improve reproducibility and sharing among researchers
+with representative use cases.])
    
    (chapter :title [Introduction]
       
       (p [HPC system administration has to satisfy two seemingly
 contradictory demands: on one hand administrators seek stability, which
 leads to a conservative approach to software management, and on the
-other users demand recent tool chains and huge scientific software
+other hand users demand recent tool chains and huge scientific software
 stacks.  In addition, users often need different versions and different
 variants of a given software package.  To satisfy both, support teams
-always play the role of ``distribution maintainers'': they build and
+end up playing the role of ``distribution maintainers'': they build and
 install tool chains, libraries, and scientific software packages
 manually,(---)multiple variants thereof,(---)and make them available
 ,(it [via]) ``environment modules'',(ref :bib 'furlani1991:modules), which
@@ -177,8 +177,8 @@ implements the functional package management paradigm pioneered by Nix
 ,(ref :bib '(dolstra2004:nix courtes2013:functional)).  Many of its
 properties and features make it attractive in a multi-user HPC context:
 per-user profiles, transactional upgrades and roll-backs, and, more
-importantly, a controlled build environment to maximize reproducibility.
-,(numref :text [Section] :ident "rationale") details our motivations.
+importantly, a controlled build environment to maximize reproducibility.])
+      (p [,(numref :text [Section] :ident "rationale") details our motivations.
 ,(numref :text [Section] :ident "functional") describes the functional
 package management paradigm, its implementation in Guix, its impact on
 reproducibility, and how it can be applied to HPC systems.  ,(numref
@@ -206,7 +206,7 @@ the software-environment reproducibility problem they propose two
 unsatisfying approaches: one is to write down the
 version numbers of the dependencies being used, which is insufficient,
 and the other is to save and reuse full virtual machines (VMs), which poses a
-real challenge for performance and make verifiability
+real challenge for performance and makes verifiability
 impractical,(---)peers would have to download large images and would be
 unable to combine them with their own software environment.])
       (p [Yet, common practices on HPC systems hinder reproducibility.
@@ -215,16 +215,16 @@ HPC systems often run old GNU/Linux distributions that are rarely
 updated.  Thus, packages provided by the distribution are largely
 dismissed.  Instead support teams install packages from third-party
 repositories,(---)but then they clobber the global ,(tt [/usr])
-prefix, which sysadmins may want to keep under control,(---), or install
+prefix, which sysadmins may want to keep under control, or install
 them from source by
 themselves and make them available through environment modules
 ,(ref :bib 'furlani1991:modules).  Modules allow users to choose different
 versions or variants of the packages they use without interfering with
-each others.  However, when installed software is updated in place or
+each other.  However, when installed software is updated in place or
 removed, users suddenly find themselves unable to reproduce the software
 environment they were using.  Given these practices, reproducing the
 exact same software environment on a ,(emph [different]) HPC system
-seems out of reach.  It is nonetheless a very important property: it
+seems out of reach.  It is nonetheless a very important property: It
 would allow users to assess the impact of the hardware on the software's
 performance,(---)something that is very valuable in particular for
 developers of run-time systems such as StarPU ,(ref :bib
@@ -241,7 +241,7 @@ may leak into the binary that is uploaded,(---)a shortcoming that is now
 being addressed (see ,(numref :text [Section] :ident "related").)])
       (p [Second, while it is in theory possible for a user to define
 their own variant of a package, as is often needed in HPC, this
-happens to be often difficult in practice.  Users of RPM-based systems,
+is often difficult in practice.  Users of RPM-based systems,
 for example, may be able to customize a ,(code [.spec]) file to
 build a custom, relocatable RPM package, but only the administrator can
 install the package alongside its dependencies and register it in the
@@ -280,12 +280,12 @@ should return the same value,(---),(it [i.e.]), bit-identical
 files.  This approach was first described and implemented in the Nix
 package manager ,(ref :bib 'dolstra2004:nix).  Guix reuses low-level
 mechanisms from Nix to implement the same paradigm, but offers a unified
-interface for package definitions and their implementation, all embedded
+interface for package definitions and their implementations, all embedded
 in a single programming language ,(ref :bib 'courtes2013:functional).])
       (p [An obvious challenge is the implementation of this paradigm:
-how can build and install processes be viewed as pure?  To obtain that
+How can build and install processes be viewed as pure?  To obtain that
 property, Nix and Guix ensure tight control over the build environment.
-In both cases, build processes are started by a privileged daemon that
+In both cases, build processes are started by a privileged daemon, which
 always runs them in ``containers'' as implemented by the kernel Linux;
 that is, they run in a chroot environment, under a dedicated user ID,
 with a well-defined set of environment variables,
@@ -306,11 +306,11 @@ stored in a common place called ,(emph [the store]), typically the ,(tt
 [/gnu/store]) directory.  Each entry in ,(tt [/gnu/store]) has a name
 that includes a hash of ,(emph [all the inputs]) of the build process
 that led to it.  By ``all
-the inputs'', we really mean all of them: this includes of course
+the inputs'', we really mean all of them: This includes of course
 compilers and libraries, including the C library, but also build
-scripts and environment variable values.  This is recursive: the
+scripts and environment variable values.  This is recursive: The
 compiler's own directory name is a hash of the tools and libraries used
-to build, and so on, until a set a pre-built binaries used
+to build, and so on, up to a set of pre-built binaries used
 for bootstrapping purposes,(---)which can in turn be rebuilt using
 Guix ,(ref :bib 'courtes2013:functional).  Thus, for each package that
 is built, the system has access to the ,(emph [complete DAG]) of
@@ -363,7 +363,7 @@ of Guix to query those package objects, as illustrated with the code in
 ,(numref :text [Figure] :ident "fig-query"), which queries the name and
 version of the direct and indirect dependencies of our package,(footnote
 
-[This is an ``active paper'' written in Skribilo, a Scheme-based authoring
+[This document is an ``active paper'' written in Skribilo, a Scheme-based authoring
 tool, which allows us to use Guix and run this code from the document.]).])
       (p [With that definition in place, running ,(tt [guix build
 openmpi]) returns the directory name
@@ -405,7 +405,7 @@ securely permit unprivileged users to install packages in the store
 commands connect to the build daemon, which then performs the build (if
 needed) on their behalf, in the isolated environment.
 When two users build the exact same package, both end up using the exact
-same ,(tt [/gnu/store]) file name and storage is shared.  If a user
+same ,(tt [/gnu/store]) file name, and storage is shared.  If a user
 tries to build, say, a malicious version of the C library, then the
 other users on the system will not use it, simply because they cannot
 guess its ,(tt [/gnu/store]) file name,(---)unless
@@ -451,7 +451,7 @@ snippet that lists the requested packages (see ,(numref :text [Figure]
 :ident "fig-manifest")) and then runs ,(tt [guix package
 --manifest=my-packages.scm]).])
          (p [This declarative profile management makes it easy to
-replicate a profile, but it is symbolic: it uses whatever package
+replicate a profile, but it is symbolic: It uses whatever package
 objects the variables are bound to (,(tt [gnu-make]), ,(tt
 [gcc-toolchain]), etc.), but these variables are typically defined in
 the ,(tt [(gnu packages …)]) modules that Guix comes with.  Thus the
@@ -508,9 +508,9 @@ adds the optional dependency on the SimGrid simulator,(---)a variant
 useful to scheduling practitioners, but not necessarily to solver
 developers.])
          (p [These StarPU package definitions are obviously useful to
-users of StarPU: they can install them with ,(tt [guix package -i
+users of StarPU: They can install them with ,(tt [guix package -i
 starpu]) and similar commands.  But they are also useful to StarPU
-developers: they can enter a ``pristine'' development environment
+developers: They can enter a ``pristine'' development environment
 corresponding to the dependencies given in the recipe by running ,(tt
 [guix environment starpu --pure]).  This command spawns a shell where
 the usual ,(tt [PATH]), ,(tt [CPATH]) etc. environment variables are
@@ -668,7 +668,7 @@ against this goal.]))
    (chapter :title [Related Work] :ident "related"
       
       (p (emph [Reproducible builds.]) [ Reproducible software
-environments have traditionally not been a major concern until recently.
+environments have only recently become an active research area.
 One of the earliest pieces of work in this area is the Vesta software configuration
 system ,(ref :bib 'heydon2000:caching).  Vesta provides a DSL that
 allows users to describe build operations, similar to Nix
@@ -697,7 +697,7 @@ deployments ,(ref :bib 'vangorp2011:share), and full-system
 container-based deployments ,(ref :bib 'kniep2015:reproducibility).  In
 addition to being resource-hungry, these approaches are coarse-grain
 and do not compose: if two different VM or Docker images provide useful
-features or packages, one has to make a binary choice and
+features or packages, the user has to make a binary choice and
 cannot combine the features or packages they offer.  A side issue is
 security: it was recently reported that many official Docker images are
 plagued with serious unfixed security vulnerabilities ,(ref :bib
@@ -725,13 +725,13 @@ packages built with different compilers, or linked against different MPI
 implementations.  To achieve that, it relies on directory naming
 conventions; for instance, ,(tt [OpenMPI/1.7.3-GCC-4.8.2]) contains
 packages built with the specified MPI implementation and compiler.  Such
-conventions fail to capture all the complexity of the DAG and
+conventions fail to capture the full complexity of the DAG and
 configuration space.  For instance, the convention arbitrarily omits the
 C library, linker, or configuration flags being used.])
       (p [EasyBuild is tightly integrated with environment modules ,(ref
 :bib 'furlani1991:modules), which are familiar to most users of HPC
 systems.  While modules provide users with flexible environments, they
-implement an imperative, stateful paradigm: users run a sequence of ,(tt
+implement an imperative, stateful paradigm: Users run a sequence of ,(tt
 [module load]) and ,(tt [module unload]) commands that ,(emph [alter])
 the current environment.  This can make it much harder to reason about
 and reproduce an environment, as opposed to the declarative approaches
