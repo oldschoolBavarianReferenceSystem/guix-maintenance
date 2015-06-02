@@ -210,8 +210,8 @@ real challenge for performance and make verifiability
 impractical,(---)peers would have to download large images and would be
 unable to combine them with their own software environment.])
       (p [Yet, common practices on HPC systems hinder reproducibility.
-The vast majority of HPC systems run GNU/Linux but for understandable
-stability reasons, they often run old distributions that are rarely
+For understandable stability reasons,
+HPC systems often run old GNU/Linux distributions that are rarely
 updated.  Thus, packages provided by the distribution are largely
 dismissed.  Instead support teams install packages from third-party
 repositories,(---)but then they clobber the global ,(tt [/usr])
@@ -245,22 +245,17 @@ happens to be often difficult in practice.  Users of RPM-based systems,
 for example, may be able to customize a ,(code [.spec]) file to
 build a custom, relocatable RPM package, but only the administrator can
 install the package alongside its dependencies and register it in the
-central package database.  A user without super-user privileges cannot
-write to the central ,(code [yumdb]), and as ,(code [yum]) does not
-support per-user package databases, the user has to fall back to the
-lower-level ,(code [rpm]) tool to be able to use a separate package
-registry, losing higher-level package management features such as
-dependency analysis as a result.  Since RPM package databases cannot
-be composed, a user would need to manually track down and register the
-complete graph of dependencies with the separate, user-owned package
-database, a tedious process resulting in needless duplication and
-preventing sharing.])
+central ,(code [yumdb]) package database.  The
+lower-level ,(code [rpm]) tool can use a separate package
+registry, which could be useful for unprivileged users; however RPM
+package databases cannot
+be composed, so users would need to manually track down and register the
+complete graph of dependencies, which is impractical at best.])
       (p [Third, these tools implement an ,(emph
-[imperative]) and ,(emph [stateful]) package management model, as Dolstra
-et al. explain in ,(ref :bib 'dolstra2004:nix).  It is
+[imperative]) and ,(emph [stateful]) package management model
+,(ref :bib 'dolstra2004:nix).  It is
 imperative in the sense that it modifies the set of available packages
-in place.  For example, upgrading libc means that suddenly all the
-installed packages start using the new libc version; switching to an
+in place.  For example, switching to an
 alternative MPI implementation, or upgrading the OpenMP run-time library
 means that suddenly all the installed applications and libraries start
 using them.  It is stateful in the sense that the system state after a
