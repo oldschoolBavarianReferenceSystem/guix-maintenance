@@ -418,9 +418,9 @@ of software distribution, such as statically linked binaries on group
 network shares, relocatable RPMs installed into group prefixes,
 one-off builds on the cluster, and user-built software
 installed in home directories.
-The researchers use tens of bioinformatics tools as well as Python
+The researchers use tens of bioinformatics tools as well as
 frameworks such as Biopython, NumPy, SciPy, and SymPy.
-This proved particularly
+The functional packaging approach proved particularly
 useful in the ongoing efforts to move dozens of users and their custom software
 environments from an older cluster running Ubuntu to a new cluster
 running a version of CentOS, because software packaged with Guix does
