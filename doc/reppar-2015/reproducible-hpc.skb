@@ -417,7 +417,10 @@ replacing other methods
 of software distribution, such as statically linked binaries on group
 network shares, relocatable RPMs installed into group prefixes,
 one-off builds on the cluster, and user-built software
-installed in home directories.  This proved particularly
+installed in home directories.
+The researchers use tens of bioinformatics tools as well as Python
+frameworks such as Biopython, NumPy, SciPy, and SymPy.
+This proved particularly
 useful in the ongoing efforts to move dozens of users and their custom software
 environments from an older cluster running Ubuntu to a new cluster
 running a version of CentOS, because software packaged with Guix does
@@ -763,7 +766,7 @@ standalone, reproducible GNU/Linux distribution.]))
    (chapter :title [Acknowledgments] :number #f
       
       (p [We would like to thank Florent Pruvost, Emmanuel Agullo, and
-Andreas Enge at Inria and Eric Bavier at Cray, Inc. for insightful
+Andreas Enge at Inria and Eric Bavier at Cray Inc. for insightful
 discussions and comments on an earlier draft.  We are grateful to the
 Guix contributors who keep improving the system.]))
    
