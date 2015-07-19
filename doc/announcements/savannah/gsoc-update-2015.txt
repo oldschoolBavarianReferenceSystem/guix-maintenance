@@ -1,0 +1,15 @@
+This year Guix was lucky to have [https://savannah.gnu.org/forum/forum.php?forum_id=8264 3 GSoC projects], and they have made rather good progress so far:
+
+* Manolis successfully completed the recipes to get a [http://git.savannah.gnu.org/cgit/guix.git/log/?h=wip-hurd cross-compilation toolchain to GNU/Hurd], with part of the work already in the main branch.  This allowed him to produce statically-linked bootstrap binaries (stumbling upon nasty ld.so issues on the way.)  Manolis is now [http://lists.gnu.org/archive/html/guix-devel/2015-07/msg00029.html running Guix and building packages natively] on GNU/Hurd, which will constitute a large part of the remainder of his project.
+* Rémi has written [http://git.savannah.gnu.org/cgit/guix/gnunet.git/tree/ Guile bindings] to crucial parts of the [https://gnunet.org GNUnet] API, including the file sharing API.  This will allow him to move to the next step: Writing [http://lists.gnu.org/archive/html/guix-devel/2015-07/msg00033.html tools to publish and retrieve] Guix [http://www.gnu.org/software/guix/manual/html_node/Substitutes.html substitutes] (pre-built binaries.)
+* Rohan laid the foundations of the [http://git.savannah.gnu.org/cgit/guix/dhcp.git/tree/ DHCP client].  The current code can send packets on all the configured network interfaces.  Rohan hopes to have working code to establish leases in the following weeks.
+
+Happy hacking!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
