@@ -690,18 +690,30 @@ verifiability of mainstream package distributions.
 Google's recent Bazel build tool relies on container facilities provided
 by the kernel Linux and provides another DSL to describe build
 operations.])
-      (p [Reproducibility can be
-achieved with heavyweight approaches such as full operating system
-deployments ,(ref :bib 'jeanvoine2013:kadeploy3), VM
-deployments ,(ref :bib 'vangorp2011:share), and full-system
-container-based deployments ,(ref :bib 'kniep2015:reproducibility).  In
-addition to being resource-hungry, these approaches are coarse-grain
-and do not compose: if two different VM or Docker images provide useful
-features or packages, the user has to make a binary choice and
-cannot combine the features or packages they offer.  A side issue is
-security: it was recently reported that many official Docker images are
-plagued with serious unfixed security vulnerabilities ,(ref :bib
-'gummaraju2015:docker).])
+      (p [Reproducibility can be achieved with heavyweight approaches
+such as full operating system deployments, be it on hardware or in VMs
+or containers ,(ref :bib '(jeanvoine2013:kadeploy3 ruiz2015:kameleon
+vangorp2011:share boettiger2015:docker)).  In addition to being
+resource-hungry, these approaches are coarse-grain and do not compose:
+if two different VM/container images or ``software appliances'' provide
+useful features or packages, the user has to make a binary choice and
+cannot combine the features or packages they offer.  Furthermore,
+``Docker files'', ``Vagrant files'', and Kameleon ``recipes'' ,(ref :bib
+'ruiz2015:kameleon) suffer from being too broad for the purposes of
+reproducing a software environment,(---)they are about configuring
+complete operating systems,(---)and from offering a inappropriate level
+of abstraction,(---)these recipes list commands to ,(emph [modify]) the
+state of the system image to obtain the desired state, whereas Guix
+allows users to ,(emph [declare]) the desired environment in terms of
+software packages.  Lastly, the tendency to rely on complete third-party
+system images is a security concern,(footnote [``Over 30% of Official
+Images in Docker Hub Contain High Priority Security Vulnerabilities'',
+,(url "http://www.banyanops.com/blog/analyzing-docker-hub/").])
+Building upon third-party binary images also puts a barrier on
+reproducibility: Users may have recipes to rebuild their own software
+from source, but the rest of the system is essentially considered as a
+``black box'', which, if it can be rebuilt from source at all, can only
+be rebuilt using a completely different tool set.])
       (p (emph [HPC package management.]) [ In the HPC community,
 efforts have focused primarily on the automation of software deployment
 and the ability for users to customize their build environment
