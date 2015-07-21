@@ -34,7 +34,7 @@
              (gnu packages)
              (ice-9 i18n))
 
-(define-values (%openmpi-path %openmpi-hash)
+(define-values (%openmpi-path)
   ;; Here we connect to the Guix build daemon to get information about
   ;; the software environment we are talking about.
   (guix:with-store store
@@ -45,6 +45,7 @@
 
         ;; Here we go as far as building it (if it's not already built)
         ;; and computing its hash.
+        #;
         (parameterize ((guix:current-build-output-port (current-error-port)))
           (build-derivations store (list (package-derivation store openmpi)))
           (call-with-values open-sha256-port
