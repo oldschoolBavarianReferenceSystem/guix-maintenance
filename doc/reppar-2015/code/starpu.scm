@@ -47,7 +47,7 @@
 
 (define starpu-with-simgrid
   (package (inherit starpu)
-    (name "starpu-with-simgrid")  ;name shown the user interface
+    (name "starpu-with-simgrid")  ;name shown in the user interface
     (inputs `(("simgrid" ,simgrid)
               ,@(package-inputs starpu)))))
 ;!end-starpu-variants

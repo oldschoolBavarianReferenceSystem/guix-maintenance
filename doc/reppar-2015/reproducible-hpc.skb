@@ -774,7 +774,7 @@ reproducible software environments, while still allowing fine-grain
 software composition and not imposing high disk and RAM costs.
 Today, GNU,(~)Guix comes with
 ,(number* (fold-packages (lambda (p n) (+ 1 n)) 0)) packages, including many of the common
-HPC tools and libraries as well as around 40 bioinformatics packages.
+HPC tools and libraries as well as around 50 bioinformatics packages.
 It is deployed on the clusters of the MDC Berlin, 
 and being discussed as one of the packaging options by
 the Open Bioinformatics Foundation, a non-profit for the biological
