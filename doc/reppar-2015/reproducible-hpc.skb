@@ -356,8 +356,9 @@ the direct dependencies of the package.  The field refers to the
 which are also bound to package objects (their definition is not shown
 here.)  It would be inconvenient to specify all the standard inputs,
 such as Make, GCC, Binutils so these are implicit here;
-they are provided by ,(tt [gnu-build-system]), which is responsible for
-compiling package objects to an intermediate representation.
+as it compiles package objects to a lower-level intermediate
+representation, ,(tt [gnu-build-system]) automatically inserts
+references to specific package objects for GCC, Binutils, etc.
 Since we are manipulating ``normal'' Scheme objects, we can use the API
 of Guix to query those package objects, as illustrated with the code in
 ,(numref :text [Figure] :ident "fig-query"), which queries the name and
