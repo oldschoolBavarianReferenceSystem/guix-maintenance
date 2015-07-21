@@ -629,7 +629,16 @@ access to the Internet.  However, the daemon needs to be able to download
 source code tarballs or pre-built binaries from external servers.  Thus,
 the daemon must run on a node with Internet access, which could be
 contrary to the policy on some clusters.])
-
+      (p (emph [OS kernel.]) [ By choosing not to use a full-blown VM
+and thus relying on the host OS kernel, our system assumes that the
+kernel interface is stable and that the kernel has little or no impact
+on program behavior.  While this may sound like a broad assumption, our
+experience has shown that it holds for almost all the software packages
+provided by Guix.  Indeed, while applications may be sensitive to
+changes in the C library, only low-level kernel-specific user-land
+software is really sensitive to changes in the kernel.  The build daemon
+itself relies on features that have been available in the kernel for
+several years.])
       (p (emph [Non-determinism.])[ Despite the use of
 isolated containers to run build processes, there are still a few sources
 of non-determinism that build systems of packages might use and
