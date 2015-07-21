@@ -228,8 +228,7 @@ exact same software environment on a ,(emph [different]) HPC system
 seems out of reach.  It is nonetheless a very important property: It
 would allow users to assess the impact of the hardware on the software's
 performance,(---)something that is very valuable in particular for
-developers of run-time systems such as StarPU ,(ref :bib
-'augonnet2009:starpu),(---)and it would allow other researchers to
+developers of run-time systems,(---)and it would allow other researchers to
 reproduce experiments on their system.])
       (p [Essentially, by deploying software and environment modules,
 HPC support teams find themselves duplicating the work of GNU/Linux
@@ -474,8 +473,8 @@ sharing among peers.]))
          (p [Our colleagues at Inria in the HiePACS and Runtime teams
 develop a complete linear algebra software stack going from sparse
 solvers such as PaStiX and dense solvers such as Chameleon,
-to run-time support libraries and compiler extensions such as StarPU
-,(ref :bib 'augonnet2009:starpu) and hwloc.  While
+to run-time support libraries and compiler extensions such as
+StarPU,(footnote (url "http://starpu.gforge.inria.fr/")) and hwloc.  While
 developers of simulations want to be able to deploy the whole stack,
 developers of solvers only need their project's
 dependencies, possibly several variants thereof.  For instance,
