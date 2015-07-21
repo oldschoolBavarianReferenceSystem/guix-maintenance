@@ -710,7 +710,7 @@ cannot combine the features or packages they offer.  Furthermore,
 ``Docker files'', ``Vagrant files'', and Kameleon ``recipes'' ,(ref :bib
 'ruiz2015:kameleon) suffer from being too broad for the purposes of
 reproducing a software environment,(---)they are about configuring
-complete operating systems,(---)and from offering a inappropriate level
+complete operating systems,(---)and from offering an inappropriate level
 of abstraction,(---)these recipes list commands to ,(emph [modify]) the
 state of the system image to obtain the desired state, whereas Guix
 allows users to ,(emph [declare]) the desired environment in terms of
