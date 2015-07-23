@@ -206,8 +206,8 @@ methodology for reproducible research experiments in HPC.  To address
 the software-environment reproducibility problem they propose two
 unsatisfying approaches: one is to write down the
 version numbers of the dependencies being used, which is insufficient,
-and the other is to save and reuse full virtual machines (VMs), which poses a
-real challenge for performance and makes verifiability
+and the other is to save and reuse full system images, which
+makes verifiability
 impractical,(---)peers would have to download large images and would be
 unable to combine them with their own software environment.])
       (p [Yet, common practices on HPC systems hinder reproducibility.
