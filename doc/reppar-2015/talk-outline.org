@@ -1,0 +1,107 @@
+#+TITLE: Outline of the RepPar talk
+
+* the problem
+
+  - 'module load foo/bar'
+    + cluster sysadmin was kind enough to write a "module file" for that
+      one
+  - 2 months later:
+    + ModuleCmd_Load.c(204):ERROR:105: Unable to locate a modulefile for 'foo/bar'
+    + or 'foo/bar' has been upgraded
+    + or 'foo/bar' has been relinked against upgraded dependencies
+    + ...
+  - conclusion: unable to reproduce an environment, *even on the same
+    machine*!
+
+* types of "reproducibility" we're interested in
+
+  - bit-reproducible builds
+    + independent builds of a package should provide bit-identical results
+  - environment reproducible for 1 user on 1 machine
+    + users should be able to manage constant environments
+    + users should able to *choose* when they alter their environments
+  - sharing among users on a machine
+    + it should be possible, optionally, to share environments among
+      users of a cluster
+  - sharing across machines => reproducible research
+    + reproduce the exact same environment or binaries everywhere
+
+* more than reproducibility: experimentation
+
+  - as scientists we want to be able to change parts of the software
+    stack, and see what impact they have
+    + example: the MORSE + StarPU + hwloc stack
+      * StarPU developers want to test scheduling algorithm on a "real"
+        linear algebra application (MORSE)
+      * MORSE developers want to compare performance of MORSE with
+        different StarPU versions, or assess impact of specific
+        compilation flags
+      * [[http://icl.cs.utk.edu/quark/docs/group__QUARK.html][Quark]] developers (another run-time system) want to see if
+        MORSE-over-Quark outperforms MORSE-over-StarPU
+  - as scientists, we demand software systems that can we can fully
+    inspect, not black boxes
+    + hard to draw any scientific conclusion from an experiment that
+      relies on black boxes
+
+* full system Docker/VM image => problem solved!
+
+  - "solution"
+    + develop in a VM, take a snapshot when it's good, publish it
+    + or: write a Dockerfile that sets up a known-good container image,
+      publish it
+  - pros:
+    - "bit-reproducible" since you essentially publish the bits
+    - reproducible anywhere by anyone
+    - "proven technology"
+  - problems:
+    + VMs are heavyweight, not OK for HPC
+      * hardware support + KVM + in-kernel page deduplication help, but
+        still
+    + VM images are completely opaque: how can i reproduce them?
+    + Dockerfiles describe steps to /modify/ an opaque image
+      * how was the base image produced?
+      * do the binary packages of the base distro really correspond to
+        the source they claim to come from?
+    + in both cases, inspection is difficult: we're given a cake, but
+      not its recipe
+    + not composable:
+      * the full system image is standalone by definition, no way to use
+        the software alongside other software packages i may need
+      * no way to use, say, the library that's inside the system image
+        as-is in my own software system
+  - full system images are:
+    + coarse-grain
+    + the wrong abstraction level
+
+* then, just use a good old package manager?
+
+  - pros:
+    + packages are the abstraction level that we want!
+    + we get recipes, not just cakes (hopefully; more on that below)
+    + well-known, "proven" tools
+  - cons:
+    + dpkg, rpm, etc. require root, difficult to customize => unsuitable
+      on a cluster
+    + EasyBuild, Spack, etc.
+      * no need to be root!
+      * simple recipes that can be shared across machine!
+      * allows users to express software variants! (Spack)
+    + but:
+      * recipes are incomplete: lots of untold expectations (such as
+        tool chain) => uncontrolled environment, definitely not
+        bit-reproducible packages
+      * if we make several cakes, they tend to "blend together": /ad
+        hoc/, half-baked handling of package variants, build environment
+        not captured
+
+* enter functional package management & Guix
+
+  - explain
+  - demo 'guix build' and 'guix environment'
+  - use cases
+
+* limitations
+
+  - explain
+  - bit-reproducibility
+    + show https://reproducible.debian.net/index_issues.html
