@@ -64,6 +64,8 @@
         the source they claim to come from?
     + in both cases, inspection is difficult: we're given a cake, but
       not its recipe
+      * {image of good cake/rotten cake}
+      * {image of a very detailed recipe}
     + not composable:
       * the full system image is standalone by definition, no way to use
         the software alongside other software packages i may need
@@ -90,15 +92,33 @@
       * recipes are incomplete: lots of untold expectations (such as
         tool chain) => uncontrolled environment, definitely not
         bit-reproducible packages
+      * {image of a recipe with missing lines and/or coffee stains}
       * if we make several cakes, they tend to "blend together": /ad
         hoc/, half-baked handling of package variants, build environment
         not captured
 
 * enter functional package management & Guix
 
-  - explain
+  - functional package management
+    + at its core: referential transparency
+    + slide #1: constant folding + CSE on: x = (2 + 4) * 5 + 2 * y + y
+    + slide #2: f = ./configure && make && make install
+      * p = f(openblas, f(coreutils, gcc, glibc, binutils), gcc, glibc)
+  - Nix vs. Guix (quickly)
+    + ELS 2013 slides showing build daemon + clients + build tools in Nix
+      and then Guix
+    + "why do we do this?"
+    + general-purpose language & environment: compiler, debugger,
+      libraries, Emacs integration, etc.
+    + *embedded* DSL means we can write domain-specific programs
+      (guix-web, active papers), write functions of packages,
+      programmatically inspect/modify the DAG, etc.
+    + code reuse thanks to use of the same language on both sides
   - demo 'guix build' and 'guix environment'
   - use cases
+  - conclude:
+    + Guix's job is not only to provide cakes, but also to provide
+      /complete/ recipes that chefs can not only inspect but also modify
 
 * limitations
 
