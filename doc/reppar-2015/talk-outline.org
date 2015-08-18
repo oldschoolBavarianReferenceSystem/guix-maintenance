@@ -38,7 +38,7 @@
         compilation flags
       * [[http://icl.cs.utk.edu/quark/docs/group__QUARK.html][Quark]] developers (another run-time system) want to see if
         MORSE-over-Quark outperforms MORSE-over-StarPU
-  - as scientists, we demand software systems that can we can fully
+  - as scientists, we demand software systems that we can fully
     inspect, not black boxes
     + hard to draw any scientific conclusion from an experiment that
       relies on black boxes
