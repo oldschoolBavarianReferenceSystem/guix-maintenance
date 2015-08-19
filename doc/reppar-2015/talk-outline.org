@@ -114,6 +114,10 @@
       (guix-web, active papers), write functions of packages,
       programmatically inspect/modify the DAG, etc.
     + code reuse thanks to use of the same language on both sides
+  - ELS slides with hash etc.
+    + slide with DAG
+    + compare DAG of package objects vs. DAG of bags vs. DAG of
+      derivations
   - demo 'guix build' and 'guix environment'
   - use cases
   - conclude:
