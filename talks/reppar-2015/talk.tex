@@ -57,7 +57,8 @@
 
 \title{Reproducible and User-Controlled Package Management in HPC with GNU Guix}
 
-\author{Ludovic Courtès \texttt{ludo@gnu.org}.\\Ricardo Wurmus \texttt{ricardo.wurmus@mdc-berlin.de}}
+\author{Ludovic Courtès (\texttt{ludovic.courtes@inria.fr})
+  \\Ricardo Wurmus (\texttt{ricardo.wurmus@mdc-berlin.de})}
 \date{\small{RepPar\\25 August 2015}}
 
 \setbeamertemplate{navigation symbols}{} % remove the navigation bar
@@ -101,28 +102,28 @@
 % under their feet, and they have little hope of being able to
 % reproduce the same software environment elsewhere.
 
-\begin{frame}{Reproducibility}
+\begin{frame}{``Reproducibility''?}
   % Let us first define what the term "reproducibility" means when
   % applied to software and software environments in the context of
   % this talk.
 
   \Large{
-    \begin{itemize}
+    \begin{enumerate}
       % The most obvious and yet most elusive is reproducible software
       % builds, i.e. translating source code into bit-identical
       % binaries, across independent builds.
-    \item bit-reproducible builds
+    \item<2-> \textbf{bit-reproducible} builds
 
       % Another is keeping a software *environment* constant,
       % i.e. reproducing the environment for one user on the same
       % machine across time.
-    \item isolating a software environment from changes
+    \item<3-> \textbf{isolating} a software environment from changes
 
       % And lastly, as an extension to the previous case, reproducing
       % an environment on a different machine and at a different point
       % in time, i.e. sharing an environment with others.
-    \item sharing environments with others
-    \end{itemize}
+    \item<4-> \textbf{sharing} environments with others
+    \end{enumerate}
   }
 \end{frame}
 
@@ -139,17 +140,17 @@
       % the environment.  It should be easy to safely revert
       % changes and continue exploration with previous versions, to
       % make exploration cheap.
-    \item user-controlled updates and roll-backs
+    \item \textbf{user-controlled upgrades} and roll-backs
 
       % Changing *specific* parts of the software stack (e.g. a
       % dependent library, or the toolchain) must be possible to see
       % what impact they have on the result.
-    \item change specific parts of software stack
+    \item change \textbf{specific parts} of the software stack
 
       % Users should not be limited by an opaque system that cannot be
       % inspected.  It is hard to draw any scientific conclusion from
       % an experiment that relies on black boxes.
-    \item hackability: no black boxes
+    \item \textbf{hackability}: no black boxes
     \end{itemize}
   }
 \end{frame}
@@ -195,7 +196,7 @@
       % but not its recipe.
       % * {image of frozen pizza}
       % * {image of a very detailed recipe}
-    \item Binary images are opaque
+    \item binary images are opaque
 
       % The full system image is standalone by definition.  There is
       % no way to use the software embedded in the image *alongside*
@@ -208,35 +209,269 @@
       % state by building additional software in an ad-hoc
       % manner---we're giving up on isolation and good system
       % administration techniques.
-    \item Not composable
+    \item not composable
     \end{itemize}
   }
 \end{frame}
 
-
-
-
+%% \setbeamercolor{normal text}{fg=black,bg=guixyellow}
 \begin{frame}[plain]
-  \includegraphics[width=\textwidth]{images/guix-logo}
+  \center{\huge{\textbf{functional package management}}}
+  \\[2em]
+  \begin{quote}
+    \large{
+    regarding the build \& installation process\\
+    of a package as a \textbf{pure function}}
+  \end{quote}
+\end{frame}
+%% \setbeamercolor{normal text}{fg=white,bg=black}
+
+% FIXME: Add ``Thesis'' slide here.
+
+\begin{frame}[fragile]
+  \frametitle{From the Architecture of Nix...}
+  \framesubtitle{\url{http://nixos.org/nix/}}
+
+  \begin{tikzpicture}[tools/.style = {
+                        text width=35mm, minimum height=4cm,
+                        text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black
+                      },
+                      tool/.style = {
+                        fill=black, text=white, text width=3cm,
+                        text centered
+                      },
+                      daemon/.style = {
+                        rectangle, text width=50mm, text centered,
+                        rounded corners=2mm, minimum height=15mm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      builders/.style = {
+                        draw=guixorange1, very thick, dashed,
+                        fill=black, text=white, text width=5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=guixred2, thick, rectangle,
+                        fill=black, text=white,
+                        rotate=90
+                      }]
+    \matrix[row sep=3mm, column sep=1cm] {
+      \node(builders)[builders, text height=5cm]{}
+          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+          node[builder, onslide=<1-2>{black}] at (-1,-0.5) {Bash, make, etc.}
+          node[builder, onslide=<1-2>{black}] at ( 0,-0.5) {Bash, make, etc.}
+          node[builder, onslide=<1-2>{black}] at ( 1,-0.5) {Bash, make, etc.}; &
+      \node[tools]{}
+          node[fill=white, text=black] at (0, 1) {\large{\textbf{Nix tools}}}
+          node[tool] at (0, 0) {Nix language}
+          node(client)[tool] at (0, -1) {client lib};
+      \\
+
+      \node(daemon)[daemon]{\large{\textbf{Nix build daemon}}}; &
+      &
+      \\
+    };
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[overlay]
+    \path[very thick, draw=guixorange1]<2->
+      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+    \path[->, very thick, draw=guixorange1]<3->
+      (daemon) edge (builders);
+  \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Functional package management}
+\begin{frame}[fragile]
+  \frametitle{... to the Architecture of Guix}
+  \framesubtitle{\url{http://gnu.org/s/guix/}}
+
+  \begin{tikzpicture}[tools/.style = {
+                        text width=35mm, minimum height=4cm,
+                        text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black
+                      },
+                      tool/.style = {
+                        fill=white, text=black, text width=3cm,
+                        text centered
+                      },
+                      daemon/.style = {
+                        rectangle, text width=50mm, text centered,
+                        rounded corners=2mm, minimum height=15mm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      builders/.style = {
+                        draw=guixorange1, very thick, dashed,
+                        fill=black, text=white, text width=5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=guixred2, thick, rectangle,
+                        fill=black, text=white,
+                        rotate=90
+                      }]
+    \matrix[row sep=3mm, column sep=1cm] {
+      \node(builders)[builders, text height=5cm]{}
+          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+          node[builder] at (-1,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 0,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 1,-0.5) {\alert{Guile}, make, etc.}; &
+      \node[tools]{}
+          node[fill=white, text=black] at (0, 1) {\large{\textbf{Guile Scheme}}}
+          node[tool] at (0, 0) {\texttt{(guix packages)}}
+          node(client)[tool] at (0, -1) {\texttt{(guix store)}};
+      \\
+
+      \node(daemon)[daemon]{\large{\textbf{Nix build daemon}}}; &
+      &
+      \\
+    };
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[overlay]
+    \path[very thick, draw=guixorange1]
+      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+    \path[->, very thick, draw=guixorange1]
+      (daemon) edge (builders);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Why Guix?}
+
   \Large{
+    \begin{enumerate}
+    \item{Scheme is a ``programmable programming language''
+      \begin{itemize}
+      \item we devise tailored, expressive \alert{EDSLs}
+      \item can write domain-specific programs: Web UI, functions of
+        packages, etc.
+      \end{itemize}}
+    \item \alert{general-purpose language} with compiler, debugger,
+      libraries, etc.
+    \item \alert{a single language} $\rightarrow$ more code reuse,
+      unified environment
+    \item \alert{\textbf{complete package programming interface}}
+    \end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Reproducible Builds$^*$}
+  \framesubtitle{$^*$ almost!}
+
+  \begin{semiverbatim}
+\$ guix build slepc
+\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sf72\textrm{...}}};}-slepc-3.6.0}
+
+\uncover<3->{\$ \alert<3>{guix gc --references /gnu/store/\textrm{...}-slepc-3.6.0}
+/gnu/store/\textrm{...}-openmpi-1.8.5
+/gnu/store/\textrm{...}-gfortran-4.9.3-lib
+/gnu/store/\textrm{...}-superlu-4.3
+/gnu/store/\textrm{...}-petsc-complex-openmpi-3.6.0
+/gnu/store/\textrm{...}-glibc-2.21
+\textrm{...}}
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \node<1>(labelnixhash) [fill=white, text=black] at (current page.center) {%
+      \Large{\textbf{isolated build}: chroot, separate name spaces, etc.}
+    };
+
+    \node<2>(labelnixhash) [fill=white, text=black] at (4cm, 2cm) {%
+      hash of \textbf{all} the dependencies};
+    \path[->]<2>(labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
+
+    \draw<4> (-10pt, 105pt) [very thick, color=guixorange2, rounded corners=8pt]
+      arc (10:-50:-50pt and 110pt);
+    \node<4>[fill=white, text=black, text opacity=1, opacity=.7,
+          rounded corners=2mm, inner sep=5mm]
+      at (7, 2) {\textbf{\Large{(nearly) bit-identical for everyone}}};
+  \end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Reproducible Environments}
+
+  \begin{semiverbatim}
+\$ guix package -i gcc-toolchain coreutils sed grep
+\textrm{...}
+
+
+\$ eval `guix package --search-paths`
+\textrm{...}
+
+
+\$ guix package --manifest=my-software.scm
+\textrm{...}
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \node[rounded corners=4, text centered,
+          fill=guixorange1, text width=3cm,
+          inner sep=3mm, rotate=5, opacity=.75, text opacity=1,
+          drop shadow={opacity=0.5}] at (5, 4) {
+            \textbf{\large{demo}}
+          };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experience at the Max Delbrück Center, Berlin}
+
+  \large{
   \begin{itemize}
-  \item no \alert{global} values:\\
-        /bin, /usr/include, /usr/lib, ...
-  \item \alert{purity}:\\
-        only declared inputs are visible at build time
-  \item \alert{reproducible} results:\\
-        build outputs can be cached and substituted;\\
-        automatic deduplication!
-  \item \alert{immutable results} without \alert{side effects}:\\
-        nothing outside of the cache and internal state is modified
+    \item \textbf{Guix deployed on 250-node cluster} + workstations
+    \item used by \textbf{bioinformatics} researchers
+    \item \textbf{50+ bioinfo packages} in use (C/C++, Python,
+      etc.)
+    \item replaces CentOS packages + sysadmin-managed software
   \end{itemize}
   }
 \end{frame}
 
+% FIXME: Chameleon/StarPU use case.
 
+\begin{frame}
+  \frametitle{Summary}
+
+  \Large{
+    \begin{itemize}
+    \item<1-> Guix allows \alert{\textbf{cluster users}} to reproduce
+      environments
+    \item<2-> Guix provides \alert{\textbf{recipes}} that chefs can
+      inspect \& modify
+    \item<3-> \alert{\textbf{composability, transparency, and
+        hackability}} of software stacks are key to reproducible
+      research
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      \includegraphics[height=\paperheight]{images/gourmet-vegetarian-recipe}
+  };
+    \node [text=black] at (current page.center) {
+      \Huge{\textbf{recipes, not just pizzas}}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+% FIXME: Add ``Thanks'' slide with tiny Guix logo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 
   \begin{textblock}{12}(2, 8)
@@ -277,5 +512,5 @@
 % comment-start: "%"
 % comment-end: ""
 % ispell-local-dictionary: "american"
-% compile-command: "pdflatex talk.tex"
+% compile-command: "rubber --pdf talk.tex"
 % End:
