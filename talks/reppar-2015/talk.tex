@@ -119,10 +119,43 @@
       % machine across time.
     \item<3-> \textbf{isolating} a software environment from changes
 
+      \only<4> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/isolation-1}
+          };
+        \end{tikzpicture}
+      }
+
+      \only<5> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/isolation-2}
+          };
+        \end{tikzpicture}
+      }
+
+
       % And lastly, as an extension to the previous case, reproducing
       % an environment on a different machine and at a different point
       % in time, i.e. sharing an environment with others.
-    \item<4-> \textbf{sharing} environments with others
+    \item<6-> \textbf{sharing} environments with others
+      \only<7> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/isolation-2}
+          };
+        \end{tikzpicture}
+      }
+
+      \only<8> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/sharing}
+          };
+        \end{tikzpicture}
+      }
+
     \end{enumerate}
   }
 \end{frame}
@@ -140,17 +173,48 @@
       % the environment.  It should be easy to safely revert
       % changes and continue exploration with previous versions, to
       % make exploration cheap.
-    \item \textbf{user-controlled upgrades} and roll-backs
+    \item<2-> \textbf{user-controlled upgrades} and roll-backs
+      \only<3> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/isolation-2}
+          };
+        \end{tikzpicture}
+      }
+
+      \only<4> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/upgrades}
+          };
+        \end{tikzpicture}
+      }
+
 
       % Changing *specific* parts of the software stack (e.g. a
       % dependent library, or the toolchain) must be possible to see
       % what impact they have on the result.
-    \item change \textbf{specific parts} of the software stack
+    \item<5-> change \textbf{specific parts} of the software stack
+      \only<6> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/upgrades}
+          };
+        \end{tikzpicture}
+      }
+
+      \only<7> {
+        \begin{tikzpicture}[overlay]
+          \node [at=(current page.center), inner sep=0mm]{
+            \includegraphics[width=\textwidth]{images/specific-changes}
+          };
+        \end{tikzpicture}
+      }
 
       % Users should not be limited by an opaque system that cannot be
       % inspected.  It is hard to draw any scientific conclusion from
       % an experiment that relies on black boxes.
-    \item \textbf{hackability}: no black boxes
+    \item<8-> \textbf{hackability}: no black boxes
     \end{itemize}
   }
 \end{frame}
