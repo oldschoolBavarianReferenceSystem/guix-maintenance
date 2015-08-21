@@ -230,51 +230,55 @@
   % how a base image is to be modified to reach the desired state.
 
   \Large{
-    Pros:
-    \begin{itemize}
-      % It's bit-reproducible in the sense that you essentially
-      % publish the bits.
-    \item ``bit-reproducible''
+  \begin{columns}
+    \begin{column}[t]<2->{0.5\textwidth}
+      Pros:
+      \begin{itemize}
+        % It's bit-reproducible in the sense that you essentially
+        % publish the bits.
+      \item ``bit-reproducible''
 
-      % Virtualization is wide-spread and is "proven technology" with
-      % few surprises, making it simple for anyone to reuse an image.
-    \item reproducible anywhere by anyone
-    \end{itemize}
-  }
+        % Virtualization is wide-spread and is "proven technology" with
+        % few surprises, making it simple for anyone to reuse an image.
+      \item reproducible anywhere by anyone
+      \end{itemize}
+    \end{column}
 
-  \Large{
-    Problems:
-    \begin{itemize}
-      % VMs are heavyweight, which means they are unsuited for HPC.
-      % * hardware support + KVM + in-kernel page deduplication help, but still
-    \item VMs are heavyweight
+    \begin{column}[t]<3->{0.5\textwidth}
+      Problems:
+      \begin{itemize}
+        % VMs are heavyweight, which means they are unsuited for HPC.
+        % * hardware support + KVM + in-kernel page deduplication help, but still
+      \item VMs are heavyweight
 
-      % VM images are completely opaque, binary artifacts: how can I
-      % reproduce them?
-      % Likewise, Dockerfiles describe steps to modify an opaque base
-      % image.  How was the base image produced?  Do the binary
-      % packages of the base system really correspond
-      % to the source they claim to come from?
+        % VM images are completely opaque, binary artifacts: how can I
+        % reproduce them?
+        % Likewise, Dockerfiles describe steps to modify an opaque base
+        % image.  How was the base image produced?  Do the binary
+        % packages of the base system really correspond
+        % to the source they claim to come from?
 
-      % In both cases, inspection is difficult: we're given a pizza,
-      % but not its recipe.
-      % * {image of frozen pizza}
-      % * {image of a very detailed recipe}
-    \item binary images are opaque
+        % In both cases, inspection is difficult: we're given a pizza,
+        % but not its recipe.
+        % * {image of frozen pizza}
+        % * {image of a very detailed recipe}
+      \item binary images are opaque
 
-      % The full system image is standalone by definition.  There is
-      % no way to use the software embedded in the image *alongside*
-      % other software packages I may need.
+        % The full system image is standalone by definition.  There is
+        % no way to use the software embedded in the image *alongside*
+        % other software packages I may need.
 
-      % For example, there is no way to use, say, the library that's
-      % inside the system image as-is in my own software system.
+        % For example, there is no way to use, say, the library that's
+        % inside the system image as-is in my own software system.
 
-      % This encourages bad habits: modifying the image
-      % state by building additional software in an ad-hoc
-      % manner---we're giving up on isolation and good system
-      % administration techniques.
-    \item not composable
-    \end{itemize}
+        % This encourages bad habits: modifying the image
+        % state by building additional software in an ad-hoc
+        % manner---we're giving up on isolation and good system
+        % administration techniques.
+      \item not composable
+      \end{itemize}
+    \end{column}
+  \end{columns}
   }
 \end{frame}
 
