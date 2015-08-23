@@ -2,7 +2,6 @@
 
 \usetheme{default}
 
-\usefonttheme{structurebold}
 \usepackage{helvet}
 \usecolortheme{seagull}         % white on black
 
@@ -55,28 +54,24 @@
 \setbeamercolor{frametitle in toc}{fg=white,bg=black}
 \setbeamercolor{local structure}{fg=guixorange1,bg=black}
 
+\newcommand{\highlight}[1]{\alert{\textbf{#1}}}
+
 \title{Reproducible and User-Controlled Package Management in HPC with GNU Guix}
 
 \author{Ludovic Courtès (\texttt{ludovic.courtes@inria.fr})
   \\Ricardo Wurmus (\texttt{ricardo.wurmus@mdc-berlin.de})}
-\date{\small{RepPar\\25 August 2015}}
+\date{\small{Workshop on Reproducibility in Parallel Computing
+    (RepPar)\\25 August 2015}}
 
 \setbeamertemplate{navigation symbols}{} % remove the navigation bar
 
 \AtBeginSection[]{
   \begin{frame}
     \frametitle{}
-    \tableofcontents[currentsection, hideothersections]
+    \tableofcontents[currentsection]
   \end{frame} 
 }
 
-
-\AtBeginSubsection[]{
-  \begin{frame}
-  \frametitle{}
-  \tableofcontents[currentsection, currentsubsection]
-  \end{frame}
-}
 
 \begin{document}
 
@@ -282,8 +277,10 @@
   }
 \end{frame}
 
-%% \setbeamercolor{normal text}{fg=black,bg=guixyellow}
-\begin{frame}[plain]
+%% \section{Functional Package Management}
+
+%% \setbeamercolor{normal text}{fg=black, bg=black}
+\begin{frame}
   \center{\huge{\textbf{functional package management}}}
   \\[2em]
   \begin{quote}
@@ -294,7 +291,33 @@
 \end{frame}
 %% \setbeamercolor{normal text}{fg=white,bg=black}
 
-% FIXME: Add ``Thesis'' slide here.
+\begin{frame}{Functional Package Management}
+  \Large{
+    \begin{itemize}
+    \item<3-> \textit{Caching Function Calls Using Precise Dependencies}
+      (``Vesta''), Heydon et al., 2000
+    \item \textit{A Safe and Policy-Free System for Software Deployment}
+      (``Nix''), Dolstra et al., 2003
+    \item<2-> \textit{Functional Package Management with Guix}, Courtès,
+      2013
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{Thesis}
+
+  \Large{
+    \begin{enumerate}
+    \item functional package management (FPM) \textbf{empowers cluster
+      users}
+    \item FPM is a solid foundation for \textbf{reproducible software
+      deployment}
+    \item \textbf{beyond reproducibility}: Guix is programmable, supports
+      experimentation
+      % You get the ``source of the software environment''.
+    \end{enumerate}
+  }
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{From the Architecture of Nix...}
@@ -336,7 +359,7 @@
           node[builder, onslide=<1-2>{black}] at ( 1,-0.5) {Bash, make, etc.}; &
       \node[tools]{}
           node[fill=white, text=black] at (0, 1) {\large{\textbf{Nix tools}}}
-          node[tool] at (0, 0) {Nix language}
+          node[tool] at (0, 0) {\textbf<4->{\alert<4->{Nix language}}}
           node(client)[tool] at (0, -1) {client lib};
       \\
 
@@ -414,26 +437,23 @@
 
 \begin{frame}[fragile]
   \frametitle{Why Guix?}
+  \framesubtitle{[Courtès 2013]}
 
   \Large{
     \begin{enumerate}
     \item{Scheme is a ``programmable programming language''
-      \begin{itemize}
-      \item we devise tailored, expressive \alert{EDSLs}
-      \item can write domain-specific programs: Web UI, functions of
-        packages, etc.
-      \end{itemize}}
+      $\rightarrow$ \alert{tailored EDSLs}}
     \item \alert{general-purpose language} with compiler, debugger,
       libraries, etc.
     \item \alert{a single language} $\rightarrow$ more code reuse,
       unified environment
-    \item \alert{\textbf{complete package programming interface}}
+    \item \highlight{complete package programming interface}
     \end{enumerate}
   }
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Reproducible Builds$^*$}
+  \frametitle{Bit-Reproducible Builds$^*$}
   \framesubtitle{$^*$ almost!}
 
   \begin{semiverbatim}
@@ -458,11 +478,14 @@
       hash of \textbf{all} the dependencies};
     \path[->]<2>(labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
 
-    \draw<4> (-10pt, 105pt) [very thick, color=guixorange2, rounded corners=8pt]
+    \draw<4-> (-10pt, 105pt) [very thick, color=guixorange2, rounded corners=8pt]
       arc (10:-50:-50pt and 110pt);
-    \node<4>[fill=white, text=black, text opacity=1, opacity=.7,
+    \node<4->[fill=white, text=black, text opacity=1, opacity=.7,
           rounded corners=2mm, inner sep=5mm]
       at (7, 2) {\textbf{\Large{(nearly) bit-identical for everyone}}};
+    \node<5>[fill=white, text=black, text opacity=1, opacity=.7,
+          rounded corners=1mm, inner sep=3mm]
+      at (8, 1) {\url{http://reproducible.debian.net}};
   \end{tikzpicture}
 
 \end{frame}
@@ -495,7 +518,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Experience at the Max Delbrück Center, Berlin}
+  \frametitle{Experience at the\\Max Delbrück Center, Berlin}
 
   \large{
   \begin{itemize}
@@ -508,20 +531,106 @@
   }
 \end{frame}
 
-% FIXME: Chameleon/StarPU use case.
+%% \section{Supporting Experimentation}
+
+\begin{frame}[fragile]
+  \frametitle{Fiddling with the HPC Stack}
+  \framesubtitle{Example from Inria}
+
+  \begin{tikzpicture}[algebra/.style = {
+                        text width=8cm, text centered,
+                        rounded corners=2mm,
+                        minimum height=2cm,
+                        fill=white, text=black
+                      },
+                      runtime/.style = {
+                        text width=8cm, text centered,
+                        rounded corners=2mm,
+                        minimum height=1cm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      system/.style = {
+                        text width=8cm, text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black,
+                        minimum height=1cm
+                      },
+                      legend/.style = {
+                        fill=black, text=white, rotate=90,
+                        inner sep=0mm
+                      }]
+    \matrix[row sep=1mm, column sep=1cm] {
+      \node[legend]{linear algebra}; &
+      \node[algebra]{\textbf{PaSTiX, Chameleon} (solvers)};
+      \\
+
+      &
+      \node[runtime]{\large{\textbf{StarPU}} (task scheduling)};
+      \\
+
+      \node[legend]{run-time}; &
+      \node[runtime]{\large{\textbf{hwloc}} (hardware topology)};
+      \\
+
+      &
+      \node[runtime]{\large{\textbf{MPI}} (message passing)};
+      \\
+
+      &
+      \node[system]{\large{compiler's run-time support, C~library,
+          etc.}}; \\ };
+  \end{tikzpicture}
+\end{frame}
+
+% FIXME: Add ``How do we fiddle with that?'' here.  (?)
+
+\begin{frame}{HPC Developer Requirements}
+
+  \Large{
+    \begin{enumerate}
+    \item customize + non-ambiguously \highlight{specify package DAG}
+    \item reliably reproduce \highlight{variants of the DAG}
+    \end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Limitations}
+
+  \Large{
+    \begin{itemize}
+    \item{daemon must run as root
+      \begin{itemize}
+      \item<2-> WIP: have daemon rely on \textbf{user name spaces} (Linux
+        3.8+)
+    \end{itemize}}
+    \item{non-deterministic build systems
+      \begin{itemize}
+      \item<3->must be identified and \textbf{fixed upstream}
+    \end{itemize}}
+    \item{non-free software unavailable in Guix
+      \begin{itemize}
+      \item<4-> \textbf<4>{would you do chemistry research out of magic
+        potions?}
+      \item<5-> \textbf{reproducible research demands software freedom}
+    \end{itemize}}
+    \end{itemize}
+  }
+\end{frame}
 
 \begin{frame}
   \frametitle{Summary}
 
   \Large{
     \begin{itemize}
-    \item<1-> Guix allows \alert{\textbf{cluster users}} to reproduce
+    \item<1-> Guix allows \highlight{cluster users} to reproduce
       environments
-    \item<2-> Guix provides \alert{\textbf{recipes}} that chefs can
+    \item<2-> Guix provides \highlight{recipes} that chefs can
       inspect \& modify
-    \item<3-> \alert{\textbf{composability, transparency, and
-        hackability}} of software stacks are key to reproducible
-      research
+    \item<3-> \highlight{composability, transparency, and hackability}
+      of software stacks are key to reproducible research
     \end{itemize}
   }
 \end{frame}
@@ -582,3 +691,5 @@
 % ispell-local-dictionary: "american"
 % compile-command: "rubber --pdf talk.tex"
 % End:
+
+%%  LocalWords:  Reproducibility
