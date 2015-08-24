@@ -1,3 +1,8 @@
+% The comment below tells Rubber to compile the .dot files.
+%
+% rubber: module graphics
+% rubber: rules rules.ini
+
 \documentclass{beamer}
 
 \usetheme{default}
@@ -665,6 +670,63 @@
     \path[->, fill=white, thick]<3-4>(labelvar) edge (var);
     \path[->, fill=white, thick]<5>(labelgbs) edge (gbs);
     \path[->, fill=white, thick]<5>(labelgbsdeps) edge (gbs);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{DAG of Package Objects}
+
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      \includegraphics[width=1.3\textwidth]{starpu-package-dag}
+    };
+    \node (command) [at=(current page.south east), anchor=south east, inner sep=5mm]{
+      \texttt{guix graph --type=package starpu}
+    };
+    \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
+      \large{\highlight{10 nodes}}
+    };
+    \node<2->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
+      rounded corners=2mm, inner sep=5mm, at=(current page.center)] {
+      \textbf{\Large{What about implicit inputs?}}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{Same DAG, including implicit inputs}
+
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      \includegraphics[width=1.2\textwidth]{starpu-emerged-dag}
+    };
+    \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
+      \large{\highlight{29 nodes}}
+    };
+    \node [at=(current page.south east), anchor=south east, inner sep=5mm]{
+      \texttt{guix graph --type=bag-emerged starpu}
+    };
+    \node<2->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
+      rounded corners=2mm, inner sep=5mm, at=(current page.center)] {
+      \textbf{\Large{What about the compiler's compiler, etc.?}}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{Full DAG, including bootstrap}
+
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      %\includegraphics[width=0.01\textwidth]{starpu-full-dag}
+      (too big)
+    };
+    \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
+      \large{\highlight{321 nodes}}
+    };
+    \node [at=(current page.south east), anchor=south east, inner sep=5mm]{
+      \texttt{guix graph --type=bag starpu}
+    };
   \end{tikzpicture}
 \end{frame}
 
