@@ -1,24 +1,26 @@
 digraph G {
-  "79547584" [label = "starpu-1.1.4", shape = box, fontname = Helvetica];
-  "79547584" -> "53930816" [color = red];
-  "79547584" -> "65372544" [color = red];
-  "79547584" -> "65375040" [color = red];
-  "53930816" [label = "pkg-config-0.28", shape = box, fontname = Helvetica];
-  "65372544" [label = "fftw-3.3.4", shape = box, fontname = Helvetica];
-  "65372544" -> "50498752" [color = red];
-  "50498752" [label = "perl-5.16.1", shape = box, fontname = Helvetica];
-  "65375040" [label = "hwloc-1.10.1", shape = box, fontname = Helvetica];
-  "65375040" -> "53930816" [color = red];
-  "65375040" -> "51165632" [color = red];
-  "65375040" -> "67751488" [color = red];
-  "65375040" -> "68084864" [color = red];
-  "65375040" -> "66840256" [color = red];
-  "51165632" [label = "ncurses-5.9", shape = box, fontname = Helvetica];
-  "67751488" [label = "numactl-2.0.9", shape = box, fontname = Helvetica];
-  "68084864" [label = "expat-2.1.0", shape = box, fontname = Helvetica];
-  "66840256" [label = "libpciaccess-0.13.2", shape = box, fontname = Helvetica];
-  "66840256" -> "53930816" [color = red];
-  "66840256" -> "68274432" [color = red];
-  "68274432" [label = "zlib-1.2.7", shape = box, fontname = Helvetica];
+  ratio = 0.55;
+  bgcolor = black;
+  "79547584" [label = "starpu-1.1.4", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "79547584" -> "53930816" [color = orange];ppp
+  "79547584" -> "65372544" [color = orange];
+  "79547584" -> "65375040" [color = orange];
+  "53930816" [label = "pkg-config-0.28", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "65372544" [label = "fftw-3.3.4", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "65372544" -> "50498752" [color = orange];
+  "50498752" [label = "perl-5.16.1", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "65375040" [label = "hwloc-1.10.1", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "65375040" -> "53930816" [color = orange];
+  "65375040" -> "51165632" [color = orange];
+  "65375040" -> "67751488" [color = orange];
+  "65375040" -> "68084864" [color = orange];
+  "65375040" -> "66840256" [color = orange];
+  "51165632" [label = "ncurses-5.9", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "67751488" [label = "numactl-2.0.9", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "68084864" [label = "expat-2.1.0", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "66840256" [label = "libpciaccess-0.13.2", shape = box, fontname = Helvetica, color = white, fontcolor = white];
+  "66840256" -> "53930816" [color = orange];
+  "66840256" -> "68274432" [color = orange];
+  "68274432" [label = "zlib-1.2.7", shape = box, fontname = Helvetica, color = white, fontcolor = white];
 
 }
