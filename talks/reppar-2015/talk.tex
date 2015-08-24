@@ -284,12 +284,12 @@
 
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}[plain]
-  \center{\huge{\textbf{Functional Package Management}}}
+  \center{\Huge{\textbf{Functional Package Management}}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
 \begin{frame}{Functional Package Management}
-  \huge{
+  \Large{
     Regarding the build \& installation process
     of a package as a \highlight{pure function}.
   }
@@ -303,13 +303,13 @@
 
     \uncover<3->{$\texttt{gcc} = h(\texttt{make}, \texttt{coreutils}, \texttt{gcc}_0)$}
     
-    \uncover<4->{$\texttt{gcc}_0 = \sigma$}
+    \uncover<3->{\textrm{...}}
   }
 
   \uncover<1>{\large{where $f =$ \texttt{./configure \&\& make \&\& make install}}}
 
   \begin{tikzpicture}[overlay]
-    \node<5->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
+    \node<4->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
           rounded corners=2mm, inner sep=5mm] at (5, 1) {
             \textbf{\Large{the complete DAG is captured}}
           };
@@ -319,11 +319,11 @@
 \begin{frame}{References}
   \Large{
     \begin{itemize}
-    \item<3-> \textit{Caching Function Calls Using Precise Dependencies}
-      (``Vesta''), Heydon et al., 2000
+    %% \item<3-> \textit{Caching Function Calls Using Precise Dependencies}
+    %%   (``Vesta''), Heydon et al., 2000
     \item \textit{A Safe and Policy-Free System for Software Deployment}
       (``Nix''), Dolstra et al., 2003
-    \item<2-> \textit{Functional Package Management with Guix}, Courtès,
+    \item \textit{Functional Package Management with Guix}, Courtès,
       2013
     \end{itemize}
   }
@@ -508,13 +508,24 @@
     \node<4->[fill=white, text=black, text opacity=1, opacity=.7,
           rounded corners=2mm, inner sep=5mm]
       at (7, 2) {\textbf{\Large{(nearly) bit-identical for everyone}}};
-    \node<5>[fill=white, text=black, text opacity=1, opacity=.7,
-          rounded corners=1mm, inner sep=3mm]
-      at (8, 1) {\url{http://reproducible.debian.net}};
+    %% \node<5>[fill=white, text=black, text opacity=1, opacity=.7,
+    %%       rounded corners=1mm, inner sep=3mm]
+    %%   at (8, 1) {\url{http://reproducible.debian.net}};
   \end{tikzpicture}
 
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Reproducible Environments}
+
+  \Large{
+    \begin{itemize}
+    \item \textbf{per-user ``profiles''}
+    \item \textbf{non-interference} among users/profiles
+    \item \textbf{transactional upgrades \& rollbacks}
+    \end{itemize}
+  }
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Reproducible Environments}
@@ -552,16 +563,23 @@
 
   \large{
   \begin{itemize}
-    \item \textbf{Guix deployed on two clusters} (about 250 nodes) + workstations
+    \item \textbf{Guix deployed on two clusters} ($\approx$250 nodes) + workstations
     \item used by \textbf{bioinformatics} researchers
     \item \textbf{50+ bioinfo packages} in use (C/C++, Python,
       etc.)
     \item replaces CentOS packages + sysadmin-managed software
+    \item<2-> \highlight{advantages}: more user control, better resource
+      usage, ...
   \end{itemize}
   }
 \end{frame}
 
-%% \section{Supporting Experimentation}
+\setbeamercolor{normal text}{bg=guixblue2}
+\begin{frame}[plain]
+  \center{\Huge{\textbf{Beyond Reproducibility:\\
+        Supporting Experimentation}}}
+\end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
 \begin{frame}[fragile]
   \frametitle{Fiddling with the HPC Stack}
@@ -647,29 +665,29 @@
   \end{semiverbatim}
 
   \begin{textblock}{5}(11, 12)
-    \tikz{\node<2-3>(labeldeps)[fill=white, text=black]{dependencies};}
+    \tikz{\node<2>(labeldeps)[fill=white, text=black]{dependencies};}
   \end{textblock}
 
-  \begin{textblock}{5}(9, 9)
-    \tikz{\node<3-4>(labelvar)[fill=white, text=black]{reference to a
-        variable};}
-  \end{textblock}
+  %% \begin{textblock}{5}(9, 9)
+  %%   \tikz{\node<3>(labelvar)[fill=white, text=black]{reference to a
+  %%       variable};}
+  %% \end{textblock}
 
   \begin{textblock}{5}(3, 5)
-    \tikz{\node<5>(labelgbs)[fill=white, text=black]{\texttt{./configure
+    \tikz{\node<3>(labelgbs)[fill=white, text=black]{\texttt{./configure
         \&\& make install}...};}
   \end{textblock}
 
   \begin{textblock}{5}(8, 9)
-    \tikz{\node<5>(labelgbsdeps)[fill=white, text=black]{depends on
+    \tikz{\node<3>(labelgbsdeps)[fill=white, text=black]{depends on
         \texttt{gcc}, \texttt{make}, \texttt{bash}, etc.};}
   \end{textblock}
 
   \begin{tikzpicture}[overlay]
-    \path[->, fill=white, thick]<2-3>(labeldeps) edge (deps);
-    \path[->, fill=white, thick]<3-4>(labelvar) edge (var);
-    \path[->, fill=white, thick]<5>(labelgbs) edge (gbs);
-    \path[->, fill=white, thick]<5>(labelgbsdeps) edge (gbs);
+    \path[->, fill=white, thick]<2>(labeldeps) edge (deps);
+    %% \path[->, fill=white, thick]<3>(labelvar) edge (var);
+    \path[->, fill=white, thick]<3>(labelgbs) edge (gbs);
+    \path[->, fill=white, thick]<3>(labelgbsdeps) edge (gbs);
   \end{tikzpicture}
 \end{frame}
 
@@ -684,11 +702,11 @@
       \texttt{guix graph --type=package starpu}
     };
     \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
-      \large{\highlight{10 nodes}}
+      \Large{\highlight{10 nodes}}
     };
     \node<2->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
       rounded corners=2mm, inner sep=5mm, at=(current page.center)] {
-      \textbf{\Large{What about implicit inputs?}}
+      \textbf{\Large{Where are GCC, libc, etc.?}}
     };
   \end{tikzpicture}
 \end{frame}
@@ -701,7 +719,7 @@
       \includegraphics[width=1.2\textwidth]{starpu-emerged-dag}
     };
     \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
-      \large{\highlight{29 nodes}}
+      \Large{\highlight{29 nodes}}
     };
     \node [at=(current page.south east), anchor=south east, inner sep=5mm]{
       \texttt{guix graph --type=bag-emerged starpu}
@@ -719,10 +737,10 @@
   \begin{tikzpicture}[overlay]
     \node [at=(current page.center), inner sep=0mm]{
       %\includegraphics[width=0.01\textwidth]{starpu-full-dag}
-      (too big)
+      \large{(too big)}
     };
     \node [at=(current page.south west), anchor=south west, inner sep=5mm]{
-      \large{\highlight{321 nodes}}
+      \Large{\highlight{321 nodes}}
     };
     \node [at=(current page.south east), anchor=south east, inner sep=5mm]{
       \texttt{guix graph --type=bag starpu}
@@ -768,11 +786,10 @@
 
   \begin{semiverbatim}
 \small{
-  (define (\alert{make-chameleon} name \tikz[baseline]{\node(formal)[anchor=base]{\alert<1>{starpu}};})
+  (define (\alert{make-chameleon} \tikz[baseline]{\node(formal)[anchor=base]{\alert<1>{starpu}};})
      ;; Return the Chameleon solver linked against
      ;; this particular variant of StarPU.
      (\alert{package}
-       (name name)
        ;; \textrm{...}
        (inputs `(("starpu" ,\tikz[baseline]{\node(use)[anchor=base]{\alert<1>{starpu}};})
                  ("blas" ,atlas)
@@ -781,9 +798,9 @@
                  ("python" ,python-2)))))
 \uncover<2->{
    (define chameleon
-     (\alert{make-chameleon} "chameleon" starpu))
+     (\alert{make-chameleon} starpu))
    (define chameleon/starpu-simgrid
-     (\alert{make-chameleon} "chameleon-simgrid" starpu-with-simgrid))
+     (\alert{make-chameleon} starpu-with-simgrid))
 }
 }
   \end{semiverbatim}
@@ -796,7 +813,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}[plain]
-  \center{\huge{\textbf{Conclusion}}}
+  \center{\Huge{\textbf{Conclusion}}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
@@ -805,20 +822,22 @@
 
   \Large{
     \begin{itemize}
-    \item{daemon must run as root
+      \setlength\itemsep{1em}
+    \item{daemon must run as root to isolate builds
       \begin{itemize}
-      \item<2-> WIP: have daemon rely on \textbf{user name spaces} (Linux
-        3.8+)
+      \item<2-> \large{WIP: have daemon rely on \textbf{user name
+          spaces} (Linux 3.8+)}
     \end{itemize}}
     \item{non-deterministic build systems
       \begin{itemize}
-      \item<3->must be identified and \textbf{fixed upstream}
-    \end{itemize}}
+      \item<3-> \large{must be identified \& \textbf{fixed upstream}}
+      \item<3-> WIP thanks to \url{http://reproducible.debian.net}
+      \end{itemize}}
     \item{non-free software unavailable in Guix
       \begin{itemize}
-      \item<4-> \textbf<4>{would you do chemistry research out of magic
-        potions?}
-      \item<5-> \textbf{reproducible research demands software freedom}
+      \item<4-> \textbf<4>{\large{would you do chemistry research out of magic
+        potions?}}
+      \item<5-> \textbf{\large{reproducible research demands free software}}
     \end{itemize}}
     \end{itemize}
   }
@@ -831,8 +850,8 @@
     \begin{itemize}
     \item<1-> Guix allows \highlight{cluster users} to reproduce
       environments
-    \item<2-> Guix provides \highlight{recipes} that chefs can
-      inspect \& modify
+    \item<2-> it provides \highlight{the source of software
+      environments}, not just the bits
     \item<3-> \highlight{composability, transparency, and hackability}
       of software stacks are key to reproducible research
     \end{itemize}
