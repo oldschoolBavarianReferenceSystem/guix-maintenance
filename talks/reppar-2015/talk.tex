@@ -10,9 +10,7 @@
 \usepackage[absolute,overlay]{textpos}
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes,trees,shadows,positioning}
-%% \usepackage{tree}
 \usepackage{fancyvrb}           % for \Verb
-\usepackage{ulem}               % for \sout
 
 % Remember the position of every picture.
 \tikzstyle{every picture}+=[remember picture]
@@ -279,19 +277,41 @@
 
 %% \section{Functional Package Management}
 
-%% \setbeamercolor{normal text}{fg=black, bg=black}
-\begin{frame}
-  \center{\huge{\textbf{functional package management}}}
-  \\[2em]
-  \begin{quote}
-    \large{
-    regarding the build \& installation process\\
-    of a package as a \textbf{pure function}}
-  \end{quote}
+\setbeamercolor{normal text}{bg=guixblue2}
+\begin{frame}[plain]
+  \center{\huge{\textbf{Functional Package Management}}}
 \end{frame}
-%% \setbeamercolor{normal text}{fg=white,bg=black}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
 \begin{frame}{Functional Package Management}
+  \huge{
+    Regarding the build \& installation process
+    of a package as a \highlight{pure function}.
+  }
+\end{frame}
+
+\begin{frame}[plain]
+  \Large{
+    $\texttt{openmpi} = f(\texttt{hwloc}, \texttt{gcc}, \texttt{make},\texttt{coreutils})$
+    
+    \uncover<2->{$\texttt{hwloc} = g(\texttt{pciaccess}, \texttt{gcc}, \texttt{make}, \texttt{coreutils})$}
+
+    \uncover<3->{$\texttt{gcc} = h(\texttt{make}, \texttt{coreutils}, \texttt{gcc}_0)$}
+    
+    \uncover<4->{$\texttt{gcc}_0 = \sigma$}
+  }
+
+  \uncover<1>{\large{where $f =$ \texttt{./configure \&\& make \&\& make install}}}
+
+  \begin{tikzpicture}[overlay]
+    \node<5->[fill=guixorange1, text=black, text opacity=1, opacity=.7,
+          rounded corners=2mm, inner sep=5mm] at (5, 1) {
+            \textbf{\Large{the complete DAG is captured}}
+          };
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{References}
   \Large{
     \begin{itemize}
     \item<3-> \textit{Caching Function Calls Using Precise Dependencies}
@@ -457,14 +477,14 @@
   \framesubtitle{$^*$ almost!}
 
   \begin{semiverbatim}
-\$ guix build slepc
-\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sf72\textrm{...}}};}-slepc-3.6.0}
+\$ guix build petsc
+\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sf72\textrm{...}}};}-petsc-3.6.0}
 
-\uncover<3->{\$ \alert<3>{guix gc --references /gnu/store/\textrm{...}-slepc-3.6.0}
+\uncover<3->{\$ \alert<3>{guix gc --references /gnu/store/\textrm{...}-petsc-3.6.0}
 /gnu/store/\textrm{...}-openmpi-1.8.5
 /gnu/store/\textrm{...}-gfortran-4.9.3-lib
 /gnu/store/\textrm{...}-superlu-4.3
-/gnu/store/\textrm{...}-petsc-complex-openmpi-3.6.0
+/gnu/store/\textrm{...}-lapack-3.5.0
 /gnu/store/\textrm{...}-glibc-2.21
 \textrm{...}}
   \end{semiverbatim}
@@ -498,12 +518,17 @@
 \$ guix package -i gcc-toolchain coreutils sed grep
 \textrm{...}
 
-
 \$ eval `guix package --search-paths`
 \textrm{...}
 
-
 \$ guix package --manifest=my-software.scm
+\textrm{...}
+
+\$ guix environment petsc
+\textrm{...}
+
+\$ guix environment --ad-hoc python-ipython python-numpy \\
+    -E ipython
 \textrm{...}
   \end{semiverbatim}
 
@@ -584,9 +609,7 @@
   \end{tikzpicture}
 \end{frame}
 
-% FIXME: Add ``How do we fiddle with that?'' here.  (?)
-
-\begin{frame}{HPC Developer Requirements}
+\begin{frame}{Requirements for an\\Experimentation-Capable System}
 
   \Large{
     \begin{enumerate}
@@ -595,6 +618,125 @@
     \end{enumerate}
   }
 \end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+\small{
+(define starpu
+  (\alert{package}
+    (name "starpu")
+    (version "1.1.4")
+    (source (origin
+             (method url-fetch)
+             (uri "http://\textrm{...}")
+             (sha256 (base32 "0zmkw\textrm{...}"))))
+    (\alert{build-system} \tikz[baseline]{\node[anchor=base](gbs){gnu-build-system};})
+    (native-inputs `(("pkg-config" ,pkg-config)))
+    (\tikz[baseline]{\node[anchor=base](deps){inputs};} `(("fftw" ,fftw)
+              ("hwloc" ,\tikz[baseline]{\node[anchor=base](var){hwloc};})))
+    (home-page "http://starpu.gforge.inria.fr/")
+    (synopsis "Run-time system for heterogeneous computing")
+    (description "Blah...")
+    (license lgpl2.1+)))
+}
+  \end{semiverbatim}
+
+  \begin{textblock}{5}(11, 12)
+    \tikz{\node<2-3>(labeldeps)[fill=white, text=black]{dependencies};}
+  \end{textblock}
+
+  \begin{textblock}{5}(9, 9)
+    \tikz{\node<3-4>(labelvar)[fill=white, text=black]{reference to a
+        variable};}
+  \end{textblock}
+
+  \begin{textblock}{5}(3, 5)
+    \tikz{\node<5>(labelgbs)[fill=white, text=black]{\texttt{./configure
+        \&\& make install}...};}
+  \end{textblock}
+
+  \begin{textblock}{5}(8, 9)
+    \tikz{\node<5>(labelgbsdeps)[fill=white, text=black]{depends on
+        \texttt{gcc}, \texttt{make}, \texttt{bash}, etc.};}
+  \end{textblock}
+
+  \begin{tikzpicture}[overlay]
+    \path[->, fill=white, thick]<2-3>(labeldeps) edge (deps);
+    \path[->, fill=white, thick]<3-4>(labelvar) edge (var);
+    \path[->, fill=white, thick]<5>(labelgbs) edge (gbs);
+    \path[->, fill=white, thick]<5>(labelgbsdeps) edge (gbs);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Defining Package Variants}
+
+  \begin{semiverbatim}
+\small{
+(define starpu-1.2rc              ;release candidate
+  (package (\alert{inherit} starpu)
+    (version "1.2.0rc2")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append "http://\textrm{...}/"
+                                 "starpu-" version ".tar.gz"))
+             (sha256 (base32 "0qgb6y\textrm{...}"))))))
+}
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Defining Package Variants}
+  
+  \begin{semiverbatim}
+\small{
+(define starpu-with-simgrid
+  (package (\alert{inherit} starpu)
+    (name "starpu-with-simgrid")
+
+    ;; Add SimGrid, an optional dependency.
+    (inputs `(("simgrid" ,simgrid)
+              ,@(package-inputs starpu)))))
+}
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Package Functions}
+
+  \begin{semiverbatim}
+\small{
+  (define (\alert{make-chameleon} name \tikz[baseline]{\node(formal)[anchor=base]{\alert<1>{starpu}};})
+     ;; Return the Chameleon solver linked against
+     ;; this particular variant of StarPU.
+     (\alert{package}
+       (name name)
+       ;; \textrm{...}
+       (inputs `(("starpu" ,\tikz[baseline]{\node(use)[anchor=base]{\alert<1>{starpu}};})
+                 ("blas" ,atlas)
+                 ("lapack" ,lapack)
+                 ("gfortran" ,gfortran-4.8)
+                 ("python" ,python-2)))))
+\uncover<2->{
+   (define chameleon
+     (\alert{make-chameleon} "chameleon" starpu))
+   (define chameleon/starpu-simgrid
+     (\alert{make-chameleon} "chameleon-simgrid" starpu-with-simgrid))
+}
+}
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \path[<->, fill=white, thick]<1>(formal) edge (use);
+  \end{tikzpicture}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamercolor{normal text}{bg=guixblue2}
+\begin{frame}[plain]
+  \center{\huge{\textbf{Conclusion}}}
+\end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
 \begin{frame}
   \frametitle{Limitations}

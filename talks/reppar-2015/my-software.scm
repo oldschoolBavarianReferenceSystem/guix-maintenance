@@ -2,7 +2,5 @@
 
 (packages->manifest
  (list gcc-5 glibc binutils
-       coreutils
-       gnu-make
-       findutils
-       sed grep))
+       coreutils findutils sed grep
+       gnu-make))
