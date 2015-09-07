@@ -167,3 +167,32 @@ http://gnulinuxvagos.es/topic/4673-guixsd-una-nueva-distro-con-kernel-libre/
 http://www.oneopensource.it/15/05/2015/gnu-guix-0-8-2/
 https://d4n1.org/guix-install/
 https://www.reddit.com/r/emacs/comments/36na9o/guileemacs_available_in_guix/
+
+* June 2015
+
+https://news.ycombinator.com/item?id=9746427
+http://elephly.net/posts/2015-06-21-getting-started-with-guix.html
+
+* July 2015
+
+http://zvfak.blogspot.ro/
+http://guix.mdc-berlin.de/packages?/?search=bioinfo
+http://www.reddit.com/r/linux/comments/3e6skl/gnu_guix_083_released/
+https://news.ycombinator.com/item?id=9928563
+https://news.ycombinator.com/item?id=9929809
+http://phoronix.com/scan.php?page=news_item&px=GNU-Guix-0.8.3-Released
+http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.8.3
+http://www.root.cz/zpravicky/guix-0-8-3-snad-s-definitivnim-oznacenim-systemu-jako-guixsd/
+http://www.oschina.net/news/64473/gnu-guix-0-8-3
+
+* August 2015
+
+https://wingolog.org/archives/2015/08/04/developing-v8-with-guix
+https://news.ycombinator.com/item?id=10004467
+http://phoronix.com/scan.php?page=news_item&px=GNU-Hurd-Gets-Guix
+https://news.ycombinator.com/item?id=10091371
+http://kabarlinux.web.id/2015/manajer-paket-gnu-guix-diport-ke-gnu-hurd/
+http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.8.3
+http://osworld.pl/gnu-hurd-doczekal-sie-natywnego-menedzera-pakietow-gnu-guix/
+http://dthompson.us/ruby-on-guix.html
+https://news.ycombinator.com/item?id=10145633
