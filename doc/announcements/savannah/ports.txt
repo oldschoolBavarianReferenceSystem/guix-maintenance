@@ -1,0 +1,15 @@
+Quite a lot has happened lately when it comes to porting Guix and GuixSD to other systems.
+
+A few weeks ago, Manolis Ragkousis [https://lists.gnu.org/archive/html/guix-devel/2015-08/msg00379.html announced] the completion of the GSoC project whose purpose was to port Guix to the Hurd.  The system distribution, GuixSD, cannot run GNU/Hurd yet, but the package manager itself can both cross-compile from GNU/Linux to GNU/Hurd and build natively on GNU/Hurd.  The work of Manolis is being gradually merged in the main branch.
+
+More recently, Mark H Weaver [https://lists.gnu.org/archive/html/guix-devel/2015-08/msg00500.html posted] a series of patches porting GuixSD to MIPS (Lemote Yeeloong), making it the first GuixSD port to non-Intel-compatible hardware (the package manager itself has supported mips64el [https://savannah.gnu.org/forum/forum.php?forum_id=7766 for two years] already.)  By removing several platform-specific assumptions, this work paves the way for future ports.
+
+Lastly, we are glad to report the [http://www.gnu.org/software/guix/donate/ donation] of [https://lists.gnu.org/archive/html/guix-devel/2015-09/msg00134.html two ARM machines] for our build farm.  They will allow us to continuously test the ARM port, which was completed [https://savannah.gnu.org/forum/forum.php?forum_id=8175 earlier this year], and to publish pre-built binaries on our [http://hydra.gnu.org/jobset/gnu/master build farm].  We are grateful to the donors whose contribution makes a big difference for the development of Guix on ARM.  If you would like to help out with hardware and/or hosting, [http://www.gnu.org/software/guix/donate/ please get in touch]!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
