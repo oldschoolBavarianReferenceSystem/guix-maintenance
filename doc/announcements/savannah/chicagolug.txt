@@ -1,0 +1,13 @@
+[http://dustycloud.org/ Chris Webber] of [http://mediagoblin.org/ MediaGoblin] fame [https://chicagolug.org/meetings/2015-09-30.html will be giving two talks] for the Chicago GNU/Linux User Group meeting on September 30th.  The first talk will discuss the state of federation on the Web, while the second one is entitled _Functional Package Management and Deployment with Guix_:
+
+_Tired of being stuck after an upgrade? Wish your operating system could roll forward and backwards in time, more like Git? Want a way to get really reproducible software? Or just want a better alternative to $YOUR_LANGUAGE's stressful packaging ecosystem you can run on an existing distro? And why on earth would you want something called a "symlink forest" anyway? Discover all this and more in this exciting talk about the GNU Guix project!_
+
+If you're in the Chicago area, do not miss Chris!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
