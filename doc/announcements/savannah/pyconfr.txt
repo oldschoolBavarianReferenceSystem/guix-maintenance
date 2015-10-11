@@ -1,0 +1,13 @@
+Bonjour ! Cyril Roelandt of Red Hat who works on OpenStack will be [http://www.pycon.fr/2015/schedule/presentation/47/ giving a talk] about Guix-Tox at PyConFR in Pau, France, on October 17th.
+
+[https://git.framasoft.org/Steap/guix-tox Guix-Tox] is a young variant of the [http://tox.testrun.org/ Tox] "virtualenv" management tool for Python that uses [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-environment.html guix environment] as its back-end.  In essence, while Tox restricts itself to building pure Python environments, Guix-Tox takes advantages of Guix to build complete environments, including dependencies that are outside Tox's control, thereby improving environment reproducibility.  Cyril will demonstrate practical use cases with OpenStack.
+
+If you're around, do not miss the talk.  If you're a Pythonista, you can help by providing feedback on Guix-Tox!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
