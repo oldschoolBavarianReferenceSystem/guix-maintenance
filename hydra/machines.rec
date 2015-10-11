@@ -1,0 +1,106 @@
+# Database of the build machines and hydra.gnu.org front-end.
+
+Nickname: hydra
+Hostname: hydra.gnu.org
+Port: 22
+Physical: No
+Location: FSF rack, MIT data center, Boston, MA, USA
+Contact: Lisa Maginnis (nully) <sysadmin@gnu.org>
+Contact: Mark H Weaver <mhw@netris.org>
+Contact: Ludovic Courtès <ludo@gnu.org>
+Contact: Andreas Enge <andreas@enge.fr>
+SystemType: n/a (front end)
+Cores: 4
+BaseSystem: Trisquel 4.1 LTS
+
+Nickname: chapters
+Hostname: chapters.gnu.org
+Port: 9022
+Physical: No
+Location: FSF France, France
+Contact: Nacho Gonzalez <nacho@es.gnu.org>
+Contact: José Marchesi <jemarch@gnu.org>
+SystemType: x86_64-linux
+SystemType: i686-linux
+Cores: 2
+BaseSystem: Debian GNU/Linux
+
+Nickname: gnunet
+Hostname: hydra.gnunet.org
+Port: 22
+Physical: Yes
+Location: TUM, Munich, Germany
+Contact: Christian Grothoff <christian@grothoff.org>
+Contact: Sree Harsha Totakura <totakura@in.tum.de>
+Contact: Sree Harsha Totakura <sreeharsha@totakura.in>
+SystemType: x86_64-linux
+SystemType: i686-linux
+Cores: 8
+BaseSystem: Debian GNU/Linux
+
+Nickname: jxself
+Hostname: wildebeest.jxself.org
+Port: 22
+Physical: Yes(?)
+Location: unknown
+Contact: Jason Self <j@jxself.org>
+Contact: Jason Self <jself@gnu.org>
+SystemType: x86_64-linux
+SystemType: i686-linux
+Cores: 8
+BaseSystem: Trisquel GNU/Linux 7.0
+
+Nickname: sjd
+Hostname: guix.sjd.se
+Port: 22
+Physical: No
+Location: Sweden
+Contact: Simon Joseffson <simon@josefsson.org>
+SystemType: x86_64-linux
+SystemType: i686-linux
+Cores: 8
+BaseSystem: Debian GNU/Linux 8
+MuninURL: https://munin.sjd.se/munin/sjd.se/guix.sjd.se/index.html
+
+Nickname: hydra-slave1
+Hostname: hydra-slave1.netris.org
+Port: 7275
+Physical: Yes
+Vendor: Novena
+Location: Boston, MA, USA
+Contact: Mark H Weaver <mhw@netris.org>
+SystemType: armhf-linux
+Cores: 2   # actually 4, but 2 of them are disabled
+BaseSystem: Debian GNU/Linux
+
+Nickname: hydra-slave0
+Hostname: hydra-slave0.gnu.org
+Port: 7272
+Physical: Yes
+Vendor: Loongson
+Location: Boston, MA, USA
+Contact: Mark H Weaver <mhw@netris.org>
+Contact: Lisa Maginnis (nully) <sysadmin@gnu.org>
+SystemType: mips64el-linux
+Cores: 2
+BaseSystem: Debian GNU/Linux (?)
+
+Nickname: librenote
+Hostname: librenote.netris.org
+Port: 7272
+Vendor: Loongson
+Location: Boston, MA, USA
+Contact: Mark H Weaver <mhw@netris.org>
+SystemType: mips64el-linux
+Cores: 2
+BaseSystem: Debian GNU/Linux (?)
+
+Nickname: enge-armhf
+Hostname: enge.fr
+Port: 9022
+Physical: Yes
+Vendor: Novena
+Location: Bordeaux, France
+Contact: Andreas Enge <andreas@enge.fr>
+Cores: 4
+BaseSystem: Debian GNU/Linux (?)
