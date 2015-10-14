@@ -62,6 +62,17 @@ Cores: 8
 BaseSystem: Debian GNU/Linux 8
 MuninURL: https://munin.sjd.se/munin/sjd.se/guix.sjd.se/index.html
 
+Nickname: hydra-slave2
+Hostname: hydra-slave2.netris.org
+Port: 7276
+Physical: Yes
+Vendor: Wandboard
+Location: Cambridge, MA, USA
+Contact: Mark H Weaver <mhw@netris.org>
+SystemType: armhf-linux
+Cores: 2   # actually 4, but 2 of them are disabled
+BaseSystem: Debian GNU/Linux
+
 Nickname: hydra-slave1
 Hostname: hydra-slave1.netris.org
 Port: 7275
