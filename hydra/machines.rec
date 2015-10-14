@@ -67,7 +67,7 @@ Hostname: hydra-slave1.netris.org
 Port: 7275
 Physical: Yes
 Vendor: Novena
-Location: Boston, MA, USA
+Location: Cambridge, MA, USA
 Contact: Mark H Weaver <mhw@netris.org>
 SystemType: armhf-linux
 Cores: 2   # actually 4, but 2 of them are disabled
@@ -89,7 +89,7 @@ Nickname: librenote
 Hostname: librenote.netris.org
 Port: 7272
 Vendor: Loongson
-Location: Boston, MA, USA
+Location: Cambridge, MA, USA
 Contact: Mark H Weaver <mhw@netris.org>
 SystemType: mips64el-linux
 Cores: 2
