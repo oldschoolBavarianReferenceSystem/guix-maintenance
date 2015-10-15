@@ -92,7 +92,7 @@ Software Configuration Management")
   (title "Caching Function Calls Using Precise Dependencies")
   (booktitle "Proceedings of the ACM SIGPLAN 2000 conference on
 Programming Language Design and Implementation")
-  (series "PLDI '00")
+  ;; (series "PLDI '00")
   (year "2000")
   (isbn "1-58113-199-2")
   (location "Vancouver, British Columbia, Canada")

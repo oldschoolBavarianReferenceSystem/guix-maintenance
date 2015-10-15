@@ -77,16 +77,6 @@
                                (make-locale LC_ALL "en_US.utf8"))
                              (make-locale LC_ALL "en_US.UTF-8"))))
 
-;; Abbreviate author first names.
-(markup-writer '&bib-entry-author
-   :action (lambda (n e)
-	     (let ((names (markup-body n)))
-	       (evaluate-document
-	         (if (string? names)
-		     (abbreviate-first-names names)
-		     names)
-		 e))))
-
 ;; Abbreviate book titles in bibliography entries.
 (markup-writer '&bib-entry-booktitle
    :action (lambda (n e)
@@ -97,8 +87,8 @@
 
              (let ((title (markup-body n)))
                (evaluate-document
-                (it (abbreviate-markup %abbreviations
-                                        title)) e))))
+                (abbreviate-markup %abbreviations title)
+                 e))))
 
 (bibliography "../els-2013/guix.sbib")
 (bibliography "reppar.sbib")
