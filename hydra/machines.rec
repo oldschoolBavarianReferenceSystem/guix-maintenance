@@ -172,4 +172,12 @@ Vendor: Novena
 Location: Bordeaux, France
 Contact: Andreas Enge <andreas@enge.fr>
 Cores: 4
-BaseSystem: Debian GNU/Linux (?)
+BaseSystem: Debian GNU/Linux Jessie
+PublicKey: (public-key
++   (ecc
++    (curve Ed25519)
++    (q #550281B05EA8DF7222C732FBF1A04BF2010C69AB5F40F96128C72E44CBA0CAF3#)
++    )
++   )
++
+
