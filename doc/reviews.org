@@ -196,3 +196,20 @@ http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.8.3
 http://osworld.pl/gnu-hurd-doczekal-sie-natywnego-menedzera-pakietow-gnu-guix/
 http://dthompson.us/ruby-on-guix.html
 https://news.ycombinator.com/item?id=10145633
+
+* September 2015
+
+http://www.ochobitshacenunbyte.com/2015/09/09/guixsd-la-distro-gnu-del-futuro/
+http://mediagoblin.org/news/state-of-the-goblin-september-2015.html
+
+* October 2015
+
+http://dustycloud.org/blog/chicagolug-guix-talk-retrospective/
+http://blogs.rdoproject.org/7843/guix-tox-a-functional-version-of-tox
+https://news.ycombinator.com/item?id=10392541
+https://www.reddit.com/r/hackernews/comments/3ouwzo/guixtox_a_functional_version_of_tox/
+http://blog.imgtec.com/mips-processors/mips-open-source-linux-3-18-lts-perl-emulation
+https://www.reddit.com/r/linux/comments/3qfdfb/container_provisioning_with_guix/
+https://www.reddit.com/r/gnu/comments/3qfce6/container_provisioning_with_guix/
+http://lwn.net/Articles/662296/
+https://www.logilab.org/blogentry/2337253
