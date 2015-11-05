@@ -1,0 +1,23 @@
+We are pleased to announce the next alpha release of GNU Guix, version 0.9.0.
+
+The release comes with USB installation images to install the standalone [http://www.gnu.org/software/guix/manual/html_node/System-Installation.html GuixSD], and with tarballs to install the package manager on top of a running GNU/Linux system, either [http://www.gnu.org/software/guix/manual/html_node/Requirements.html from source] or [http://www.gnu.org/software/guix/manual/html_node/Binary-Installation.html from binaries].
+
+The highlights for this release include:
+
+* Support for [http://savannah.gnu.org/forum/forum.php?forum_id=8386 automatic container provisioning] in [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-environment.html guix environment], for development environments, and in [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html guix system], for full GuixSD deployments.
+* A brand new [https://www.gnu.org/software/guix/manual/html_node/Service-Composition.html service composition framework] for GuixSD.  It significantly improves extensibility and modularity, while providing a framework that makes it easy to reason about how system services relate to each other.  This was one of the main design issues that needed to be addressed on the road to 1.0.
+* The new [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-graph.html guix graph] command can draw package dependency graphs with different levels of details.  Likewise, [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html guix system] has a new extension-graph command to draw the system's service composition graph, and a dmd-graph command to draw the service dependency graph as seen by [http://www.gnu.org/software/dmd/ GNU dmd].
+* The new [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-challenge.html guix challenge] command allows users to challenge the authenticity of [http://www.gnu.org/software/guix/manual/html_node/Substitutes.html substitutes] provided by a server.  More on that in a future post!
+* [http://www.gnu.org/software/guix/packages/ 543 new packages], notably Idris and many [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-import.html imported] Haskell, Python, and R packages.
+* [http://debbugs.gnu.org/rrd/guix.html Bug fixes], documentation, and other niceties!
+
+See https://lists.gnu.org/archive/html/guix-devel/2015-11/msg00131.html for details.
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
+
