@@ -1,0 +1,15 @@
+Ludovic Courtès will be giving a talk about GNU Guix and GuixSD [http://www.agendadulibre.org/events/10182 in Rennes, France, on November 9th].  The event is organized by the three local free software and hacker organizations:
+
+_ “It used to work perfectly, then I upgraded something, and somehow…” Sounds like a déjà vu?  Sometimes feel like software deployment is unpredictable?  Dissatisfied with Dockerfiles, Vagrantfiles, and co?  Ever wondered if you can trust your compiler or the integrity of those binary packages you have downloaded?_
+
+_This talk introduces GNU Guix, a package manager that implements the functional package management paradigm pioneered by [http://nixos.org/nix Nix] to address these issues.  Guix supports transactional upgrades and rollbacks, as well as support for multiple software profiles.  In this talk, I will introduce functional package management and demonstrate Guix on practical use cases.  I will discuss the implications on (bit-)reproducible packages and environments, and how this can lead to verifiable binaries.  Lastly, we will see how this extends to whole-system deployments with GuixSD, the Guix System Distribution._
+
+Earlier on that day, a similar talk with a focus on security and reproducibility issues will be given at [http://www.inria.fr/en/centre/rennes Inria], thanks to the support of [http://grothoff.org/christian/ Christian Grothoff] and the [http://sed.bordeaux.inria.fr/ software development department] in Bordeaux.
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
