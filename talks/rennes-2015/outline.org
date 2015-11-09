@@ -1,0 +1,135 @@
+#+TITLE: Reproducible Software Deployment with GNU Guix
+
+
+* Summary
+
+  “It used to work perfectly, then I upgraded something, and somehow…”
+  Sounds like a déjà vu?  Sometimes feel like software deployment is
+  unpredictable?  You think reproducible research demands reproducible
+  software deployment?  Ever wondered if you can trust your compiler or
+  the integrity of those binary packages you have downloaded?
+
+  This talk introduces GNU Guix, a package manager that implements the
+  /functional package management/ paradigm pioneered by Nix to address
+  these issues.  Guix supports transactional upgrades and rollbacks, as
+  well as support for multiple software profiles.  In this talk, I will
+  introduce functional package management and demonstrate Guix on
+  practical use cases.  I will discuss the implications on
+  (bit-)reproducible packages and environments, and how this can lead to
+  /verifiable/ binaries.  Lastly, we will see how this extends to
+  whole-system deployments with GuixSD, the Guix System Distribution.
+
+
+* COMMENT Random notes
+
+** Phases
+
+   - sentiments : surprise, déception, promesse, doute, angoisse (pick 3)
+   - registres : conceptuel, factuel, émotionnel
+
+** Breton (cf. [[http://www.lexilogos.com/breton_mots.htm][expressions]] & [[https://fr.wikipedia.org/wiki/Breton][WP]])
+
+   - salut -> kenavo
+   - attention ! -> diwall !
+   - merci -> Mersi bras | Trugarez
+
+** Debian example with hooks
+
+#+BEGIN_VERBATIM
+$ sudo apt-get install gpm
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following package was automatically installed and is no longer required:
+  liblwgeom-2.1.7
+Use 'apt-get autoremove' to remove it.
+The following NEW packages will be installed:
+  gpm
+0 upgraded, 1 newly installed, 0 to remove and 31 not upgraded.
+Need to get 229 kB of archives.
+After this operation, 496 kB of additional disk space will be used.
+Get:1 http://ftp.fr.debian.org/debian/ wheezy/main gpm i386 1.20.4-6 [229 kB]
+Fetched 229 kB in 0s (567 kB/s)
+Preconfiguring packages ...
+Selecting previously unselected package gpm.
+(Reading database ... 190889 files and directories currently installed.)
+Unpacking gpm (from .../archives/gpm_1.20.4-6_i386.deb) ...
+Processing triggers for man-db ...
+Processing triggers for install-info ...
+Setting up gpm (1.20.4-6) ...
+
+Creating config file /etc/gpm.conf with new version
+
+#+END_VERBATIM
+
+** Docker: add screenshot of http://www.banyanops.com/blog/analyzing-docker-hub/
+
+** Docker: see http://www.vitavonni.de/blog/201503/2015031201-the-sad-state-of-sysadmin-in-the-age-of-containers.html
+
+** [[http://blog.circleci.com/its-the-future/][It's the future!]]
+
+** deployment is hard
+
+*** side effects
+
+*** things not really under control
+
+*** sequence of effectful operations
+
+** deployment is harder in practice
+
+*** apt-get, pypi, [[http://dustycloud.org/blog/javascript-packaging-dystopia/][npm, bower]], cabal, gem, etc.
+
+*** environments: debootstrap, [[http://blogs.rdoproject.org/7843/guix-tox-a-functional-version-of-tox][virtualenv/tox]], [[http://dthompson.us/ruby-on-guix.html][RVM/Bundler]], etc.
+
+*** services?
+
+
+
+* The upgrade problem [doubt]
+
+  - apt-get dist-upgrade, breakage, etc.
+    + power outage => breakage!
+    + no unattended system upgrades
+    + no way back
+    + screenshots of debian.org
+
+* The "reproducibility" problem [angst]
+
+  - reproduce development environments
+  - reproduce bit-for-bit
+    + Debian reproducibility problem
+
+* The reproducibility problem, worst [angst]
+
+  - pypi etc.
+  - docker -> pizza, not recipe
+  - docker security issues, sysadmin problem
+
+* Guix solution [hope | facts]
+
+  - demo 'guix package' etc. (cf. [[file:~/src/guix-maintenance/talks/reppar-2015/talk.tex::\$%20guix%20package%20-i%20gcc-toolchain%20coreutils%20sed%20grep][RepPar]])
+  - ci.inria.fr/alta screenshot
+
+* under the hood: FPM [hope | concepts]
+
+  - function, composition, etc.
+  - references
+  - the daemon, containers, etc.
+  - bootstrapping
+  - bit-reproducible builds
+
+* Corresponding Source [doubt | concepts]
+
+  - 'guix challenge'
+  - diverse double compilation
+
+* whole-system deployments
+
+  - GuixSD config
+
+* lively!
+
+  - contributor stats
+  - package stats
+  - release timeline
