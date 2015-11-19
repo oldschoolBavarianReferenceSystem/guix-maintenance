@@ -1,0 +1,75 @@
+TITLE: Service composition in GuixSD
+
+GuixSD provides a declarative, stateless approach to operating system configuration management.  In this context, the mechanism offered to select and compose system services is a crucial one.  This post presents the new service framework introduced in the [https://savannah.gnu.org/forum/forum.php?forum_id=8398 0.9.0 version] of GNU Guix.
+
+== Declarative Configuration Management ==
+
+GuixSD is not like your parents’ distro.  Instead of fiddling with configuration files all around, or running commands that do so as a side effect, the system administrator _declares_ what the system will be like.  This takes the form of an [https://www.gnu.org/software/guix/manual/html_node/Using-the-Configuration-System.html operating-system declaration], which specifies all the details: file systems, user accounts, locale, timezone, system services, etc.
+
+If you’re familiar with it, this may remind you of what deployment tools like Ansible and Puppet provide.  There is an important difference though: GuixSD takes a stateless–or “purely functional”–approach.  This means that instantiating the system with [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html guix system] always produces the same result, without modifying the current system state.  This is what makes it possible to test new system configurations, roll-back to previous ones, and so on.  The [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html guix system] command allows system configurations to be instantiated on the bare metal, in virtual machines, or in [https://savannah.gnu.org/forum/forum.php?forum_id=8386 containers], which makes it easy to test them.
+
+In GuixSD, operating-system declarations are first-class objects in the [https://www.gnu.org/software/guile/ host language].  They can be inspected at the REPL:
+
++verbatim+
+scheme@(guile-user)> ,use (gnu)
+scheme@(guile-user)> (define os (load "os-config.scm"))
+scheme@(guile-user)> (operating-system-kernel os)
+$1 = #<package linux-libre-4.2.6 gnu/packages/linux.scm:279 2ea90c0>
+scheme@(guile-user)> (length (operating-system-user-services os))
+$2 = 30
+scheme@(guile-user)> (map user-account-name (operating-system-users os))
+$3 = ("alice" "nobody" "root")
+-verbatim-
+
+It is also possible to write functions that take or return OS configurations.  For instance, the [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/system/vm.scm#n382 virtualized-operating-system function] returns a variant of the given OS where the set of file systems and the initrd are changed so that the resulting OS can be used in a lightweight virtual machine environment. Likewise for [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/system/linux-container.scm#n50 containerized-operating-system].
+
+== Services Beyond Daemons ==
+
+System services are specified in the services field of operating-system declarations, which is a list of service objects.  As a user, we want to be able to ideally add one line specifying the [https://www.gnu.org/software/guix/manual/html_node/Services.html system service] we want to add, possibly with several instances of a service, and have GuixSD do the right thing.
+
+Before 0.9.0, GuixSD had a narrow definition of what a “system service” is.  Each service in the operating-system configuration had to map to exactly one dmd service–[https://www.gnu.org/software/dmd GNU dmd] is the init system of GuixSD.  This would work well in many cases: an SSH server or a log-in daemon is indeed a service that dmd has to take care of, even a file system mount is an operation that can be usefully inserted into dmd’s service dependency graph.
+
+However, this simple mapping failed to capture more complex service composition patterns.  A striking example is “super-daemons”—daemons that can spawn other daemons, such as dbus-daemon or inetd.  From the user viewpoint, it does not matter whether a daemon is started by dmd, or by dbus-daemon, or by inetd; this should be transparent.  If it’s a D-Bus service, then dbus-daemon’s configuration file should be told about the service; if it’s an inetd service, then inetd.conf should be augmented accordingly; if it’s a dmd service, information on how to start and stop it should go to dmd’s configuration file.  Unfortunately, the pre-0.9.0 services could not express such things.
+
+Worse, this approach did not capture the more general pattern of _service extension_.  In the examples above, the super-daemons are effectively _extended_ by other services that rely on them.  But there are many cases where services are similarly extended: [https://wiki.gentoo.org/wiki/Project:Eudev eudev] can be passed new device rules, [http://www.freedesktop.org/wiki/Software/polkit/ polkit] can be extended with new rules and actions, the [http://www.linux-pam.org/ Pluggable authentication module system (PAM)] can be extended with new services, and so on.  At that point it was clear that GuixSD’s naive approach wouldn’t scale.
+
+== Composing System Services ==
+
+The lesson learned from these observations is that system services _extend_ each other in various way.  The new [https://www.gnu.org/software/guix/manual/html_node/Service-Composition.html service composition framework] is built around this model: “system services”, broadly defined, can extend each other, and services and their “extends” relationships form a graph.  The root of the graph is the operating system itself.
+
+We can see that this pattern applies to services that are not daemons. PAM is one such example.  Accounts are another example: GuixSD provides an “account service” that can be extended with new user accounts or groups; for example, the [https://www.gnu.org/software/guix/manual/html_node/Networking-Services.html#index-ntp_002dservice Network time protocol (NTP) daemon] needs to run under the unprivileged “ntp” user, so the NTP service extends the account service with an “ntp” user account.  Likewise, the “/etc” service can be extended with new files to be added to /etc; the “setuid” service can be extended with new programs to be made setuid-root. [https://www.gnu.org/software/guix/manual/html_node/Service-Reference.html See the manual] for more examples.
+
+The nice thing is that composition of services is made _explicit_: extensions can only happen where explicit extension relationships have been [https://www.gnu.org/software/guix/manual/html_node/Service-Types-and-Services.html declared].  By looking at the extension graph, users can see how services fit together.  The [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html#system_002dextension_002dgraph guix system extension-graph] command, for instance, takes an operating-system declaration and renders the extension graph in the Graphviz format, making it easy to inspect the OS configuration structure.
+
+The API makes it easy to see how services contributed to a specific service’s configuration.  For instance, the following expression shows the PAM service as extended by other declared services:
+
++verbatim+
+(fold-services (operating-system-services os) 
+               #:target-type pam-root-service-type)
+-verbatim-
+
+The result is a service object whose value is a list of pam-service objects.  Likewise, the following expression returns the /etc service, whose value is a list of entries to be added to /etc:
+
++verbatim+
+(fold-services (operating-system-services os) 
+               #:target-type etc-service-type)
+-verbatim-
+
+This contrasts with the approach taken by [http://nixos.org/ NixOS], GuixSD’s cousin, and described in this [https://nixos.org/~eelco/pubs/nixos-jfp-final.pdf 2010 paper].  In NixOS, the whole system configuration is described in an “attribute set”—a list of key/value associations, similar to JavaScript objects or Python dictionaries.  Each NixOS service is passed the whole system configuration, allowing it to inspect and change any part of it.
+
+This form of [https://en.wikipedia.org/wiki/Ambient_authority ambient authority] gives a lot of flexibility, but it makes it harder to reason about service composition—all a service implementation does is inspect, add, or modify attributes of the global configuration, which may or may not affect other services.  The use of a loose key/value dictionary also prevents good error reporting; for instance, a typo in a service name may go undetected.  Lastly, NixOS services are enabled by writing service.enable = true stanzas, which leads to complications for services that may have several instances, each with its own configuration.
+
+== Wrapping Up ==
+
+The new [https://www.gnu.org/software/guix/manual/html_node/Service-Composition.html service composition framework] in GuixSD 0.9.0 addresses shortcomings found in previous versions of GuixSD.  It simplifies operating-system declarations for users, and provides a highly extensible framework that clearly exposes the way services are composed.
+
+This new framework has already allowed us to integrate [https://www.gnu.org/software/guix/manual/html_node/Desktop-Services.html Freedesktop and GNOME services] in a convenient way.  We hope it will prove fruitful as we address other types of services, such as Web services.
+
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
