@@ -1,0 +1,17 @@
+Title: Guix starts fundraising campaign with support from the FSF
+
+The GNU Guix project is glad to announce its first fundraising campaign, supported by the Free Software Foundation (FSF).  As the FSF [https://www.fsf.org/blogs/community/fsf-announces-support-for-gnu-guix announced today], the campaign’s primary goal is to help increase the capacity of the project’s build farm.  We believe Guix offers a great tool set to increase the freedom and autonomy of computer users, and we are excited that the FSF supports the project!
+
+Until now, the build farm behind hydra.gnu.org had been working on hardware and hosting [https://www.gnu.org/software/guix/donate/ generously provided] by several organizations and individuals—thank you!  To cope with the growing number of [https://www.gnu.org/software/guix/packages/ packages] and users, we felt that the time has come to call to the community to strengthen the project’s infrastructure.  Our first action will be to change the build farm’s front-end, which orchestrates builds and [http://www.gnu.org/software/guix/manual/html_node/Substitutes.html distributes binaries].  Next we want to add more build machines, with two goals in mind: being able to quickly test changes that trigger lots of rebuilds, and being able to identify [https://savannah.gnu.org/forum/forum.php?forum_id=8407 non-verifiable builds].
+
+Donations can be made on the [https://my.fsf.org/civicrm/contribute/transact?reset=1&id=50 FSF-hosted page for the campaign].  10% of your contribution will also go to help the FSF [https://fsf.org/appeal meet its current fundraising goal].
+
+GNU Guix also welcomes contributions, both technical and non-technical: testing, adding new packages, writing code, translating messages and package descriptions to your native language, helping with Web design, and more.  Check out [http://www.gnu.org/software/guix/contribute/ the contribution page]!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
