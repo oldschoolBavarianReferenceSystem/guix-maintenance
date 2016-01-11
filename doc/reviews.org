@@ -213,3 +213,30 @@ https://www.reddit.com/r/linux/comments/3qfdfb/container_provisioning_with_guix/
 https://www.reddit.com/r/gnu/comments/3qfce6/container_provisioning_with_guix/
 http://lwn.net/Articles/662296/
 https://www.logilab.org/blogentry/2337253
+
+* November 2015
+
+https://news.ycombinator.com/item?id=10512449
+http://phoronix.com/scan.php?page=news_item&px=GNU-Guix-0.9
+https://www.opennet.ru/opennews/art.shtml?num=43268
+https://gnunet.org/guix2015video
+https://www.reddit.com/r/linux/comments/3s9utj/video_reproducible_software_deployment_with_gnu/
+https://www.reddit.com/r/gnu/comments/3sf9o7/reproducible_builds_a_means_to_an_end/
+https://www.reddit.com/r/linux/comments/3sf2vy/reproducible_builds_a_means_to_an_end/
+http://lwn.net/Articles/664100/
+http://dplinux.net/gnu-guix-se-apunta-a-las-compilaciones-reproducibles/
+https://lwn.net/Articles/663954/
+
+* December 2015
+
+https://news.ycombinator.com/item?id=10689651
+https://nurdspace.nl/GNU_Guix_w_Arvados_testbed
+http://www.ochobitshacenunbyte.com/2015/12/07/instalacion-de-guixsd-en-virtualbox-y-qemu/
+https://www.fsf.org/blogs/community/fsf-announces-support-for-gnu-guix
+https://www.reddit.com/r/linux/comments/3x4f48/fsf_announces_fundraising_support_for_gnu_guix_a/
+http://mediagoblin.org/news/stripe-retreat-state-of-the-goblin.html
+
+* January 2016
+
+http://dustycloud.org/blog/goodbye-2015-hello-2016/
+http://lwn.net/Articles/670362/
