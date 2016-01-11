@@ -5,9 +5,9 @@
 
   “It used to work perfectly, then I upgraded something, and somehow…”
   Sounds like a déjà vu?  Sometimes feel like software deployment is
-  unpredictable?  You think reproducible research demands reproducible
-  software deployment?  Ever wondered if you can trust your compiler or
-  the integrity of those binary packages you have downloaded?
+  unpredictable?  Ever wondered if you can trust your compiler or the
+  integrity of those binary packages you have downloaded?  Falling for
+  VM/Docker images to address the shortcomings of “traditional distros”?
 
   This talk introduces GNU Guix, a package manager that implements the
   /functional package management/ paradigm pioneered by Nix to address
