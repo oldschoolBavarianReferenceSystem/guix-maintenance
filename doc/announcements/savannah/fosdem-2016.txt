@@ -1,0 +1,27 @@
+One week to [https://fosdem.org/2016 FOSDEM]!  This year, there will be no less than six Guix-related talks.  This and the fact that we are addressing different communities is exciting.
+
+First, on Saturday morning, in the [https://fosdem.org/2016/schedule/track/gnu_guile/ GNU Guile track] (room K.3.201):
+
+* [https://fosdem.org/2016/schedule/event/guixhurd/ Adding GNU/Hurd support to GNU Guix] (Manolis Ragkousis)
+* [https://fosdem.org/2016/schedule/event/guix/ A gentle introduction to functional package management with GNU Guix] (Ricardo Wurmus)
+* [https://fosdem.org/2016/schedule/event/guixdistro/ Your distro is a Scheme library] (Ludovic Courtès)
+* [https://fosdem.org/2016/schedule/event/guixmodules/ Foreign packages in GNU Guix] (Pjotr Prins)
+
+On Saturday afternoon:
+
+* [https://fosdem.org/2016/schedule/event/deployments_with_gnu_guix/ Reproducible and Customizable Deployments with GNU Guix] (Ludovic Courtès, [https://fosdem.org/2016/schedule/track/distributions/ distributions track], room K.4.201)
+* [https://fosdem.org/2016/schedule/event/guix_tox/ Guix-tox, a functional version of tox] (Cyril Roelandt, [https://fosdem.org/2016/schedule/track/python/ Python track], room UD2.218A)
+
+On Sunday noon:
+
+* [https://fosdem.org/2016/schedule/event/hpc_bigdata_gnu_guix/ Reproducible and User-Controlled Package Management in HPC with GNU Guix] (Ricardo Wurmus, [https://fosdem.org/2016/schedule/track/hpc,_big_data_and_data_science/ HPC track], room AW1.126)
+
+See you there!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
