@@ -153,8 +153,8 @@ PublicKey: (public-key
 +  )
 + 
 
-Nickname: enge-armhf
-Hostname: enge.fr
+Nickname: solar
+Hostname: solar.enge.fr
 Port: 9022
 Physical: Yes
 Vendor: Novena
