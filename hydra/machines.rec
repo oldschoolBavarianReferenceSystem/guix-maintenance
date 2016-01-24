@@ -170,3 +170,20 @@ PublicKey: (public-key
 +   )
 +
 
+Nickname: redhill
+Hostname: redhill.enge.fr
+Port: 9023
+Physical: Yes
+Vendor: Novena
+Location: Bordeaux, France
+Contact: Andreas Enge <andreas@enge.fr>
+Cores: 4
+BaseSystem: Debian GNU/Linux Jessie
+PublicKey: (public-key
++   (ecc
++    (curve Ed25519)
++    (q #5A5C54755AA5A20C42CFEE24257D9A8C33401C034A6F716D65F517CC3D7F4A77#)
++    )
++   )
++
+
