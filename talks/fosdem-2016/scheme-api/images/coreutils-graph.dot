@@ -1,0 +1,25 @@
+digraph "Guix package" {
+  "63480960" [label = "coreutils-8.24", shape = box, fontname = Helvetica];
+  "63480960" -> "42360000" [color = red];
+  "63480960" -> "64378176" [color = red];
+  "63480960" -> "47268416" [color = red];
+  "63480960" -> "64019072" [color = red];
+  "42360000" [label = "perl-5.22.1", shape = box, fontname = Helvetica];
+  "64378176" [label = "acl-2.2.52", shape = box, fontname = Helvetica];
+  "64378176" -> "64378752" [color = red];
+  "64378176" -> "42360000" [color = red];
+  "64378176" -> "64378368" [color = red];
+  "64378752" [label = "gettext-0.19.7", shape = box, fontname = Helvetica];
+  "64378752" -> "62890368" [color = red];
+  "62890368" [label = "expat-2.1.0", shape = box, fontname = Helvetica];
+  "64378368" [label = "attr-2.4.47", shape = box, fontname = Helvetica];
+  "64378368" -> "64378752" [color = red];
+  "64378368" -> "42360000" [color = red];
+  "47268416" [label = "gmp-6.1.0", shape = box, fontname = Helvetica];
+  "47268416" -> "47268608" [color = red];
+  "47268608" [label = "m4-1.4.17", shape = box, fontname = Helvetica];
+  "64019072" [label = "libcap-2.24", shape = box, fontname = Helvetica];
+  "64019072" -> "42360000" [color = red];
+  "64019072" -> "64378368" [color = red];
+
+}
