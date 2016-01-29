@@ -240,3 +240,5 @@ http://mediagoblin.org/news/stripe-retreat-state-of-the-goblin.html
 
 http://dustycloud.org/blog/goodbye-2015-hello-2016/
 http://lwn.net/Articles/670362/
+http://community.redhat.com/events/#fosdem--guix-tox-a-functional-version-of-tox
+http://wiki.dlang.org/Installing_LDC_on_GNU_Guix
