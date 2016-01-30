@@ -7,6 +7,7 @@
 
 \usetheme{default}
 
+\usefonttheme{structurebold}
 \usepackage{helvet}
 \usecolortheme{seagull}         % white on black
 
@@ -102,8 +103,10 @@
   \Huge{\#1. Upgrades are hard.}
 \end{frame}
 
+\setbeamercolor{normal text}{bg=white}
 \screenshot{images/debian-upgrade-warning}
 \screenshot{images/debian-upgrade-instructions}
+\setbeamercolor{normal text}{bg=black}
 
 \begin{frame}[plain]
   \Huge{\#2. Stateful system management is intractable.}
@@ -198,13 +201,13 @@
     \LARGE{``Debian and other distributions are going to be \textbf{that
         thing you run docker on}, little more.''}
   \end{quotation}
-  \hfill{--- Poortvliet, ownCloud developer}
+  \hfill{--- Jos Poortvliet, ownCloud developer}
 
-  %% \begin{tikzpicture}[overlay]
-  %%   \node [at=(current page.east), anchor=east]{
-  %%     \url{http://lwn.net/Articles/669114/}
-  %%   };
-  %% \end{tikzpicture}
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.south east), anchor=south east]{
+      \url{http://lwn.net/Articles/670566/}
+    };
+  \end{tikzpicture}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
@@ -224,6 +227,10 @@
   \begin{tikzpicture}[remember picture, overlay]
     \node [at=(current page.center), inner sep=0pt]
           {\includegraphics[width=\paperwidth]{images/docker-image-layers-cropped}};
+    \node [at=(current page.north east), anchor=north east,
+           text=black, text opacity=1, fill=white, opacity=.6]{
+      \url{https://imagelayers.io/}
+    };
   \end{tikzpicture}
 \end{frame}
 
@@ -419,6 +426,7 @@
   \uncover<2->{\Large{A simple matter of installing the deps, right?}}
 \end{frame}
 
+\setbeamercolor{normal text}{bg=white}
 \begin{frame}[plain]
   \begin{tikzpicture}[remember picture, overlay]
     \node [at=(current page.center), inner sep=0pt]
@@ -454,7 +462,7 @@
           {\includegraphics[width=\paperwidth]{images/os-declaration}};
     \node [at=(current page.center), fill=black, opacity=.3, text
       opacity=1., minimum height=21cm, minimum width=297mm]
-          {\huge{\textbf{GuixSD: the Emacs of distros}}};
+          {\huge{\textbf{GuixSD: declarative OS config}}};
   \end{tikzpicture}
 \end{frame}
 
@@ -535,7 +543,7 @@
 % TODO: CIA's XCode exploit here
 
 \begin{frame}[fragile]
-  \frametitle{Transparent binary/source deployment}
+  \frametitle{binary/source deployment}
   \begin{overlayarea}{\textwidth}{6cm}
     \begin{semiverbatim}
 alice@foo\$ \alert{guix package --install=}emacs
@@ -637,7 +645,7 @@ The following derivations will be \alert{built}:
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{The path to greater user control}
+\begin{frame}{towards greater user control}
   \Large{
   \begin{enumerate}
   \item{ \textbf{Bit-reproducible builds}
@@ -690,7 +698,7 @@ $ \alert{guix challenge} --substitute-urls="http://hydra.gnu.org http://guix.exa
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
-\begin{frame}{Timeline}
+\begin{frame}{timeline}
   \begin{itemize}
     \item Nov. 2012 --- dubbed GNU
     \item{Jan. 2013 --- \alert{0.1}}
@@ -710,7 +718,7 @@ $ \alert{guix challenge} --substitute-urls="http://hydra.gnu.org http://guix.exa
 
 \screenshot{images/better}
 
-\begin{frame}{Status}
+\begin{frame}{status}
   \Large{
   \begin{itemize}
     \item full-featured package manager

@@ -306,6 +306,61 @@
   \Huge{\#4. ``Staging'': hosting build-side code.}
 \end{frame}
 
+\begin{frame}[fragile]{}
+  \begin{tikzpicture}[tools/.style = {
+                        text width=35mm, minimum height=4cm,
+                        text centered,
+                        rounded corners=2mm,
+                        fill=white, text=black
+                      },
+                      tool/.style = {
+                        fill=white, text=black, text width=3cm,
+                        text centered
+                      },
+                      daemon/.style = {
+                        rectangle, text width=50mm, text centered,
+                        rounded corners=2mm, minimum height=15mm,
+                        top color=guixorange1,
+                        bottom color=guixyellow,
+                        text=black
+                      },
+                      builders/.style = {
+                        draw=guixorange1, very thick, dashed,
+                        fill=black, text=white, text width=5cm,
+                        rounded corners=2mm,
+                      },
+                      builder/.style = {
+                        draw=guixred2, thick, rectangle,
+                        fill=black, text=white,
+                        rotate=90
+                      }]
+    \matrix[row sep=3mm, column sep=1cm] {
+      \node(builders)[builders, text height=5cm]{}
+          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+          node[builder] at (-1,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 0,-0.5) {\alert{Guile}, make, etc.}
+          node[builder] at ( 1,-0.5) {\alert{Guile}, make, etc.}; &
+      \node[tools]{}
+          node[fill=white, text=black] at (0, 1) {\large{\textbf{Guile Scheme}}}
+          node[tool] at (0, 0) {\texttt{(guix packages)}}
+          node(client)[tool] at (0, -1) {\texttt{(guix store)}};
+      \\
+
+      \node(daemon)[daemon]{\large{\textbf{build daemon}}}; &
+      &
+      \\
+    };
+  \end{tikzpicture}
+
+  \begin{tikzpicture}[overlay]
+    \path[very thick, draw=guixorange1]
+      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+    \path[->, very thick, draw=guixorange1]
+      (daemon) edge (builders);
+  \end{tikzpicture}
+\end{frame}
+
 \begin{frame}[plain]
   \Huge{\#5. Operating system!}
 \end{frame}
