@@ -242,3 +242,12 @@ http://dustycloud.org/blog/goodbye-2015-hello-2016/
 http://lwn.net/Articles/670362/
 http://community.redhat.com/events/#fosdem--guix-tox-a-functional-version-of-tox
 http://wiki.dlang.org/Installing_LDC_on_GNU_Guix
+https://www.haiku-os.org/blog/mmu_man/2016-02-02_back_fosdem_2016
+
+* Feb. 2016
+
+https://distrowatch.com/weekly.php?issue=20160215#new
+https://people.debian.org/~lunar/blog/posts/reproducible_builds_stretch_week_42/
+http://wiki.dlang.org/Installing_LDC_on_GNU_Guix
+http://www.themindiseverything.eu/2016_02_01_archive.html
+http://without-systemd.org/wiki/index.php/Init
