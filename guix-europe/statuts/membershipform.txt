@@ -1,22 +1,29 @@
 I ask to join the association "Guix Europe" and declare adhering to the
 Statutes and the Interior Reglementary of which I have obtained a copy.
 
-Name
+Name:
 
-First name
+First name:
 
-Birth date
+Birth date:
 
-Postal address
+Postal address:
 
-E-mai address
+E-mail address:
 
-OpenPGP key finger print (if applicable)
+OpenPGP key finger print (if applicable):
 
-Motivation to join the association
+Motivation to join the association:
 
-I am paying the membership fees of 10€
+I am paying the membership fees of 10€:
 in cash / by wire transfer / by French check.
+
+I agree that my membership status and contact details may be communicated
+to other members:
+yes / no
+
+I agree that my membership status may be communicated to the general public:
+yes / no
 
 
 Date
@@ -24,3 +31,4 @@ Date
 Place
 
 Signature
+
