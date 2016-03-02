@@ -1,0 +1,36 @@
+Timely delivery of security updates
+-----------------------------------
+
+Yesterday, a [http://openssl.org/news/secadv/20160301.txt new version of OpenSSL was released], addressing several serious vulnerabilities, some of which are [https://drownattack.com/ nicknamed "DROWN"].  Like all free software distributions, we were waiting to deploy the fixes as soon as possible.  This time though, we are happy to report that we were able to [http://git.savannah.gnu.org/cgit/guix.git/commit/?id=caeadfddb01d2cda19d2f761ba9906ef8f162173 deploy it] to users faster than before: an hour or so after disclosure. This was made possible by fixing our fast update deployment mechanism, which is based on _grafts_.
+
+== Updates in a functional package management framework ==
+
+GNU Guix implements the [https://www.gnu.org/software/guix/manual/html_node/Introduction.html functional package management discipline].  What this means is that the the package graph in Guix is an immutable, [https://en.wikipedia.org/wiki/Persistent_data_structure persistent data structure]—similar to a singly-linked list in a functional programming language, or to the [http://eagain.net/articles/git-for-computer-scientists/ object graph in the Git version control system].
+
+A common difficulty with persistent data structures is the algorithmic complexity of updates—the computational cost of updating an arbitrary element of the data structure.  For instance, to update the nth element of a singly-linked list, you first need to traverse and copy the n − 1 elements at the head of the list, then insert the new element and make it point to the tail of the list.
+
+With the functional package management paradigm, the cost of updating a package is simple to understand: you need to rebuild the package itself, _and all the packages that depend on it_.  This is nice in many ways: all packages _must_ build from source, there is no way we can be using binaries that cannot be [https://savannah.gnu.org/forum/forum.php?forum_id=8407 rebuilt from their Corresponding Source], breakage due to incompatible application binary interfaces (ABIs) is foreign to our users, we have a precise trail of the tools that produced binaries—that is, builds are [https://en.wikipedia.org/wiki/Referential_transparency “referentially transparent”], and as a bonus, we get [https://www.gnu.org/software/guix/manual/html_node/Features.html features] such as transactional upgrades and rollbacks, peaceful coexistence of different variants of the same package, and more.
+
+But obviously, this update cost is very high when all you want is to deliver an important security update in a core package.  Regarding yesterday’s update, [http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-refresh.html guix refresh -l openssl] shows that 2,115 packages depend on OpenSSL. On top of that, Guix supports 4 architectures, so needless to say, rebuilding everything that depends on OpenSSL would take time.  Sure, users do not have to wait for [http://www.gnu.org/software/guix/manual/html_node/Substitutes.html pre-built binaries] and can instead build just what they need locally; in practice, they’d better have a powerful machine, though.
+
+== Grafting important updates ==
+
+A solution to this problem has been floating around for some time: the idea is to _graft_ important package updates onto packages that depend on it.  That way, we would rebuild OpenSSL, but all we need to do for packages that depend on OpenSSL is to substitute the reference to the “broken” OpenSSL with a reference to the security update, with the understanding that this substitution process is orders of magnitude cheaper than rebuilding packages, and faster than redownloading rebuilt packages.
+
+Shea Levy had implemented a form of grafting [https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/replace-dependency.nix in Nixpkgs] in 2013, and Guix itself has provided [https://www.gnu.org/software/guix/manual/html_node/Security-Updates.html the infrastructure for grafted updates] since [https://savannah.gnu.org/forum/forum.php?forum_id=8147 version 0.8] in 2014.  With Guix, package developers simply have to [http://git.savannah.gnu.org/cgit/guix.git/commit/?id=caeadfddb01d2cda19d2f761ba9906ef8f162173 define a replacement] in the object representing the package that needs an update and the tools automatically pick the replacement and graft it onto packages as needed.
+
+The problem is that these implementations had a severe limitation, described in [http://debbugs.gnu.org/cgi/bugreport.cgi?bug=22139 this bug report]: grafting was not _recursive_.  When we provided a patched OpenSSL to be grafted, any package that directly depended on OpenSSL, would be appropriately grafted to refer to the new OpenSSL.  However, if a package depended on libfoo, which in turn depended on OpenSSL, then that package would keep referring to the old libfoo, which refered to the old OpenSSL.  That made grafts useless in most situations.
+
+== Good news! ==
+
+This bug was finally addressed, [https://lists.gnu.org/archive/html/guix-devel/2016-03/msg00009.html just in time for yesterday’s OpenSSL update].  We have identified things to improve, but overall, it has worked pretty well.  It has worked so well that we even experienced [http://debbugs.gnu.org/cgi/bugreport.cgi?bug=22876#8 our first ABI break] like all [https://bugzilla.redhat.com/show_bug.cgi?id=1313509 real] [https://bugs.gentoo.org/show_bug.cgi?id=576128 distros]!
+
+From now on, we have confidence that we can deliver important updates quickly using grafts, and happily rebuild the world in the background, whenever is convenient.  This is an important improvement for functional package management to keep our users happy and safe.
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
