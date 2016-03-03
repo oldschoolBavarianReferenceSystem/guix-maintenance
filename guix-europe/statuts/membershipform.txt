@@ -5,9 +5,12 @@ Name:
 
 First name:
 
-Birth date:
+Birth date (optional):
 
-Postal address:
+If no birth date is given: I certify being at least 18 years old.
+yes / no
+
+Postal address (optional):
 
 E-mail address:
 
@@ -16,7 +19,7 @@ OpenPGP key finger print (if applicable):
 Motivation to join the association:
 
 I am paying the membership fees of 10€:
-in cash / by wire transfer / by French check.
+in cash / by wire transfer / by French check
 
 I agree that my membership status and contact details may be communicated
 to other members:
