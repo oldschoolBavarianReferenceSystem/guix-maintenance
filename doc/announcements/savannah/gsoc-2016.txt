@@ -1,0 +1,18 @@
+Join GNU Guix for GSoC
+
+
+This year again the [https://www.gnu.org/ GNU Project] is a mentoring organization for the [https://summerofcode.withgoogle.com/ Google Summer of Code] (GSoC), and [https://www.gnu.org/software/guix Guix] is participating under GNU’s umbrella.
+
+We have collected project ideas for [https://libreplanet.org/wiki/Group:Guix/GSoC-2016 Guix, GuixSD], and [https://libreplanet.org/wiki/Group:Guix/GSoC-2016#Project_ideas_for_the_GNU_Shepherd the GNU Shepherd] covering a wide range of topics.  If you are passionate about computing freedom, Scheme, functional programming, or operating system development, check out the proposed projects.  The list is far from exhaustive, so feel free to bring your own!
+
+Get in touch with us on the [https://www.gnu.org/software/guix/about/#contact mailing lists] or #guix on the Freenode IRC network.
+
+If you are an [https://developers.google.com/open-source/gsoc/faq#can_i_participate_in_gsoc_as_both_a_mentor_and_a_student eligible student], make sure to apply [https://developers.google.com/open-source/gsoc/timeline by March 25th].
+
+== About GNU Guix ==
+
+[https://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [https://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [https://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
