@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="453.5433"
+   height="340.15747"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="03.svg"
+   version="1.0"
+   viewBox="0 0 128 95.999997"
+   enable-background="new">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient9709"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop9711" />
+    </linearGradient>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Roughen"
+       id="filter13391-1">
+      <feTurbulence
+         type="fractalNoise"
+         numOctaves="5"
+         seed="1"
+         baseFrequency="0.013 0.013"
+         result="turbulence"
+         id="feTurbulence13393-2" />
+      <feDisplacementMap
+         in="SourceGraphic"
+         in2="turbulence"
+         scale="10.2094"
+         yChannelSelector="G"
+         xChannelSelector="R"
+         id="feDisplacementMap13395-8" />
+    </filter>
+    <marker
+       inkscape:stockid="Arrow2Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Send-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path6389-4"
+         style="fill:#f34eaf;fill-opacity:1;fill-rule:evenodd;stroke:#f34eaf;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)" />
+    </marker>
+    <filter
+       y="-0.2"
+       height="1.4"
+       inkscape:label="Rough and Dilate"
+       inkscape:menu="Distort"
+       inkscape:menu-tooltip="Create a turbulent contour around"
+       style="color-interpolation-filters:sRGB;"
+       id="filter6525">
+      <feMorphology
+         radius="7"
+         operator="dilate"
+         result="result8"
+         in="SourceGraphic"
+         id="feMorphology6527" />
+      <feComposite
+         in2="result8"
+         result="result10"
+         in="SourceGraphic"
+         operator="arithmetic"
+         k1="0.5"
+         k3="0.5"
+         id="feComposite6529" />
+      <feTurbulence
+         result="result11"
+         type="fractalNoise"
+         numOctaves="3"
+         baseFrequency="0.07"
+         id="feTurbulence6531" />
+      <feDisplacementMap
+         result="result12"
+         in2="result11"
+         in="result10"
+         xChannelSelector="R"
+         scale="10"
+         id="feDisplacementMap6533" />
+      <feComposite
+         operator="arithmetic"
+         result="result13"
+         in="SourceGraphic"
+         in2="result12"
+         k1="0.25"
+         k2="0.25"
+         k3="0.75"
+         id="feComposite6535" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Roughen"
+       id="filter6597">
+      <feTurbulence
+         type="fractalNoise"
+         numOctaves="5"
+         seed="69"
+         baseFrequency="0.013 0.001"
+         result="turbulence"
+         id="feTurbulence6599" />
+      <feDisplacementMap
+         in="SourceGraphic"
+         in2="turbulence"
+         scale="41.4"
+         yChannelSelector="G"
+         xChannelSelector="R"
+         id="feDisplacementMap6601" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2862346"
+     inkscape:cx="229.79211"
+     inkscape:cy="160.07256"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g31531"
+     inkscape:window-width="1280"
+     inkscape:window-height="740"
+     inkscape:window-x="0"
+     inkscape:window-y="31"
+     width="12.8cm"
+     height="9.6cm"
+     units="cm"
+     showgrid="true"
+     grid_units="mm"
+     inkscape:object-paths="false"
+     inkscape:grid-points="true"
+     inkscape:grid-bbox="true"
+     inkscape:guide-points="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       orientation="vertical"
+       position="56.476527"
+       id="guide3573" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="11.035643"
+       id="guide3579" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="24.018753"
+       id="guide3886" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="285.62841"
+       id="guide3988" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="303.15561"
+       id="guide4081" />
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0px"
+       originy="0px"
+       spacingx="2mm"
+       spacingy="2mm"
+       color="#3f3fff"
+       empcolor="#3f3fff"
+       opacity="0.15"
+       empopacity="0.38"
+       empspacing="5" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(4.149475e-6,-698.0315)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.28888893px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="69.999992"
+       y="754.03149"
+       id="text5335"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5337"
+         x="69.999992"
+         y="754.03149"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'" /></text>
+    <g
+       id="g31531"
+       transform="matrix(0.42305207,0,0,0.42305207,-168.22716,514.30643)"
+       style="">
+      <rect
+         style="opacity:1;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4136"
+         width="302.56323"
+         height="50.702263"
+         x="397.65118"
+         y="434.28476"
+         ry="0" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         x="434.63376"
+         y="470.90131"
+         id="text4140"
+         sodipodi:linespacing="88.999999%"><tspan
+           sodipodi:role="line"
+           x="434.63376"
+           y="470.90131"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.35549545px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan5398">Beyond reproducibility</tspan><tspan
+           sodipodi:role="line"
+           x="434.63376"
+           y="500.58771"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan35347" /><tspan
+           sodipodi:role="line"
+           x="434.63376"
+           y="530.27411"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan6400" /></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         x="538.82678"
+         y="521.03815"
+         id="text4140-4"
+         sodipodi:linespacing="88.999999%"><tspan
+           sodipodi:role="line"
+           x="538.82678"
+           y="521.03815"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.34884644px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+           id="tspan5398-7">Cheap exploration</tspan><tspan
+           sodipodi:role="line"
+           x="538.82678"
+           y="541.8186"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+           id="tspan35347-2" /><tspan
+           sodipodi:role="line"
+           x="538.82678"
+           y="562.59912"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+           id="tspan6400-2" /></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         x="508.31824"
+         y="576.05975"
+         id="text4140-4-1"
+         sodipodi:linespacing="88.999999%"><tspan
+           sodipodi:role="line"
+           x="508.31824"
+           y="576.05975"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.34884644px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan5398-7-6">Change parts</tspan><tspan
+           sodipodi:role="line"
+           x="508.31824"
+           y="596.84021"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan35347-2-6" /><tspan
+           sodipodi:role="line"
+           x="508.31824"
+           y="617.62073"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan6400-2-6" /></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         x="519.41876"
+         y="633.18274"
+         id="text4140-4-1-7"
+         sodipodi:linespacing="88.999999%"><tspan
+           sodipodi:role="line"
+           x="519.41876"
+           y="633.18274"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.34884644px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan5398-7-6-1">No black boxes</tspan><tspan
+           sodipodi:role="line"
+           x="519.41876"
+           y="653.9632"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan35347-2-6-6" /><tspan
+           sodipodi:role="line"
+           x="519.41876"
+           y="674.74371"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:end;text-anchor:end;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan6400-2-6-6" /></text>
+      <g
+         id="g10594"
+         transform="matrix(1.0889215,0,0,1.0889215,137.58493,-52.461575)">
+        <g
+           class="node"
+           id="node2"
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)">
+          <title
+             id="title4151">29060672</title>
+          <polygon
+             id="polygon4153"
+             points="574.22,-17.1803 574.22,-53.1803 574.22,-53.1803 493.22,-53.1803 493.22,-17.1803 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4155"
+             font-size="14.00"
+             y="-31.480301"
+             x="533.71997"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">perl-5.16.1</text>
+        </g>
+        <g
+           class="node"
+           id="node3"
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)">
+          <title
+             id="title4165">34407360</title>
+          <polygon
+             id="polygon4167"
+             points="338.195,-152.59 338.195,-188.59 338.195,-188.59 231.195,-188.59 231.195,-152.59 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4169"
+             font-size="14.00"
+             y="-166.89"
+             x="284.69501"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">perl-clone-0.37</text>
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,365.35058,630.18751)"
+           class="node"
+           id="node4">
+          <title
+             id="title4179">35178176</title>
+          <polygon
+             style="fill:none;stroke:#000000"
+             id="polygon4181"
+             points="332.476,-385.594 332.476,-385.594 194.476,-385.594 194.476,-349.594 332.476,-349.594 " />
+          <text
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle"
+             id="text4183"
+             font-size="14.00"
+             y="-363.89401"
+             x="263.47601">perl-test-deep-0.114</text>
+        </g>
+        <g
+           class="node"
+           id="node5"
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)">
+          <title
+             id="title4193">35301632</title>
+          <polygon
+             id="polygon4195"
+             points="434.162,-1.86054 434.162,-37.8605 434.162,-37.8605 264.162,-37.8605 264.162,-1.86054 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4197"
+             font-size="14.00"
+             y="-16.1605"
+             x="349.16199"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">perl-test-simple-1.001014</text>
+        </g>
+        <g
+           class="node"
+           id="node6"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4207">50782208</title>
+          <polygon
+             id="polygon4209"
+             points="853.33,-251.418 853.33,-251.418 754.33,-251.418 754.33,-215.418 853.33,-215.418 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4211"
+             font-size="14.00"
+             y="-229.718"
+             x="803.83002"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">python-2.7.10</text>
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,365.35058,630.18751)"
+           class="node"
+           id="node7">
+          <title
+             id="title4221">35301440</title>
+          <polygon
+             style="fill:none;stroke:#000000"
+             id="polygon4223"
+             points="234.173,-536.852 234.173,-536.852 92.1732,-536.852 92.1732,-500.852 234.173,-500.852 " />
+          <text
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle"
+             id="text4225"
+             font-size="14.00"
+             y="-515.15198"
+             x="163.173">perl-test-tester-0.109</text>
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,365.35058,630.18751)"
+           class="node"
+           id="node8">
+          <title
+             id="title4235">35302976</title>
+          <polygon
+             style="fill:none;stroke:#000000"
+             id="polygon4237"
+             points="170,-430.425 170,-430.425 -1.42109e-14,-430.425 -1.42109e-14,-394.425 170,-394.425 " />
+          <text
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle"
+             id="text4239"
+             font-size="14.00"
+             y="-408.72501"
+             x="85">perl-test-nowarnings-1.04</text>
+        </g>
+        <g
+           class="node"
+           id="node9"
+           transform="matrix(0.18404895,0,0,0.1831339,308.5068,628.05702)">
+          <title
+             id="title4249">30434432</title>
+          <polygon
+             id="polygon4251"
+             points="1083.65,-191.917 973.653,-191.917 973.653,-155.917 1083.65,-155.917 1083.65,-191.917 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4253"
+             font-size="14.00"
+             y="-170.217"
+             x="1028.65"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">pkg-config-0.28</text>
+        </g>
+        <g
+           class="node"
+           id="node10"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4263">46250624</title>
+          <polygon
+             id="polygon4265"
+             points="985.923,-81.2403 985.923,-81.2403 902.923,-81.2403 902.923,-45.2403 985.923,-45.2403 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4267"
+             font-size="14.00"
+             y="-59.540298"
+             x="944.42297"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">bzip2-1.0.6</text>
+        </g>
+        <g
+           class="node"
+           id="node11"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4277">36701312</title>
+          <polygon
+             id="polygon4279"
+             points="854.37,-36 854.37,-36 772.37,-36 772.37,-3.19744e-14 854.37,-3.19744e-14 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4281"
+             font-size="14.00"
+             y="-14.3"
+             x="813.37"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">gdbm-1.11</text>
+        </g>
+        <g
+           class="node"
+           id="node12"
+           transform="matrix(0.17447053,0,0,0.1736031,326.20644,622.27715)">
+          <title
+             id="title4291">36701888</title>
+          <polygon
+             id="polygon4293"
+             points="952.527,-321.412 952.527,-285.412 1016.53,-285.412 1016.53,-321.412 1016.53,-321.412 "
+             style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.37202656;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             id="text4295"
+             font-size="14.00"
+             y="-299.71201"
+             x="984.52698"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1">libffi-3.1</text>
+        </g>
+        <g
+           class="node"
+           id="node13"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4305">59828864</title>
+          <polygon
+             id="polygon4307"
+             points="869.488,-442.646 869.488,-442.646 768.488,-442.646 768.488,-406.646 869.488,-406.646 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4309"
+             font-size="14.00"
+             y="-420.94601"
+             x="818.98798"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">sqlite-3.8.10.2</text>
+        </g>
+        <g
+           class="node"
+           id="node14"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4319">37402688</title>
+          <polygon
+             id="polygon4321"
+             points="724.391,-119.17 724.391,-119.17 619.391,-119.17 619.391,-83.1702 724.391,-83.1702 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4323"
+             font-size="14.00"
+             y="-97.4702"
+             x="671.89099"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">openssl-1.0.2d</text>
+        </g>
+        <g
+           class="node"
+           id="node15"
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)">
+          <title
+             id="title4333">35415936</title>
+          <polygon
+             id="polygon4335"
+             points="983.266,-481.886 983.266,-481.886 895.266,-481.886 895.266,-445.886 983.266,-445.886 "
+             style="fill:none;stroke:#000000" />
+          <text
+             id="text4337"
+             font-size="14.00"
+             y="-460.186"
+             x="939.26599"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">readline-6.3</text>
+        </g>
+        <g
+           class="node"
+           id="node16"
+           transform="matrix(0.33110028,0,0,0.32945413,218.99248,675.04053)">
+          <title
+             id="title4347">46251584</title>
+          <polygon
+             id="polygon4349"
+             points="634.472,-380.947 634.472,-344.947 705.472,-344.947 705.472,-380.947 705.472,-380.947 "
+             style="fill:#f34eaf;fill-opacity:1;stroke:none" />
+          <text
+             id="text4351"
+             font-size="14.00"
+             y="-359.24701"
+             x="669.97198"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle;fill:#fdfdfd;fill-opacity:1">zlib-1.2.7</text>
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,253.14538,648.56324)"
+           class="node"
+           id="node17">
+          <title
+             id="title4382">35416128</title>
+          <polygon
+             style="fill:none;stroke:#000000"
+             id="polygon4384"
+             points="1096.18,-637.653 1009.18,-637.653 1009.18,-601.653 1096.18,-601.653 1096.18,-637.653 " />
+          <text
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle"
+             id="text4386"
+             font-size="14.00"
+             y="-615.953"
+             x="1052.6801">ncurses-5.9</text>
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           class="edge"
+           id="edge17"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+          <title
+             id="title4368">59828864-&gt;35415936</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4370"
+             d="m 869.721,-441.919 c 5.939,-2.011 11.083,-3.744 15.658,-5.272" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4372"
+             points="886.731,-443.951 884.53,-450.596 884.53,-450.596 895.124,-450.418 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge1">
+          <title
+             id="title4158">62885888-&gt;29060672</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4160"
+             d="m 472.617,-178.834 c 15.96,74.077 20.957,92.9537 39.462,117.5456"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4162"
+             points="518.283,-53.4055 509.348,-59.0992 514.849,-63.4284 514.849,-63.4284 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge2">
+          <title
+             id="title4172">62885888-&gt;34407360</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4174"
+             d="m 423.465,-183.545 c -36.327,10.614 -57.28,15.969 -74.878,17.791"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4176"
+             points="338.523,-165.076 348.265,-169.24 348.735,-162.256 348.735,-162.256 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,330.71633,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge3">
+          <title
+             id="title4186">62885888-&gt;35178176</title>
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4188"
+             d="m 436.45485,-215.64861 c 2.11881,-40.19047 12.00435,-57.10386 6.69028,-97.6188" />
+          <polygon
+             inkscape:transform-center-y="-0.083178062"
+             inkscape:transform-center-x="0.39638497"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             transform="matrix(0.87566145,0.48292544,-0.48292554,0.87566145,35.797946,-145.84787)"
+             id="polygon4190"
+             points="274.698,-338.932 274.698,-338.932 273.06,-349.399 280.868,-342.238 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge4">
+          <title
+             id="title4200">62885888-&gt;35301632</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4202"
+             d="m 456.43,-178.665 c -56.153,83.6723 -69.103,102.9363 -88.935,131.9917"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4204"
+             points="361.677,-38.1569 364.428,-48.3884 370.208,-44.4398 370.208,-44.4398 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge5">
+          <title
+             id="title4214">62885888-&gt;50782208</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4216"
+             d="m 572.70132,-194.98891 c 68.59745,10.49288 131.72676,9.80987 189.92568,-15.58309"
+             inkscape:connector-curvature="0"
+             sodipodi:nodetypes="cc" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4218"
+             points="760.957,-213.648 771.415,-215.346 764.299,-207.497 760.957,-213.648 " />
+        </g>
+        <g
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           transform="matrix(0.18404895,0,0,0.1831339,365.35056,630.18751)"
+           class="edge"
+           id="edge6">
+          <title
+             id="title4228">35178176-&gt;35301440</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4230"
+             d="M 246.083,-385.852 C 191.77,-442.998 180.838,-456.586 170.65,-490.915" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4232"
+             points="173.985,-491.983 167.247,-490.086 167.247,-490.086 167.905,-500.66 " />
+        </g>
+        <g
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           transform="matrix(0.18404895,0,0,0.1831339,365.24627,631.25947)"
+           class="edge"
+           id="edge7">
+          <title
+             id="title4242">35178176-&gt;35302976</title>
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4244"
+             d="m 194.124,-365.70642 c -13.542,-3.194 -102.664452,12.89719 -105.162109,-27.89642" />
+          <polygon
+             inkscape:transform-center-y="-0.076971906"
+             inkscape:transform-center-x="0.7874542"
+             transform="matrix(0.38076853,0.9246703,-0.92467048,0.38076853,-333.66488,-387.51489)"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4246"
+             points="150.499,-394.328 161.045,-395.338 159.373,-388.54 159.373,-388.54 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge9">
+          <title
+             id="title4256">50782208-&gt;30434432</title>
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4258"
+             d="m 853.578,-219.579 c 57.597,16.008 121.83983,17.49885 123.95763,41.83645"
+             inkscape:connector-curvature="0" />
+          <polygon
+             transform="matrix(0.71403844,0.70360467,-0.6966257,0.71403844,151.54542,-731.1396)"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4260"
+             points="964.609,-192.936 964.609,-192.936 973.44,-187.083 962.886,-186.151 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge10">
+          <title
+             id="title4270">50782208-&gt;46250624</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4272"
+             d="m 822.533,-215.369 c 74.891,72.34 89.238,87.533 108.384,124.6722"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4274"
+             points="934.277,-91.8064 935.648,-81.3006 928.025,-88.6584 934.277,-91.8064 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge11">
+          <title
+             id="title4284">50782208-&gt;36701312</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4286"
+             d="m 809.218,-215.162 c 29.405,99.861 32.327,116.0522 14.113,169.309"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4288"
+             points="826.565,-44.4976 819.959,-36.2145 819.958,-46.8094 826.565,-44.4976 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge12">
+          <title
+             id="title4298">50782208-&gt;36701888</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4300"
+             d="m 853.502,-244.865 c 56.632,-13.327 76.565,-19.814 98.968,-34.635"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4302"
+             points="950.699,-282.532 960.908,-285.366 954.695,-276.784 950.699,-282.532 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge13">
+          <title
+             id="title4312">50782208-&gt;59828864</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4314"
+             d="m 812.374,-251.534 c 32.857,-70.06 35.236,-82.844 15.614,-145.256"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4316"
+             points="824.636,-395.781 824.934,-406.371 831.305,-397.906 824.636,-395.781 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge14">
+          <title
+             id="title4326">50782208-&gt;37402688</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4328"
+             d="m 796.384,-215.38 c -23.046,55.343 -32.093,69.636 -75.748,91.598"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4330"
+             points="721.949,-120.528 711.429,-119.273 718.87,-126.814 721.949,-120.528 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge15">
+          <title
+             id="title4340">50782208-&gt;35415936</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4342"
+             d="m 821.976,-251.456 c 92.564,-92.169 102.407,-105.851 113.449,-183.848"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4344"
+             points="932.022,-436.247 936.855,-445.675 938.957,-435.291 932.022,-436.247 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge16">
+          <title
+             id="title4354">50782208-&gt;46251584</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4356"
+             d="m 794.772,-251.617 c -18.86,-36.966 -29.117,-47.37 -88.945,-87.505"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4358"
+             points="703.832,-336.245 697.463,-344.712 707.722,-342.065 703.832,-336.245 " />
+        </g>
+        <g
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           transform="matrix(0.18404895,0,0,0.1831339,365.35056,630.18751)"
+           class="edge"
+           id="edge8">
+          <title
+             id="title4361">35302976-&gt;35301440</title>
+          <path
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4363"
+             d="m 89.2316,-430.64 c 8.0345,-33.279 13.5564,-43.951 40.1824,-64.165" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4365"
+             points="131.544,-492.027 127.382,-497.655 127.382,-497.655 137.503,-500.786 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge19">
+          <title
+             id="title4375">37402688-&gt;29060672</title>
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="path4377"
+             d="m 618.34261,-79.638593 c 0,0 -8.19261,36.666493 -33.92061,40.849293"
+             inkscape:connector-curvature="0" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polygon4379"
+             points="574.324,-37.4869 583.794,-42.2374 584.69,-35.2949 584.69,-35.2949 " />
+        </g>
+        <g
+           transform="matrix(0.18404895,0,0,0.1831339,317.17596,624.9046)"
+           style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           class="edge"
+           id="edge18">
+          <title
+             id="title4389">35415936-&gt;35416128</title>
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             inkscape:connector-curvature="0"
+             id="path4391"
+             d="m 939.72964,-480.96378 c 15.51627,-72.56501 -236.17491,-105.16159 -234.02715,-28.39488" />
+          <polygon
+             style="fill:none;stroke:#a0a0a0;stroke-width:10.21002769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             transform="matrix(-0.95832953,0.285665,-0.28566506,-0.95832953,1535.8835,-1384.9982)"
+             id="polygon4393"
+             points="1039.04,-593.433 1039.04,-593.433 1045.95,-601.468 1045.56,-590.88 " />
+        </g>
+        <g
+           class="node"
+           id="node1"
+           transform="matrix(0.18404895,0,0,0.1831339,327.59559,624.9046)">
+          <title
+             id="title4144">62885888</title>
+          <polygon
+             id="polygon4146"
+             points="513.719,-178.977 513.719,-214.977 513.719,-214.977 423.719,-214.977 423.719,-178.977 "
+             style="fill:none;stroke:#000000;stroke-width:5.09949636;stroke-miterlimit:4;stroke-dasharray:none" />
+          <text
+             id="text4148"
+             font-size="14.00"
+             y="-193.27699"
+             x="468.71899"
+             style="font-size:14px;font-family:Helvetica, sans-Serif;text-anchor:middle">bowtie-2.2.4</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
