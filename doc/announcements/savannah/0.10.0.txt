@@ -1,0 +1,22 @@
+We are pleased to announce the new beta release of GNU Guix and GuixSD, version 0.10.0!
+
+The release comes with USB installation images to install the standalone [https://www.gnu.org/software/guix/manual/html_node/System-Installation.html GuixSD], and with tarballs to install the package manager on top of a running GNU/Linux system, either [https://www.gnu.org/software/guix/manual/html_node/Requirements.html from source] or [https://www.gnu.org/software/guix/manual/html_node/Binary-Installation.html from binaries].
+
+It’s been almost 5 months since the previous release, and many things happened!  The highlights include:
+
+* Our “grafting” mechanism for [https://www.gnu.org/software/guix/manual/html_node/Security-Updates.html security updates] has been fixed to be generally applicable.  Read [https://savannah.gnu.org/forum/forum.php?forum_id=8470 this post] for more information on the challenges behind this.
+* [https://www.gnu.org/software/guix/manual/html_node/Substitutes.html Substitutes] are now fetched by default over HTTPS and from a faster mirror.
+* A number of packages have been made [https://savannah.gnu.org/forum/forum.php?forum_id=8407 bit-for-bit reproducible], including glibc, Perl, Emacs packages, and Python packages.  This work was simplified by [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-challenge.html guix challenge] and by the new [https://www.gnu.org/software/guix/manual/html_node/Additional-Build-Options.html#Additional-Build-Options --check] and [https://www.gnu.org/software/guix/manual/html_node/Common-Build-Options.html#Common-Build-Options --rounds] build options, and also by the insight gathered from [https://reproducible-builds.org/ other reproducible builds efforts].
+* GNOME is [https://savannah.gnu.org/forum/forum.php?forum_id=8491 now available], via the [https://www.gnu.org/software/guix/manual/html_node/Desktop-Services.html gnome-desktop-service procedure].
+* [https://www.gnu.org/software/guix/packages/ 639 new packages], about as many package updates, greatly simplified by the addition of new [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-import.html importers] and [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-refresh.html auto-updaters].
+* A wealth of [https://debbugs.gnu.org/cgi/pkgreport.cgi?pkg=guix#_4_2_5 bug fixes], documentation improvements, [https://www.gnu.org/software/guix/manual/html_node/Emacs-Interface.html Emacs niceties], and more!
+
+See XXX for details.
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.

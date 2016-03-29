@@ -22,7 +22,7 @@ previous version.  And then you build one for the new version:
 
   (define old
     ;; Get the list of packages of the previous release.
-    (call-with-input-file "packages-0.8.3.txt"
+    (call-with-input-file "packages-0.9.0.txt"
       read))
 
   ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
@@ -93,7 +93,7 @@ Make that list "camera-ready":
 #+BEGIN_SRC scheme
   (use-modules (ice-9 pretty-print))
 
-  (call-with-output-file "packages-0.9.0.txt"
+  (call-with-output-file "packages-0.10.0.txt"
     (lambda (port)
       (pretty-print new port)))
 
@@ -172,6 +172,20 @@ You're now all set to build the bootable images.
 That way, the bootable image will run Guix X.Y + 1 commit, and running
 'guix system init' in the bootable image will install exactly Guix X.Y.
 
+** Build the binary tarballs using commit vX.Y.Z + 1
+
+Start from the commit right after vX.Y.Z so that the Guix included in
+the tarball is exactly vX.Y.Z.
+
+  $ for i in x86_64-linux i686-linux mips64el-linux armhf-linux ; \
+    do make guix-binary.$i.tar.xz && \
+       mv guix-binary.$i.tar.gz guix-binary-X.Y.Z.$i.tar.xz ; done
+
+For architectures that you do not have access to, you may need SSH
+access to hydra.gnu.org, from where you can explicitly ‘guix build’ the
+derivations of interest; use ‘guix archive’ to transfer things back and
+forth.
+
 ** Build USB images for all the supported architectures
 
 Start from commit vX.Y.Z + 2, as explained above.
@@ -184,15 +198,6 @@ Start from commit vX.Y.Z + 2, as explained above.
        --image-size=850MiB gnu/system/install.scm
   $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.i686-linux.xz
 
-** Build the binary tarballs using commit vX.Y.Z + 1
-
-Start from the commit right after vX.Y.Z so that the Guix included in
-the tarball is exactly vX.Y.Z.
-
-  $ for i in x86_64-linux i686-linux mips64el-linux armhf-linux ; \
-    do make guix-binary.$i.tar.xz && \
-       mv guix-binary.$i.tar.gz guix-binary-X.Y.Z.$i.tar.xz ; done
-
 ** Upload
 
   $ ./build-aux/gnupload --to alpha.gnu.org:guix \
@@ -204,8 +209,11 @@ First, re-read the GNU Maintainers Guide [[info:maintain.info#Announcements][on 
 
 ** Update web pages
 
-  - Replace any references to the previous version number and replace it
-    with the new one.
+  - Update the ‘latest-guix-version’ value in (www shared), in the
+    guix-artwork.git repository.
+  - Regenerate the web site by using (export-web-site
+    "/path/to/cvs/checkout") from the (www) module, and then “cvs ci”
+    the result so that gnu.org is actually updated.
 
 ** Update the on-line copy of the manual
 
@@ -219,7 +227,7 @@ Use Gnulib's `gendocs' script, add to the manual/ directory of the web site.
   $ build-aux/announce-gen --release-type=alpha --package-name=guix \
       --previous-version=A.B --current-version=X.Y \
       --gpg-key-id=MY-KEY --url-directory=ftp://alpha.gnu.org/gnu/guix \
-      --bootstrap-tools=autoconf,automake,makeinfo
+      --bootstrap-tools=autoconf,automake,makeinfo,help2man
 
 The subject must be "GNU Guix X.Y released".  The text should remain
 formal and impersonal (it is sent on behalf of the Guix and GNU
@@ -235,7 +243,8 @@ entirety (don't call it a change log since that's not what it is.)
 
 Send to these places, preferably in the morning on a working day (UTC):
 
-  - guix-devel@gnu.org, gnu-system-discuss@gnu.org, info-gnu@gnu.org
+  - guix-devel@gnu.org, help-guix@gnu.org
+  - gnu-system-discuss@gnu.org, info-gnu@gnu.org
   - guile-user@gnu.org, nix-dev@lists.science.uu.nl
   - comp.lang.scheme
   - comp.lang.functional
