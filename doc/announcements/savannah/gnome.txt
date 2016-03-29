@@ -1,0 +1,31 @@
+GNOME on GuixSD
+
+It’s a feature that many users were waiting for: proper [https://www.gnome.org/ GNOME] support in GuixSD.  Good news: the forthcoming Guix and GuixSD release will give you exactly that!  Don’t miss the obligatory [https://www.gnu.org/software/guix/screenshots/0.9.1/gnome-totem-epiphany.png screenshot]!
+
+You would think adding GNOME is routine distro work involving a lot of packaging and bits of plumbing that’s already been done a hundred times, which is probably true!  Yet, adding GNOME support turned out to be interesting in many ways: it’s a good test for GuixSD’s declarative operating system configuration framework, it’s a way to formalize how this whole software stack fits together, and it’s been an insightful journey into GNU/Linux desktop plumbing!
+
+Of course, a lot of software needs to be packaged to begin with.  This had been on-going for some time, culminating with the addition of a [https://www.gnu.org/software/guix/packages/#gnome gnome meta-package] thanks to the hard work of 宋文武 (Sou Bunnbu) and other hackers.  On the way, we added [https://lists.gnu.org/archive/html/guix-devel/2015-12/msg00173.html an auto-updater for GNOME packages], because all these package recipes need love.
+
+The more interesting parts were system integration.  Modern GNOME/Freedesktop environments rely on a number of daemons, most of which talk over [https://www.freedesktop.org/wiki/Software/dbus/ D-Bus], and extending each other’s functionality: udev, udisks, upower, colord, geoclue, and polkit, to name a few.  Being able to _compose_ all these system services was one of the driving use cases behind [https://savannah.gnu.org/forum/forum.php?forum_id=8412 the design of GuixSD’s new service composition framework].  With this design, we knew we were able to have fine control over the [https://www.gnu.org/software/guix/manual/html_node/Service-Composition.html service composition graph].  Challenge #1 overcome!
+
+Since GuixSD uses the [https://www.gnu.org/software/shepherd/ GNU Shepherd] and not systemd as its init system, we needed a way to provide the [https://freedesktop.org/wiki/Software/systemd/logind/ “logind”] functionality that systemd implements, and which allows GNOME to know about [https://www.freedesktop.org/wiki/Software/systemd/multiseat/ users, sessions, and seats].
+
+So Andy Wingo courageously started by [https://lists.gnu.org/archive/html/guix-devel/2015-04/msg00352.html extracting] logind from systemd, leading to [https://github.com/wingo/elogind “elogind”].  At this point, we had this daemon that could keep track of logged-in users and active sessions, and which GNOME could talk to over D-Bus… provided all the relevant [http://www.linux-pam.org/ PAM services] would use the pam_elogind module so that elogind knows when a user logs in and out, as Andy [https://lists.gnu.org/archive/html/guix-devel/2015-08/msg00439.html nicely explained it].
+
+This pam_elogind thing is a typical example of a cross-cutting concern: _if_ you use elogind, _then_ you want all the relevant login-related PAM services (mingetty, the X login manager, commands such as su, the SSH daemon, etc.) to use pam_elogind.  To achieve that, we [http://git.savannah.gnu.org/cgit/guix.git/commit/?id=12c00bca92e3eef2b86565924bbefc39397b5497 updated] our PAM service such that it could be [https://lists.gnu.org/archive/html/guix-devel/2016-02/msg00163.html extended] with such [http://git.savannah.gnu.org/cgit/guix.git/commit/?id=e7ad0d586251383a4c8b00222e8dec61d491f03b cross-cutting modules].  At last, we had proper logind support! 
+
+At this point, the brave could start using GNOME on GuixSD but would soon realize that, for example, the “power off” button wouldn’t have the desired effect, or that changing a laptop’s backlight wouldn’t work because [https://www.freedesktop.org/wiki/Software/polkit/ polkit], the daemon that allows unprivileged users to perform privileged operations like that one, was [https://lists.gnu.org/archive/html/guix-devel/2016-02/msg01000.html missing essential policy files].
+
+You would think you can finally change the brightness of your screen, but no!  Turns out that polkit would [https://lists.gnu.org/archive/html/guix-devel/2016-02/msg01170.html refuse to run gnome-setting-daemon’s backlight helper program] because [https://lists.gnu.org/archive/html/guix-devel/2016-03/msg00247.html elogind happened to fail to map PIDs to sessions].  Whatever.
+
+Of course there were still a bunch of embarrassing glitches such as [http://debbugs.gnu.org/cgi/bugreport.cgi?bug=22666 GNOME suspending right after it wakes up from suspend], failure to start in QEMU, or [https://lists.gnu.org/archive/html/guix-devel/2016-03/msg00690.html the lack of GNOME’s favorite font].  Well, it seems that all these are gone now!
+
+GuixSD users can now enable GNOME by adding [https://lists.gnu.org/archive/html/guix-devel/2016-03/msg00639.html one line] in their [https://www.gnu.org/software/guix/manual/html_node/Using-the-Configuration-System.html operating system configuration].  Overall, this has been a nice experience involving a variety of areas.
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a functional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
