@@ -1,0 +1,18 @@
+GNU Guix welcomes four students for GSoC
+
+We are glad to announce that four students will join GNU Guix for the 2016 Google Summer of Code (GSoC):
+
+* Efraim will hack a [https://libreplanet.org/wiki/Group:Guix/GSoC-2016#Write_a_Bourne-shell_compiler_front-end_for_Guile Bourne-shell compiler front-end for Guile].  While this may sound a bit crazy (and rather fun :-)), the motivation behind this is to help reduce [https://www.gnu.org/software/guix/manual/html_node/Bootstrapping.html the set of binaries GNU Guix relies on for bootstrapping].
+* Jelle will work on an npm [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-import.html importer] and [https://www.gnu.org/software/guix/manual/html_node/Build-Systems.html build system] for [https://libreplanet.org/wiki/Group:Guix/GSoC-2016#NPM_package_importer_and_builder npm].  This will allow users to deploy JavaScript programming environments [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-environment.html in a controlled fashion], integrated with the rest of the system.
+* Manolis, who contributed a GNU/Hurd port of Guix [https://savannah.gnu.org/forum/forum.php?forum_id=8318 last year], will work on [https://libreplanet.org/wiki/Group:Guix/GSoC-2016#Port_GuixSD_to_GNU.2FHurd porting GuixSD to GNU/Hurd].
+* Mathieu [https://libreplanet.org/wiki/Group:Guix/GSoC-2016#Rewrite_Hydra_to_be_more_integrated_with_Guix will write] a continuous integration tool à la [https://nixos.org/hydra/ Hydra].  This will improve integration with Guix and will power continuous builds of our packages.
+
+All four projects sound exciting to us and we are happy to see progress on these fronts.  Happy hacking!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a transactional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
