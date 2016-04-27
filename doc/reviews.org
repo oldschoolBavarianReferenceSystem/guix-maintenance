@@ -251,3 +251,23 @@ https://people.debian.org/~lunar/blog/posts/reproducible_builds_stretch_week_42/
 http://wiki.dlang.org/Installing_LDC_on_GNU_Guix
 http://www.themindiseverything.eu/2016_02_01_archive.html
 http://without-systemd.org/wiki/index.php/Init
+
+* March 2016
+
+http://linux.slashdot.org/story/16/03/03/0435200/guix-gets-grafts-timely-delivery-of-security-updates
+https://www.reddit.com/r/gnu/comments/48nze8/gnu_guix_timely_delivery_of_security_updates/
+https://www.reddit.com/r/linux/comments/4bmjzn/gnome_in_guixsd/
+https://www.reddit.com/r/linux/comments/4cfdqn/gnu_guix_guixsd_0100_released/
+http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.10.0
+http://www.getgnu.org/gnulinux/guix-system-distribution-0-10-0-duyuruldu.html
+http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..19545.100
+http://lwn.net/Articles/681662/
+https://www.fsf.org/free-software-supporter/2016/april
+
+* April 2016
+
+http://www.linuxplanet.com/news/linux-top-3-guix-nixos-and-bodhi-linux-update.html
+https://news.ycombinator.com/item?id=11409674
+http://www.lffl.org/2016/03/guixsd-0-10-0-beta-software-gnome.html
+http://www.linux.org.ru/news/gnu/12495296
+https://www.phoronix.com/scan.php?page=news_item&px=GSoC-2016-Projects
