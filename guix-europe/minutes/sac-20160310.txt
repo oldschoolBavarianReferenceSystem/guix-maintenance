@@ -1,0 +1,11 @@
+Minutes of the Solidary Administrative Council meeting of 2016-03-10
+
+
+Present: Ludovic Courtès, Andreas Enge, Mathieu Lirzin, Cyril Roelandt
+
+
+1) Membership requests
+
+The membership requests by Jan Nieuwenhuizen and Pjotr Prins are accepted
+unanimously.
+

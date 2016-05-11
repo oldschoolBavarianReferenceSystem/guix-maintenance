@@ -1,0 +1,11 @@
+Minutes of the Solidary Administrative Council meeting of 2016-04-17
+
+
+Present: Ludovic Courtès, Andreas Enge, Mathieu Lirzin
+
+
+1) Membership requests
+
+The membership requests by Oliver Propst and Emmanouil Ragkousis are accepted
+unanimously.
+
