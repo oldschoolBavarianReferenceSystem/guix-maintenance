@@ -1,0 +1,13 @@
+Minutes of the Solidary Administrative Council meeting of 2016-06-02
+
+
+Present: Ludovic Courtès, Andreas Enge, Mathieu Lirzin;
+by electronic vote: Cyril Roelandt
+
+
+1) Server replacing Hydra
+
+The offer by Vikings for a machine to replace the current build server,
+based on the ASUS KGPE-D16 mainboard with Libreboot preinstalled,
+is accepted unanimously.
+
