@@ -1,0 +1,27 @@
+2016-02-11 * Transfer of redhill
+   Assets:Stock:Redhill            €1
+   Equity
+2016-02-11 * Membership fee
+   Assets:Bank                     €40
+   Income:Membership
+
+2016-03-07 * Publication Journal Officiel
+   Assets:Bank                     €-44
+   Expenses:Legal
+
+2016-03-17 * Membership fee
+   Assets:Bank                     €10
+   Income:Membership
+
+2016-03-21 * Membership fee
+   Assets:Bank                     €10
+   Income:Membership
+
+2016-03-30 * Membership fee
+   Assets:Bank                     €10
+   Income:Membership
+
+2016-05-11 * Membership fee
+   Assets:Bank                     €10
+   Income:Membership
+
