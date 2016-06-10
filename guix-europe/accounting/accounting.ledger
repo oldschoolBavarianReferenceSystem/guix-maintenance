@@ -25,3 +25,11 @@
    Assets:Bank                     €10
    Income:Membership
 
+2016-06-06 * Donation
+   Assets:Bank                     €5000
+   Income:Donations
+
+2016-06-10 * Hydra
+   Expenses:Purchases              €2142
+   Assets:Bank
+
