@@ -271,3 +271,11 @@ https://news.ycombinator.com/item?id=11409674
 http://www.lffl.org/2016/03/guixsd-0-10-0-beta-software-gnome.html
 http://www.linux.org.ru/news/gnu/12495296
 https://www.phoronix.com/scan.php?page=news_item&px=GSoC-2016-Projects
+https://github.com/LLNL/spack/wiki/Telcon:-2016-03-17
+
+* May 2016
+
+http://bioinformatics.oxfordjournals.org/content/early/2016/05/01/bioinformatics.btw241.abstract
+https://github.com/travis-ci/travis-ci/issues/5886
+https://news.ycombinator.com/item?id=11698369
+https://boutique.ed-diamond.com/gnulinux-magazine/941-gnulinux-magazine-194.html
