@@ -1,0 +1,114 @@
+TITLE: GuixSD system tests
+
+From its inception, Guix has had a thorough test suite—something that’s not only reassuring, but also the thing that allows for fearless evolution of the code.  That we didn’t have this safety net when hacking on the whole operating system, GuixSD, made it uncomfortable and more risky.  We are now addressing the problem with the introduction of _system tests_, closing one of the major roadblocks towards 1.0.
+
+Before going into details, let me recap the sorts of testing that already occurred in Guix land.
+
+== Unit tests ==
+
+Guix’s [http://git.savannah.gnu.org/cgit/guix.git/tree/tests test suite] currently contains almost 600 _unit tests_.  Each one of these stresses one particular function or subset of the functionality of Guix.  This covers core package management functionality such as package builds, utility modules such as monads or the public key infrastructure (PKI) used for authenticating binaries, maintenance tools such as [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-lint.html lint] and the [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-import.html importers], as well as the command-line interface.
+
+Since Guix provides Scheme modules for use [https://www.gnu.org/software/guix/manual/html_node/G_002dExpressions.html both in the package management front-end and on the “build side”], the latter is also tested.  This includes part of the [https://www.gnu.org/software/guix/manual/html_node/Build-Systems.html build systems], and helpers like our [http://git.savannah.gnu.org/cgit/guix.git/tree/guix/build/gremlin.scm#n264 ELF validation module].
+
+== Package tests ==
+
+Then come the software packages that Guix ships.  All of the packages in the distro are under [https://hydra.gnu.org/jobset/gnu/master continuous integration] on the 4 supported architectures (32-bit and 64-bit Intel compatible, as well as MIPS64 and ARMv7.)  Our build farm serves the resulting binaries, which users can choose to download as [https://www.gnu.org/software/guix/manual/html_node/Substitutes.html substitutes for local builds].  Our build server, which currently runs an instance of [https://nixos.org/hydra/ Hydra], always shows the number of succeeding/failing builds on its dashboard.  That way, breakage introduced by changes in the package collection is always rapidly detected.  This is a direct benefit of the [https://www.gnu.org/software/guix/manual/html_node/Introduction.html functional packaging model].
+
+Additionally, our policy is to always run each package’s test suite (typically “make check”) as part of its build process, unless there is a serious technical obstacle to doing that.  That way, we can, and do catch integration issues, incompatibilities, and plain bugs before they hit users.
+
+== System tests ==
+
+So far, so good.  Now, what about GuixSD itself?  GuixSD did not have an automated test suite until now.  What it did have, though, is the ability to instantiate an operating system in a virtual machine (VM) or in a container.  You would write your [https://www.gnu.org/software/guix/manual/html_node/Using-the-Configuration-System.html operating system declaration] in a file, then run, say:
+
++verbatim+
+guix system vm my-config.scm
+-verbatim-
+
+This [https://www.gnu.org/software/guix/manual/html_node/Invoking-guix-system.html#Invoking-guix-system gives you a script to launch a VM] running an instance of the OS declared in ‘my-config.scm’.  Already pretty convenient!  And indeed, even more so back in the days when we were eating a fair amount of dog food.  In fact, that’s how we ate our [https://savannah.gnu.org/forum/forum.php?forum_id=7506 first] [https://savannah.gnu.org/forum/forum.php?forum_id=7737 dog food dishes], and the VM infrastructure was the fork and knife that made it more tolerable.
+
+So what could we test exactly?  Roughly, we want to test that the instantiated system behaves according to the source ‘operating-system’ declaration: that user accounts are all there, that system services are running as expected, that all of the configuration is taken into account.
+
+To do that, we need to run the system under test in a VM, but we also need to instrument it.  We use [http://qemu.org QEMU] to run our VMs, and QEMU along with the Linux virtio-serial module nicely supports communication between the guest operating system and the host, a strategy also used by [https://github.com/NixOS/nixpkgs/blob/master/nixos/lib/test-driver/Machine.pm NixOS’ test driver].  Concretely, we define a [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/build/marionette.scm “marionette”] [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/tests.scm#n129 service], which hooks a Guile [https://www.gnu.org/software/guile/manual/html_node/The-REPL.html read-eval-print loop] (REPL) inside the guest.  This allows the host to evaluate arbitrary code in the guest VM.
+
+Now we can write build processes ([https://www.gnu.org/software/guix/manual/html_node/Derivations.html aka. “derivations”]) that will:
+
+0 instantiate an instrumented variant of the operating system configuration we want to test in a VM image;
+0 spawn the VM, run a series of tests on the guest OS, and return the test results.
+
+Thus, a system test to make sure the [https://www.gnu.org/software/guile/manual/html_node/System-Identification.html#index-scm_005funame ‘uname’] system call returns something that matches the OS declaration looks like this:
+
++verbatim+
+(define (run-test)
+  (define os
+    ;; The declaration of the OS we want to instantiate and test.
+    ;; Calling 'marionette-operating-system' instruments it.
+    (marionette-operating-system
+     (operating-system
+       (host-name "komputilo")
+       (timezone "Europe/Berlin")
+       (locale "en_US.UTF-8")
+
+       (bootloader (grub-configuration (device "/dev/sdX")))
+       (file-systems %base-file-systems))))
+
+  ;; Compute the script to run OS in a VM.
+  (mlet %store-monad ((run (system-qemu-image/shared-store-script
+                            os #:graphic? #f)))
+    (define test
+      ;; The actual test.  Here “#~” is like “quote”, allowing us
+      ;; to describe code to run in the build environment; it’s a
+      ;; “g-expression.”
+      #~(begin
+          (use-modules (gnu build marionette)
+                       (srfi srfi-64)
+                       (ice-9 match))
+
+          (define marionette
+	    ;; Spawn the VM that runs the declared OS.
+            (make-marionette (list #$run)))
+
+          (mkdir #$output)
+          (chdir #$output)
+
+          (test-begin "basic")
+
+          (test-assert "uname"
+	    ;; Call the ‘uname’ Scheme function in the guest.
+	    ;; In the host, make sure its result (a vector) matches
+	    ;; our OS declaration above.
+            (match (marionette-eval '(uname) marionette)
+              (#("Linux" host-name version _ architecture)
+               (and (string=? host-name
+                              #$(operating-system-host-name os))
+                    (string-prefix? #$(package-version
+                                       (operating-system-kernel os))
+                                    version)
+                    (string-prefix? architecture %host-type)))))
+
+          (test-end)
+          (exit (= (test-runner-fail-count (test-runner-current)) 0))))
+
+    ;; Turn the test into a buildable “derivation”.
+    (gexp->derivation "simple-test" test
+                      #:modules '((gnu build marionette)))))
+-verbatim-
+
+There are interesting things going on here.  First, while this is all Scheme code, there are in fact three tiers or strata of code at play here: the code that produces the OS declaration and the derivation, the build code of that derivation—the test—embodied in a [https://www.gnu.org/software/guix/manual/html_node/G_002dExpressions.html g-expression], and code sent from the host to the guest VM via ‘marionette-eval’.
+
+Using Scheme all the way means we can share code, use the right tools such as the [http://srfi.schemers.org/srfi-64/srfi-64.html SRFI-64 test framework] here, pass values from one tier to another, and so on.  And of course, being a full-blown language rather than shell scripts or similar means we have a rich and semantically-clear interface at our fingertips: we can directly access the data structures that matter rather than grepping the output of high-level commands.  As an example, we can directly query the [https://www.gnu.org/software/guix/manual/html_node/Shepherd-Services.html system service manager] right [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/services/herd.scm from Scheme], which is often useful in system tests.
+
+== Status ==
+
+Guix now includes the test infrastructure described above; running “make check-system” runs all the currently defined tests.  Currently we have [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/tests/base.scm tests for basic functionality].  This includes making sure that all the system services declared are available and running.  We have tests for specific system services such as the [https://www.gnu.org/software/mcron/ mcron] job scheduling daemon—inspired by your parents’ cron, but with a powerful Scheme interface—and [http://avahi.org/ Avahi] and its [https://www.gnu.org/software/guix/manual/html_node/Name-Service-Switch.html name service switch] (NSS) integration.
+
+Last but not least, we have [http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/tests/install.scm tests] of the full [https://www.gnu.org/software/guix/manual/html_node/System-Installation.html GuixSD installation procedure], which turned out to be [https://lists.gnu.org/archive/html/guix-devel/2016-06/msg00815.html more involved] than the other tests.  This works by running the GuixSD installation image in a VM, using another VM image as the target installation media, and finally booting the newly-installed system.
+
+All the tests are automatically run on our build farm (see [https://hydra.gnu.org/job/gnu/master/test.basic.x86_64-linux here], [https://hydra.gnu.org/job/gnu/master/test.installed-os.x86_64-linux here], or [https://hydra.gnu.org/job/gnu/master/test.mcron.i686-linux there]), which provides quick feedback.  One step closer to 1.0!
+
+== About GNU Guix ==
+
+[http://www.gnu.org/software/guix GNU Guix] is a transactional package manager for the GNU system.  The Guix System Distribution or GuixSD is an advanced distribution of the GNU system that relies on GNU Guix and [http://www.gnu.org/distros/free-system-distribution-guidelines.html respects the user's freedom].
+
+In addition to standard package management features, Guix supports transactional upgrades and roll-backs, unprivileged package management, per-user profiles, and garbage collection.  Guix uses low-level mechanisms from the Nix package manager, except that packages are defined as native [http://www.gnu.org/software/guile Guile] modules, using extensions to the [http://schemers.org Scheme] language.  GuixSD offers a declarative approach to operating system configuration management, and is highly customizable and hackable.
+
+GuixSD can be used on an i686 or x86_64 machine.  It is also possible to use Guix on top of an already installed GNU/Linux system, including on mips64el and armv7.
