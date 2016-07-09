@@ -1,6 +1,7 @@
 2016-02-11 * Transfer of redhill
    Assets:Stock:Redhill            €1
    Equity
+
 2016-02-11 * Membership fee
    Assets:Bank                     €40
    Income:Membership
@@ -30,6 +31,16 @@
    Income:Donations
 
 2016-06-10 * Hydra
-   Expenses:Purchases              €2142
-   Assets:Bank
+   Assets:Bank                     €-2142
+   Expenses:Purchases
+2016-06-23 * Hydra
+   Assets:Stock:Hydra              €1
+   Equity
+
+2016-07-09 * External hard disk for Redhill
+   Assets:Bank                     €-55.90
+   Expenses:Purchases
+2016-07-09 * External hard disk for Redhill
+   Assets:Stock:Redhill            €1
+   Equity
 
