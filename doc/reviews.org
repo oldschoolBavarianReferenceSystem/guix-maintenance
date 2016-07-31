@@ -279,3 +279,10 @@ http://bioinformatics.oxfordjournals.org/content/early/2016/05/01/bioinformatics
 https://github.com/travis-ci/travis-ci/issues/5886
 https://news.ycombinator.com/item?id=11698369
 https://boutique.ed-diamond.com/gnulinux-magazine/941-gnulinux-magazine-194.html
+
+* July 2016
+
+https://boutique.ed-diamond.com/home/1059-gnulinux-magazine-195.html
+http://www.ocsmag.com/2016/07/05/guix-the-non-aligned-universal-package-manager/
+http://www.linux-magazine.com/Online/Blogs/Off-the-Beat-Bruce-Byfield-s-Blog/How-graphical-installers-introduced-the-user
+http://www.datamation.com/open-source/best-universal-package-manager-for-linux.html
