@@ -286,3 +286,18 @@ https://boutique.ed-diamond.com/home/1059-gnulinux-magazine-195.html
 http://www.ocsmag.com/2016/07/05/guix-the-non-aligned-universal-package-manager/
 http://www.linux-magazine.com/Online/Blogs/Off-the-Beat-Bruce-Byfield-s-Blog/How-graphical-installers-introduced-the-user
 http://www.datamation.com/open-source/best-universal-package-manager-for-linux.html
+
+* August 2016
+
+http://www.phoronix.com/scan.php?page=news_item&px=GNU-Guix-0.11
+http://www.theregister.co.uk/2016/08/04/gnu_guix_emits_next_beta/
+http://news.softpedia.com/news/guix-system-distribution-0-11-uses-linux-libre-kernel-4-7-supports-raid-devices-506950.shtml
+http://www.getgnu.org/gnulinux/gnu-guix-ve-guixsd-0-11-0-duyuruldu.html
+http://distrowatch.com/?newsid=09502
+http://quebecos.com/?p=5145
+http://www.tuxmachines.org/node/92046
+http://www.linux.org.ru/news/gnu/12785667
+https://www.reddit.com/r/linux/comments/4vysgj/gnu_guix_and_guixsd_0110_released/
+https://www.opennet.ru/opennews/art.shtml?num=44916
+http://portallinuxferramentas.blogspot.fr/2016/08/guix-sistema-de-distribuicao-011-usa.html
+http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.11.0
