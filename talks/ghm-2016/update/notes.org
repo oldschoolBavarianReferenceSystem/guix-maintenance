@@ -1,0 +1,275 @@
+scaling up for the next century!
+
+* context: the rise and fall of distros
+
+** "when i got involved..."
+
+distros like Debian were the pride of free software hackers:
+
+  - unique model for the free software commons
+  - efficient, well-integrated systems, unforeseen before
+  - well-defined distributed social structure (upstream/downstream)
+
+** distros unloved
+
+  - "that thing you run Docker on"
+  - main griefs:
+    + distros are inflexible
+    + distros "lag behind"
+      * or: people no longer feel concerned)
+      * or: developers are selfish
+    + barrier to entry too high
+      * arcane tools
+      * evolution is hard since everything is intermingled
+
+** need for flexibility: virtualenv, Vagrant, Docker, Spack, etc.
+
+** profusion of language package managers (-> xkcd image)
+
+  - good for developers: facilitates distribution of small packages,
+    makes the language environment more useful
+  - good: upstream formalizes the dependency graph
+  - bad for users: makes things messier
+    + example: npm relies on the host system to build C++ extensions
+    + need to use several package managers
+  - bad: a bunch of isolated communities
+
+** Flatpak and Snappy
+
+  - cite FOSDEM 2016 talk by RH employee about "core" vs. non-core
+  - see "runtimes" at http://flatpak.org/apps.html
+
+#+BEGIN_EXAMPLE
+  {
+      "app-id": "com.igalia.Gobby",
+      "branch": "0.4",
+      "runtime": "org.gnome.Platform",
+      "runtime-version": "3.20",
+      "sdk": "org.gnome.Sdk",
+      "separate-locales": false,
+      "command": "gobby",
+      "rename-desktop-file": "gobby.desktop",
+      "rename-icon": "gobby",
+      "desktop-file-name-prefix": "(0.4) ",
+      "finish-args": [
+	  /* X11 + XShm access */
+	  "--share=ipc", "--socket=x11",
+	  /* Home directory */
+	  "--filesystem=home",
+	  /* Network access */
+	  "--share=network"
+      ],
+      "build-options" : {
+	  "cflags": "-O2 -g0",
+	  "cxxflags": "-O2 -g0 --std=c++11",
+	  "env": {
+	      "V": "1"
+	  }
+      },
+      "cleanup": [
+	  "/include",
+	  "/lib/*.a",
+	  "/lib/*.la",
+	  "/lib/*.so",
+	  "/lib/atkmm-1.6",
+	  "/lib/cairomm-1.0",
+	  "/lib/debug",
+	  "/lib/gdkmm-2.4",
+	  "/lib/giomm-2.4",
+	  "/lib/glibmm-2.4",
+	  "/lib/gtkmm-2.4",
+	  "/lib/libxml++-2.6",
+	  "/lib/pangomm-1.4",
+	  "/lib/pkgconfig",
+	  "/lib/sigc++-2.0",
+	  "/share/devhelp",
+	  "/share/doc",
+	  "/share/gtk-doc"
+      ],
+      "modules": [
+	  {
+	      "name": "sigc++",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.8/libsigc++-2.8.0.tar.xz",
+		      "sha256": "774980d027c52947cb9ee4fac6ffe2ca60cc2f753068a89dfd281c83dbff9651"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "glibmm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/glibmm/2.48/glibmm-2.48.1.tar.xz",
+		      "sha256": "dc225f7d2f466479766332483ea78f82dc349d59399d30c00de50e5073157cdf"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "cairomm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/cairomm/1.12/cairomm-1.12.0.tar.xz",
+		      "sha256": "a54ada8394a86182525c0762e6f50db6b9212a2109280d13ec6a0b29bfd1afe6"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "pangomm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/pangomm/2.40/pangomm-2.40.0.tar.xz",
+		      "sha256": "7dd0afa9dcce57cdb0aad77da9ea46823ee8515d5f3ffd895b9ede7365c3d70d"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "atkmm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/atkmm/2.24/atkmm-2.24.2.tar.xz",
+		      "sha256": "ff95385759e2af23828d4056356f25376cfabc41e690ac1df055371537e458bd"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "gtkmm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/gtkmm/2.24/gtkmm-2.24.4.tar.xz",
+		      "sha256": "443a2ff3fcb42a915609f1779000390c640a6d7fd19ad8816e6161053696f5ee"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "xmlmm",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/libxml++/2.40/libxml++-2.40.1.tar.xz",
+		      "sha256": "4ad4abdd3258874f61c2e2a41d08e9930677976d303653cd1670d3e9f35463e9"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "gtksourceview",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://ftp.gnome.org/pub/GNOME/sources/gtksourceview/2.10/gtksourceview-2.10.5.tar.bz2",
+		      "sha256": "c585773743b1df8a04b1be7f7d90eecdf22681490d6810be54c81a7ae152191e"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "net6",
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://releases.0x539.de/net6/net6-1.3.14.tar.gz",
+		      "sha256": "155dd82cbe1f8354205c79ab2bb54af4957047422250482596a34b0e0cc61e21"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "obby",
+	      "config-opts": [
+		  "--enable-ipv6"
+	      ],
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://releases.0x539.de/obby/obby-0.4.8.tar.gz",
+		      "sha256": "7d1d7ba6e800cea1b1a3c47d1189f959ef49a647ebe77170351e2dfd27b89b67"
+		  }
+	      ]
+	  },
+
+	  {
+	      "name": "gobby",
+	      "post-install": [
+		  "sed -e s/^_// contrib/gobby.desktop.in > contrib/gobby.desktop",
+		  "install -dm755 /app/share/applications",
+		  "install -m644 contrib/gobby.desktop /app/share/applications"
+	      ],
+	      "sources": [
+		  {
+		      "type": "archive",
+		      "url": "http://releases.0x539.de/gobby/gobby-0.4.13.tar.gz",
+		      "sha256": "8cbd89ffbe3e056160a8d76e11d641f3b045793e35897546f98d2de368001871"
+		  }
+	      ]
+	  }
+      ]
+  }
+#+END_EXAMPLE
+
+*** quote from Adam Williamson (Red Hat, Fedora)
+
+"You may have read some stuff this week about an application delivery
+mechanism called Snappy and how it’s going to unite all distributions
+and kill apt and rpm!
+
+This is, to put it diplomatically, a heaping pile of steaming
+bullshit. You may not be surprised to learn that said pile has been
+served by the Canonical press department."
+
+"There is in fact another system with very similar goals, which is now
+called Flatpak [...] Canonical’s press
+release, of course, doesn’t even acknowledge Flatpak’s existence…"
+
+https://www.happyassassin.net/2016/06/16/on-snappy-and-flatpak-business-as-usual-in-the-canonical-propaganda-department/
+
+** fundamental problems
+
+*** losing "big picture" work, integration work
+
+*** not composable
+
+*** where's the Corresponding Source?
+
+*** "app" model/free software mismatch
+
+* what we have
+
+** package manager
+
+** development environment
+
+** GuixSD
+
+*** VM, container, metal
+*** services
+
+* scaling up
+
+** packages: guix import, guix refresh
+
+** builds: hardware donations, funding campaign, Igalia
+
+*** new machine: picture, Libreboot
+
+** contributions: guix lint, documented processes
+
+  - reviews
+  - tools? (Patchwork, etc.)
+
+** maintainership, responsibilities
+
+  - distributed sysadmin
+  - talks
