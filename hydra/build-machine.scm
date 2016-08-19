@@ -10,17 +10,16 @@
   ;; The fine folks!
   (list (sysadmin (name "ludo")
                   (full-name "Ludovic Courtès")
-                  (lsh-public-key
-                   (local-file "/home/ludo/.lsh/identity.pub")))
+                  (lsh-public-key (local-file "keys/lsh/ludo.pub")))
         (sysadmin (name "hydra")                  ;fake sysadmin
                   (full-name "Hydra User")
                   (restricted? #t)
                   (lsh-public-key
-                   (local-file "/home/ludo/.lsh/identity.pub")))))
+                   (local-file "keys/lsh/hydra.gnu.org.pub")))))
 
 (define %authorized-guix-keys
   ;; List of authorized 'guix archive' keys.
-  (list (local-file "/etc/guix/signing-key.pub")))
+  (list (local-file "keys/guix/hydra.gnu.org-export.pub")))
 
 ;; The actual machine.
 (build-machine-os "chapters" %sysadmins
