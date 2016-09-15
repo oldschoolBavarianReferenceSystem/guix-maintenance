@@ -1,0 +1,175 @@
+#+TITLE: GNU Guix or the Search for a New Scheme Machine
+#+TITLE: GNU Guix or Putting Your GNU/Linux Distro Within Reach of the REPL
+#+TITLE: GNU Guix: The Functional GNU/Linux Distro That’s a Scheme Library
+
+* abstract
+
+GNU Guix is a functional package manager: it views package build
+processes as pure functions, and the graph of build products as an
+immutable, persistent data structure.  The Guix System Distribution
+(GuixSD) uses the concepts of Guix to build a complete bootable
+GNU/Linux distribution instantiated from a pure operating system
+declaration.  But Guix and GuixSD are also Scheme libraries that expose
+all their data structures and code, letting users fiddle with their
+distro and operating system configuration and services to their heart’s
+content.
+
+In this talk I will give an overview of Guix and GuixSD and their Guile
+Scheme interfaces and implementation: from the embedded domain-specific
+languages (EDSLs) they devise, to the compilation pipeline from package
+declarations to low-level “derivations”, to the instantiation of
+GNU/Linux from high-level operating system declarations.  Since Guix is
+designed by piling Scheme on top of Scheme, I will discuss staging and
+in particular “g-expressions”, and compare it to related work.  I will
+conclude on open design questions and future work.
+
+
+* functional package management
+
+** free software: "pragmatic", incremental
+
+** concept, paradigm
+
+  - package graph = persistent data structure
+  - "pointer discipline"
+
+** concrete advantages
+
+  - referential transparency
+  - transactions
+  - garbage collection
+  - controlled environments
+
+* Scheme integration
+
+** declarative objects (records, sort-of EDSL)
+
+  - define-record-type*
+    + default values
+    + let bindings
+    + thunked fields
+
+** compilation tower
+
+  - diagram with package/origin/derivation
+
+** two tiers: build and host
+
+  - diagram with build daemon and client code
+
+** service management, mcron, etc.
+
+  - diagram with PID 1, initrd, etc.
+  - again two tiers
+
+* staging
+
+** initial attempt: %build-inputs, labels, etc.
+
+** gexps
+
+  - how we came here
+  - usage
+    + with-imported-modules & source-module-closure
+    + compilers & expanders
+  - implementation
+
+** related work
+
+  - [[docview:~/doc/scheme/dybvig-syntax-case.pdf::3][syntax-case (Dybvig, 1992)]]
+    + focuses on hygiene
+    + syntax object can refer to pattern variables that are in its
+      lexical scope
+  - [[http://okmij.org/ftp/meta-programming/#meta-scheme][meta-scheme (Kiselyov, 2008)]]
+    + 'bracket' (like quasiquote), and 'escape' (like unquote)
+    + alpha-renaming, unique identifiers
+      * but only handles bindings introduced by 'let' and 'lambda', not
+        the whole shebang
+    + handling of free identifiers and "cross-stage persistence" (CSP)
+    + does not mention free identifiers, modules in scope
+  - [[docview:~/doc/scheme/serrano-hop-multi-tier-semantics-2010.pdf::4][Hop (multi-tier semantics, 2010)]]
+    + target language is JS, not Hop
+    + special-purpose forms ('define-service')
+    + client/server interaction ('with-hop')
+    + '~' and '$' are built in the compiler
+  - [[docview:~/doc/nix/nixos-icfp2008-submitted.pdf::5][Nix language (ICFP, 2008)]]
+    + string interpolation
+    + bash, etc.
+
+** a pattern: monadic procedure vs. declarative object
+
+  - gexp->file vs. plain-file, etc.
+
+** 'gexp->file'
+
+** shepherd, system tests
+
+* services and monads (?)
+
+** initial attempt
+
+  - flat list of monadic values
+
+** current design
+
+  - list of values, extension relationship
+
+* fears
+
+** scalability
+
+*** language as a database
+
+*** CPU time to evaluate all the package jobs
+
+*** efficient monads
+
+** staging
+
+*** modules? (should gexps embed the set of imported modules? visible modules?)
+
+  - with-imported-modules
+  - compare with Hop top-level ~(import ...) forms
+    + in Hop's case, no difference between imported and used
+    + Hop doesn't have first-class ~ expressions
+
+*** hygiene? (gexp composition, see Oleg's meta-scheme)
+
+  - currently no alpha conversion (renaming)
+
+*** record serialization?
+
+  - Hop can serialize/deserialize arbitrary objects
+    + problem: can forge records
+    + design issue: magic compiler built-in
+    + design issue: no protocol versioning
+  - [[file:~/src/guix/guix/profiles.scm::(define%20search-paths][example of manual serialization/deserialization of search paths]]
+  - more generally: [[http://okmij.org/ftp/meta-programming/#meta-scheme]['lift' operator in MetaScheme]], for "cross-stage
+    persistence" (CSP)
+
+#+BEGIN_SRC scheme
+              (define search-paths
+                ;; Search paths of MANIFEST's packages, converted back to their
+                ;; record form.
+                (map sexp->search-path-specification
+                     (delete-duplicates
+                      '#$(map search-path-specification->sexp
+                              (append-map manifest-entry-search-paths
+                                          (manifest-entries manifest))))))
+#+END_SRC
+
+*** debugging info?
+
+  - Hop
+    + maintains a mapping between generated JS code and the source (~)
+    + is able to show client/server backtraces intermingled
+
+*** relation between declarative (computed-file), monadic (gexp->file), and direct style
+
+*** formalized relation between OS and service graph
+
+
+* random notes
+
+shell escapes:
+https://github.com/NixOS/nixpkgs/commit/df475092e92b9dab9642c48f2216d49027a457a1

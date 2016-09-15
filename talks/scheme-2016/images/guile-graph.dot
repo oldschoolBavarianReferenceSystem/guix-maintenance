@@ -1,0 +1,46 @@
+digraph "Guix package" {
+  "55374208" [label = "guile-2.0.11", shape = box, fontname = Helvetica];
+  "55374208" -> "32452352" [color = dimgrey];
+  "55374208" -> "41446208" [color = dimgrey];
+  "55374208" -> "37571584" [color = dimgrey];
+  "55374208" -> "60265792" [color = dimgrey];
+  "55374208" -> "43047552" [color = dimgrey];
+  "55374208" -> "60381824" [color = dimgrey];
+  "55374208" -> "43048320" [color = dimgrey];
+  "55374208" -> "41444480" [color = dimgrey];
+  "32452352" [label = "pkg-config-0.29", shape = box, fontname = Helvetica];
+  "41446208" [label = "libffi-3.2.1", shape = box, fontname = Helvetica];
+  "37571584" [label = "readline-6.3", shape = box, fontname = Helvetica];
+  "37571584" -> "37572160" [color = darkseagreen];
+  "37572160" [label = "ncurses-6.0", shape = box, fontname = Helvetica];
+  "60265792" [label = "bash-4.3.42", shape = box, fontname = Helvetica];
+  "60265792" -> "37570624" [color = magenta];
+  "60265792" -> "37571584" [color = magenta];
+  "60265792" -> "37572160" [color = magenta];
+  "37570624" [label = "bison-3.0.4", shape = box, fontname = Helvetica];
+  "37570624" -> "29906048" [color = dimgrey];
+  "37570624" -> "37572352" [color = dimgrey];
+  "37570624" -> "37570816" [color = dimgrey];
+  "37570624" -> "37572352" [color = dimgrey];
+  "29906048" [label = "perl-5.22.1", shape = box, fontname = Helvetica];
+  "37572352" [label = "m4-1.4.17", shape = box, fontname = Helvetica];
+  "37570816" [label = "flex-2.6.0", shape = box, fontname = Helvetica];
+  "37570816" -> "37572352" [color = magenta];
+  "37570816" -> "74272960" [color = magenta];
+  "37570816" -> "37571008" [color = magenta];
+  "37570816" -> "37572352" [color = magenta];
+  "74272960" [label = "bison-2.7.1", shape = box, fontname = Helvetica];
+  "74272960" -> "29906048" [color = magenta];
+  "74272960" -> "37572352" [color = magenta];
+  "74272960" -> "37572352" [color = magenta];
+  "37571008" [label = "indent-2.2.10", shape = box, fontname = Helvetica];
+  "43047552" [label = "libunistring-0.9.6", shape = box, fontname = Helvetica];
+  "60381824" [label = "libltdl-2.4.6", shape = box, fontname = Helvetica];
+  "43048320" [label = "libgc-7.4.2", shape = box, fontname = Helvetica];
+  "43048320" -> "32452352" [color = darkviolet];
+  "43048320" -> "43048512" [color = darkviolet];
+  "43048512" [label = "libatomic-ops-7.4.2", shape = box, fontname = Helvetica];
+  "41444480" [label = "gmp-6.1.0", shape = box, fontname = Helvetica];
+  "41444480" -> "37572352" [color = blue];
+
+}
