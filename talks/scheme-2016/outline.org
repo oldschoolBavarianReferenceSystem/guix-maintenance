@@ -24,6 +24,12 @@ in particular “g-expressions”, and compare it to related work.  I will
 conclude on open design questions and future work.
 
 
+* Guix project
+
+** free software roots, GNU project
+
+** ~40 contributors per month
+
 * functional package management
 
 ** free software: "pragmatic", incremental

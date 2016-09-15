@@ -185,102 +185,6 @@
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
-\begin{frame}[fragile]
-
-  \begin{semiverbatim}
-\$ guix build chibi-scheme
-\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sc09h4\textrm{...}}};}-chibi-scheme-0.7.3}
-
-\uncover<3->{\$ \alert<3>{guix gc --references /gnu/store/\textrm{...}-chibi-scheme-0.7.3}
-/gnu/store/\textrm{...}-gcc-4.9.3-lib
-/gnu/store/\textrm{...}-glibc-2.23
-/gnu/store/\textrm{...}-chibi-scheme-0.7.3}
-
-\uncover<4->{\$ \alert<4>{guix gc}}
-  \end{semiverbatim}
-
-  \begin{textblock}{7}(4, 10)
-    \only<2>{\tikz{\node(labelnixhash)[fill=white, text=black]{hash of
-          \emph{all} the dependencies};}}
-  \end{textblock}
-
-  % Arrows
-  \only<2>{
-    \begin{tikzpicture}[overlay]
-      \path[->](labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
-    \end{tikzpicture}
-  }
-\end{frame}
-
-\setbeamercolor{normal text}{bg=guixblue2}
-\begin{frame}
-  \Huge{\textbf{Scheme integration.}}
-\end{frame}
-\setbeamercolor{normal text}{fg=white,bg=black}
-
-\begin{frame}[fragile]
-  \begin{semiverbatim}
-    \small{
-(define hello
-  (\alert{package}
-    (name "hello")
-    (version "2.8")
-    (source (\alert{origin}
-              (method url-fetch)
-              (uri (string-append
-                    "http://ftp.gnu.org/\textrm{...}/hello-" version
-                    ".tar.gz"))
-              (sha256 (base32 "0wqd\textrm{...}dz6"))))
-    (\alert{build-system} gnu-build-system)
-    (synopsis "An example GNU package")
-    (description "Produce a friendly greeting.")
-    (home-page "https://gnu.org/software/hello/")
-    (license gpl3+)))
-}
-  \end{semiverbatim}
-\end{frame}
-
-\begin{frame}[plain, fragile]
-  \begin{tikzpicture}[hilevel/.style = {
-                        rectangle, text width=25mm, text centered,
-                        rounded corners=2mm, minimum height=15mm,
-                        top color=guixorange1,
-                        bottom color=guixyellow,
-                        text=black
-                      },
-                      buildsys/.style = {
-                        rectangle, text width=25mm, text centered,
-                        rounded corners=2mm, minimum height=15mm,
-                        very thick, dashed, fill=guixdarkgrey,
-                        text=white, text opacity=1, draw=guixred2
-                      },
-                      drv/.style = {
-                        rectangle, text width=25mm, text centered,
-                        rounded corners=2mm, minimum height=15mm,
-                        fill=white, text=black
-                      }]
-    \matrix[row sep=15mm, column sep=1cm] {
-      \node(package)[hilevel] {\textbf{origin}}; &
-      \node(origin)[hilevel] {\textbf{package}}; &
-      &
-      \\
-
-      & \node(bag) [hilevel] {\textbf{bag}}; &
-      \node(buildsys) [buildsys] {\textbf{build system}}; &
-      \\
-
-      & \node(derivation) [drv] { \textbf{derivation} };
-      & &
-      \\
-    };
-
-    % bag/derivation are inverted!  XXX
-    \path[->, very thick, draw=white, sloped] (origin) edge (bag);
-    \path[->, very thick, draw=white] (bag) edge (derivation);
-    \path[->, very thick, draw=white] (package) edge (derivation);
-  \end{tikzpicture}
-\end{frame}
-
 \begin{frame}[fragile]{}
   \begin{tikzpicture}[tools/.style = {
                         text width=35mm, minimum height=4cm,
@@ -336,7 +240,55 @@
   \end{tikzpicture}
 \end{frame}
 
-%% TODO: Add LMI picture with ``Why stop here?''.
+\begin{frame}[fragile]
+
+  \begin{semiverbatim}
+\$ guix build chibi-scheme
+\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sc09h4\textrm{...}}};}-chibi-scheme-0.7.3}
+  \end{semiverbatim}
+
+  \begin{textblock}{7}(4, 10)
+    \only<2>{\tikz{\node(labelnixhash)[fill=white, text=black]{hash of
+          \emph{all} the dependencies};}}
+  \end{textblock}
+
+  % Arrows
+  \only<2>{
+    \begin{tikzpicture}[overlay]
+      \path[->](labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
+    \end{tikzpicture}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+    \small{
+(define hello
+  (\alert{package}
+    (name "hello")
+    (version "2.8")
+    (source (\alert{origin}
+              (method url-fetch)
+              (uri (string-append
+                    "http://ftp.gnu.org/\textrm{...}/hello-" version
+                    ".tar.gz"))
+              (sha256 (base32 "0wqd\textrm{...}dz6"))))
+    (\alert{build-system} gnu-build-system)
+    (synopsis "An example GNU package")
+    (description "Produce a friendly greeting.")
+    (home-page "https://gnu.org/software/hello/")
+    (license gpl3+)))
+
+;; \textsl{Yields: /gnu/store/\textrm{...}-hello-2.8}
+}
+  \end{semiverbatim}
+\end{frame}
+
+\setbeamercolor{normal text}{bg=guixblue2}
+\begin{frame}
+  \Huge{\textbf{Scheme all the way down.}}
+\end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
 \begin{frame}[fragile]
   \begin{semiverbatim}
@@ -485,26 +437,26 @@
   \begin{semiverbatim}
 (define \alert{build-exp}
   ;; \textsl{Build-side code.}
-  '(symlink (assoc-ref \alert{%build-inputs} "coreutils")
-            \alert{%output}))
-
+  '(symlink \only<1>{\textsl{"/gnu/store/123\textrm{...}-coreutils-8.25"}}\only<2->{(assoc-ref \alert{%build-inputs} "coreutils")}
+            \only<1>{\textsl{"/gnu/store/abc\textrm{...}-result"}}\only<2->{\alert{%output}}))
+\uncover<2->{
 ;; \textsl{... with unhygienic global variable:}
 ;; (define %build-inputs
-;;   '(\only<1>{("coreutils" . "/gnu/store/\textrm{...}-coreutils-8.25")}\only<2>{}))
+;;   '(\only<2>{("coreutils" . "/gnu/store/\textrm{...}-coreutils-8.25")}\only<3>{}))
 
-\uncover<1>{(define \alert{inputs}
+\uncover<2>{(define \alert{inputs}
   ;; \textsl{What goes into the chroot.}
   `(("coreutils" ,coreutils)))}
 
 (build-expression->derivation store
                               "symlink-to-coreutils"
                               \alert{build-exp}
-                              \uncover<1>{#:inputs \alert{inputs}})
+                              \uncover<2>{#:inputs \alert{inputs}})}
 \pause
   \end{semiverbatim}
 \end{frame}
 
-\screenshot{images/poor-staging-good-staging}
+%% \screenshot{images/poor-staging-good-staging}
 
 \begin{frame}[fragile]{Take \#2: G-expressions}
   \begin{semiverbatim}
@@ -657,12 +609,14 @@
 \end{frame}
 
 \begin{frame}[fragile]{Limitations}
-  \begin{itemize}
+  \Large{
+    \begin{itemize}
     \item \highlight{hygiene}, oh my!
     \item \highlight{modules} in scope?
     \item \highlight{serialization} of non-primitive data types?
     \item cross-stage \highlight{debugging info} à la Hop?
-  \end{itemize}
+    \end{itemize}
+  }
 \end{frame}
 
 \setbeamercolor{normal text}{bg=guixdarkgrey,fg=guixred3}
@@ -673,7 +627,7 @@
 
 \begin{frame}[fragile]{\texttt{syntax-case}}
   \begin{itemize}
-  \item gexps similar in spirit to syntax objects
+  \item gexps similar in spirit to \highlight{syntax objects}
   \item ... but staging with gexps is not referentially transparent
   \end{itemize}
 
@@ -797,11 +751,12 @@
 \end{frame}
 
 \begin{frame}[fragile]{Lots of other niceties!}
-  \Large{
+  \large{
     \begin{itemize}
     \item \highlight{system service} architecture
     \item ... and services written in Scheme (Shepherd, mcron)
-    \item \highlight{Emacs} integration
+    \item the \highlight{``store monad''}!
+    \item \highlight{Emacs} integration (awesome!)
     \item \highlight{whole-system test suite} (staging!)
     \item \highlight{distributed deployment} with Guile-SSH (staging!)
     \item ...
@@ -833,7 +788,7 @@
 \vfill{
   \vspace{2.5cm}
   \center{\includegraphics[width=0.3\textwidth]{images/GuixSD}}\\[1.0cm]
-  \texttt{ludo@gnu.org}\hfill{\alert{\url{http://gnu.org/software/guix/}}}
+  \texttt{ludo@gnu.org}\hfill{\alert{\url{https://gnu.org/software/guix/}}}
 }
 
 \end{frame}
@@ -843,7 +798,7 @@
   \begin{textblock}{12}(2, 8)
     \tiny{
       Copyright \copyright{} 2010, 2012--2016 Ludovic Courtès \texttt{ludo@gnu.org}.\\[3.0mm]
-      GNU GuixSD logo, CC-BY-SA 4.0, \url{http://gnu.org/s/guix/graphics}
+      GNU GuixSD logo, CC-BY-SA 4.0, \url{https://gnu.org/s/guix/graphics}
 
       Copyright of other images included in this document is held by
       their respective owners.
