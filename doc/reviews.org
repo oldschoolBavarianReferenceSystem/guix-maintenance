@@ -301,3 +301,7 @@ https://www.reddit.com/r/linux/comments/4vysgj/gnu_guix_and_guixsd_0110_released
 https://www.opennet.ru/opennews/art.shtml?num=44916
 http://portallinuxferramentas.blogspot.fr/2016/08/guix-sistema-de-distribuicao-011-usa.html
 http://www.abclinuxu.cz/zpravicky/gnu-guix-a-guixsd-0.11.0
+http://lwn.net/Articles/696890/
+http://container-solutions.com/review-habitat-sh/
+https://github.com/galaxyproject/galaxy/issues/2778
+https://linuxfr.org/users/matutine/journaux/gnu-guix-et-guixsd-v0-11-testable-en-machine-virtuelle-avec-des-images-usb
