@@ -1,0 +1,155 @@
+technical talk: methodology or technique
+
+From Nix to Guix: DSL Embedding as a first step towards a unified
+programming environment
+
+From Nix to Guix: Towards a unified programming environment
+
+Guix: Building a unified multi-tier programming environment
+
+
+Guix: Scheme as a uniform OS admin and deployment interface
+
+GNU Guix is a tool implementing the functional package management
+paradigm pioneered by Nix.  It is rooted in the free software world
+where it has a growing user and contributor community.  Guix and the
+Guix System Distribution (GuixSD) put an emphasis on providing a unified
+Scheme environment to deal with package management, container and
+virtual machine provisioning, operating system deployment,
+configuration, services, and associated activities.
+
+In this talk I will describe the techniques we use to achieve this
+unified interface, with the intent to blur the user/developer
+distinction, and our early experience.  The oft-discussed advantages of
+embedding domain-specific languages (DSLs) have allowed us to develop
+tools and a programming environment that many envy.  Our use of Scheme
+covers domains traditionally associated with C, Perl, or Python: “build
+scripts”, system initialization code, service management, Linux
+containers, and more.  Pervasive use of Scheme leads to a “multi-tier”
+programming environment; I will describe our staging techniques,
+implemented as mere Scheme syntax extensions.
+
+Ludovic Courtès
+
+https://docs.google.com/forms/d/1W6qofiCD4kL6wPoGJstROK4wPVi8DINnyRh4Mhmrhuw/formResponse
+
+
+Biography:
+
+  Ludovic is a Schemer and a free software activist, currently working
+  as a research engineer at Inria.  After contributing to GNU Guile and
+  NixOS, Ludovic continued his independent hacking journey with Guix, a
+  blend of both worlds.  Ludovic likes to investigate how functional
+  programming and Scheme can help empower users by lowering the barrier
+  of entry to programming and operating system hacking.
+
+
+* Guix intro
+
+** myself: NixOS + Guile => Guix
+
+** free software roots, GNU project
+
+** practical user freedom
+
+** ~40 contributors per month
+
+** used by several bioinformatics institutes
+
+** functional package management: basics
+
+*** won't insist on that, i'm preaching to the choir
+
+* The problem.
+
+** "putting an end to domain-specific packagers"
+
+  - cite TensorFlow keynote question
+  - cite Cabal and its [[http://cabal.readthedocs.io/en/latest/nix-local-build-overview.html][Nix-like]], OPAM, ELPA, ...
+  - xkcd
+  - Chef/Puppet example
+    + Puppet: Ruby EDSL, no namespaces, etc. "you need to know Ruby
+      anyway" (in addition to Puppet's EDSL)
+    + "Experimental features: Lambda and iteration" (Puppet)
+    + Ansible is YAML
+    + "Chef gets it right" (integrates with Ruby's looping constructs)
+  - Nix/NixOS: much better!
+
+** the DSL problem
+
+  - Nix
+    + external DSL, hard to work with
+    + limited functionality: strings, lists, etc.
+    + no abstraction (predefined set of data types)
+    + example of gnupdate
+    + *and* inlines Bash code, sometimes Perl, into Nix language
+      * picture of escaleShellArgs
+
+** cite "escaping DSL hell by having parentheses all the way down"
+
+** Scheme: programmable programming language
+
+* GNU/Linux distro as a Scheme library
+
+** thesis: embedding the DSL provides tools: lint, refresh, etc.
+
+*** full-blown language supports abstraction ("package" objects, etc.)
+
+*** EDSL thanks to macros (deep or shallow embedding)
+
+*** expose data structures
+
+*** IDE
+
+** why stop here? ELS diagram Nix/Guix side by side
+
+*** multi-tier
+
+*** example package with 'arguments'
+
+*** example 'gexp' -> possible because language is extensible
+
+* Unification beyond the distro
+
+
+** the problem
+
+  - lots of glueing, no big picture
+    + different languages, approaches, config file syntax
+    + sometimes redundant
+
+** The initrd: 'expression->initrd'
+
+** VMs: 'expression->linux-vm'
+
+** PID 1: example Shepherd service
+
+*** dependency graph of services
+
+*** static checks
+
+** more services: mcron
+
+* Summary
+
+  1. embedding the distro tools has been fruitful
+  2. hackability through uniformity
+  3. powerful staging techniques to glue it all
+
+* Notes
+
+https://skillsmatter.com/skillscasts/5488-escaping-dsl-hell-by-having-parenthesis-all-the-way-down
+"Scheme Crams Hygiene into Every Macro Expansion."  (Kaz Kylheku, c.l.s,
+2016-08-26)
+
+http://ezyang.com/nix-local-build.html (Cabal Nix-style)
+
+(embedded)domain-specific languages and (embedded)domain-specific packagers
+
+Question at ICFP keynote:
+
+  Is there a package manager for neural networks?
+
+"Control your language" (Idris talk, ICFP day 2)
+"Extend your compiler"
+"One language to rule them all", "Share your tools with your users"
