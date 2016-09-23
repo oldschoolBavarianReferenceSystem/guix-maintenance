@@ -59,7 +59,7 @@
 
 \newcommand{\highlight}[1]{\alert{\textbf{#1}}}
 
-\title{Guix: Scheme as a uniform OS admin and deployment interface}
+\title{GNU~Guix: Scheme as a uniform OS admin and deployment interface}
 
 \author{Ludovic Courtès}
 \date{\small{Commercial Users of Functional Programming\\24 September 2016, Nara, Japan}}
@@ -135,13 +135,39 @@
   \end{tikzpicture}
 \end{frame}
 
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+    \small{
+(\alert{operating-system}
+  (host-name "schememachine")
+  (timezone "Japan")
+  (locale "ja_JP.utf8")
+  (bootloader (grub-configuration (device "/dev/sda")))
+  (file-systems (cons (\alert{file-system}
+                        (device "my-root")
+                        (title 'label)
+                        (mount-point "/")
+                        (type "ext4"))
+                      %base-file-systems))
+  (users (cons (\alert{user-account}
+                 (name "alice")
+                 (group "users")
+                 (home-directory "/home/alice"))
+               %base-user-accounts))
+  (services (cons* (dhcp-client-service)
+                   (lsh-service #:port-number 2222)
+                   %base-services)))
+    }
+  \end{semiverbatim}
+\end{frame}
+
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}
-  \Huge{\textbf{Problem \#1: Imperative and domain-specific package
-      management.}}
+  \Huge{\textbf{How we got there.}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
+\setbeamercolor{normal text}{bg=guixred3,fg=white}
 \begin{frame}
   \begin{quotation}
     \noindent
@@ -149,37 +175,41 @@
   \end{quotation}
   \vspace{1cm}
   \hfill{--- Question from the audience,}\\
-  \hfill{keynote on TensorFlow, ICFP day 1}
+  \hfill{Martin Abadi's keynote on TensorFlow,}\\
+  \hfill{ICFP day 1}
 \end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
+\setbeamercolor{normal text}{fg=guixred3,bg=white}
 \begin{frame}[fragile]
   \begin{tikzpicture}
-    \matrix[row sep=3mm, column sep=1cm] {
-      \node{\includegraphics[width=3cm]{images/cabal-logo}}; &
-      \node{\includegraphics[height=3cm]{images/opam-logo}};
+    \matrix[row sep=5mm, column sep=15mm] {
+      \node{\includegraphics[width=4.5cm]{images/cabal-logo}}; &
+      \node{\includegraphics[height=2.3cm]{images/opam-logo}};
       \\
 
       \node{\includegraphics[height=3cm]{images/cargo-logo}}; &
       \node{\includegraphics[height=3cm]{images/leiningen-logo}};
       \\
 
-      \node{\includegraphics[height=3cm]{images/elm-logo}}; &
+      \node{\includegraphics[height=2cm]{images/elm-logo}}; &
       \node{...};
       \\
     };
   \end{tikzpicture}
 \end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
 
-\begin{frame}[plain]
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [at=(current page.center), inner sep=0pt]
-          {\includegraphics[height=\paperheight]{images/universal_install_script}};
-    \node [at=(current page.north east), anchor=south east, rotate=90,
-           text=black, text opacity=1, fill=white, opacity=.6]{
-      \url{http://xkcd.com/1654/}
-    };
-  \end{tikzpicture}
-\end{frame}
+%% \begin{frame}[plain]
+%%   \begin{tikzpicture}[remember picture, overlay]
+%%     \node [at=(current page.center), inner sep=0pt]
+%%           {\includegraphics[height=\paperheight]{images/universal_install_script}};
+%%     \node [at=(current page.north east), anchor=south east, rotate=90,
+%%            text=black, text opacity=1, fill=white, opacity=.6]{
+%%       \url{http://xkcd.com/1654/}
+%%     };
+%%   \end{tikzpicture}
+%% \end{frame}
 
 \begin{frame}[plain, fragile]
   \begin{overlayarea}{\textwidth}{8cm}
@@ -254,69 +284,83 @@
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
-\setbeamercolor{normal text}{bg=guixblue2}
-\begin{frame}
-  \Huge{\textbf{Problem \#2:\\ ``the DSL hell.''}}
-\end{frame}
-\setbeamercolor{normal text}{fg=white,bg=black}
-
 \begin{frame}[fragile]
-  \begin{tikzpicture}[tools/.style = {
-                        text width=35mm, minimum height=4cm,
-                        text centered,
-                        rounded corners=2mm,
-                        fill=white, text=black
-                      },
-                      tool/.style = {
-                        fill=black, text=white, text width=3cm,
-                        text centered
-                      },
-                      daemon/.style = {
-                        rectangle, text width=50mm, text centered,
-                        rounded corners=2mm, minimum height=15mm,
-                        top color=guixorange1,
-                        bottom color=guixyellow,
-                        text=black
-                      },
-                      builders/.style = {
-                        draw=guixorange1, very thick, dashed,
-                        fill=black, text=white, text width=5cm,
-                        rounded corners=2mm,
-                      },
-                      builder/.style = {
-                        draw=guixred2, thick, rectangle,
-                        fill=black, text=white,
-                        rotate=90
-                      }]
-    \matrix[row sep=3mm, column sep=1cm] {
-      \node(builders)[builders, text height=5cm]{}
-          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
-          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
-          node[builder, onslide=<1-2>{black}] at (-1,-0.5) {\textbf{Bash}, make, etc.}
-          node[builder, onslide=<1-2>{black}] at ( 0,-0.5) {\textbf{Bash}, make, etc.}
-          node[builder, onslide=<1-2>{black}] at ( 1,-0.5) {\textbf{Bash}, make, etc.}; &
-      \node[tools]{}
-          node[fill=white, text=black] at (0, 1) {\large{\textbf{Nix}}}
-          node[tool] at (0, 0) {\textbf{Nix language}}
-          node(client)[tool] at (0, -1) {client lib};
-      \\
 
-      \node(daemon)[daemon]{\large{\textbf{build daemon}}}; &
-      &
-      \\
-    };
-  \end{tikzpicture}
+  \begin{semiverbatim}
+\$ guix build ocaml
+\uncover<2->{/gnu/store/\tikz[baseline]{\node[anchor=base](nixhash){\alert<2>{h2g4sc09h4\textrm{...}}};}-ocaml-4.02.3}
+  \end{semiverbatim}
 
-  \begin{tikzpicture}[overlay]
-    \path[very thick, draw=guixorange1]<2->
-      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
-    \path[->, very thick, draw=guixorange1]<3->
-      (daemon) edge (builders);
-  \end{tikzpicture}
+  \begin{textblock}{7}(4, 10)
+    \only<2>{\tikz{\node(labelnixhash)[fill=white, text=black]{hash of
+          \emph{all} the dependencies};}}
+  \end{textblock}
+
+  % Arrows
+  \only<2>{
+    \begin{tikzpicture}[overlay]
+      \path[->, thick](labelnixhash.north) edge [bend left, in=180, out=-45] (nixhash.south);
+    \end{tikzpicture}
+  }
 \end{frame}
 
+%% \begin{frame}[fragile]
+%%   \begin{tikzpicture}[tools/.style = {
+%%                         text width=35mm, minimum height=4cm,
+%%                         text centered,
+%%                         rounded corners=2mm,
+%%                         fill=white, text=black
+%%                       },
+%%                       tool/.style = {
+%%                         fill=black, text=white, text width=3cm,
+%%                         text centered
+%%                       },
+%%                       daemon/.style = {
+%%                         rectangle, text width=50mm, text centered,
+%%                         rounded corners=2mm, minimum height=15mm,
+%%                         top color=guixorange1,
+%%                         bottom color=guixyellow,
+%%                         text=black
+%%                       },
+%%                       builders/.style = {
+%%                         draw=guixorange1, very thick, dashed,
+%%                         fill=black, text=white, text width=5cm,
+%%                         rounded corners=2mm,
+%%                       },
+%%                       builder/.style = {
+%%                         draw=guixred2, thick, rectangle,
+%%                         fill=black, text=white,
+%%                         rotate=90
+%%                       }]
+%%     \matrix[row sep=3mm, column sep=1cm] {
+%%       \node(builders)[builders, text height=5cm]{}
+%%           node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+%%           node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+%%           node[builder, onslide=<1-2>{black}] at (-1,-0.5) {\textbf{Bash}, make, etc.}
+%%           node[builder, onslide=<1-2>{black}] at ( 0,-0.5) {\textbf{Bash}, make, etc.}
+%%           node[builder, onslide=<1-2>{black}] at ( 1,-0.5) {\textbf{Bash}, make, etc.}; &
+%%       \node[tools]{}
+%%           node[fill=white, text=black] at (0, 1) {\large{\textbf{Nix}}}
+%%           node[tool] at (0, 0) {\textbf{Nix language}}
+%%           node(client)[tool] at (0, -1) {client lib};
+%%       \\
+
+%%       \node(daemon)[daemon]{\large{\textbf{build daemon}}}; &
+%%       &
+%%       \\
+%%     };
+%%   \end{tikzpicture}
+
+%%   \begin{tikzpicture}[overlay]
+%%     \path[very thick, draw=guixorange1]<2->
+%%       (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+%%     \path[->, very thick, draw=guixorange1]<3->
+%%       (daemon) edge (builders);
+%%   \end{tikzpicture}
+%% \end{frame}
+
 \begin{frame}[fragile]
-  \frametitle{Nix language}
+  \frametitle{The Nix language}
 
   \vspace{1cm}
   \small{
@@ -352,9 +396,9 @@
   \end{textblock}
 
   \begin{tikzpicture}[overlay]
-    \path[->]<1>(labelcolon) edge (colon);
-    \path[->]<1>(labelfuncall) edge (funcall);
-    \path[->]<2>(labelbash) edge (bash);
+    \path[->, thick]<1>(labelcolon) edge (colon);
+    \path[->, thick]<1>(labelfuncall) edge (funcall);
+    \path[->, thick]<2>(labelbash) edge (bash);
   \end{tikzpicture}
 \end{frame}
 
@@ -366,6 +410,7 @@
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
+\setbeamercolor{normal text}{bg=guixred3,fg=white}
 \begin{frame}[plain]
   \begin{quotation}
     \noindent
@@ -375,6 +420,7 @@
   \hfill{-- talk by Tom Hall}\\
   \hfill{\small{\url{https://skillsmatter.com/skillscasts/5488-escaping-dsl-hell-by-having-parenthesis-all-the-way-down}}}
 \end{frame}
+\setbeamercolor{normal text}{bg=black,fg=white}
 
 \begin{frame}[fragile]
   \begin{semiverbatim}
@@ -400,12 +446,50 @@
   \end{semiverbatim}
 \end{frame}
 
-\begin{frame}[plain]
-  \Large{$\Rightarrow$ plan working
-    \textbf{as expected}}
-  \\[1cm]
-  \uncover<2->{\Huge{\textbf{embed DSLs!}}}
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+(\alert{operating-system}
+  ;; \textrm{...}
+  (services (cons (openssh-service #:port 2222)
+                  %base-services)))
+  \end{semiverbatim}
 \end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+(\alert{operating-system}
+  ;; \textrm{...}
+  (services (remove (lambda (service)
+                      (eq? ntp-service-type
+                           (service-kind service)))
+                    %desktop-services)))
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+(\alert{define} %my-services
+  ;; My very own list of services.
+  (\alert{modify-services} %desktop-services
+    (mingetty-service-type config =>
+                           (mingetty-configuration
+                            (\alert{inherit} config)
+                            (motd (plain-file "motd"
+                                     "Howdy Nara!"))))
+    (upower-service-type config =>
+                         (upower-configuration
+                          (\alert{inherit} config)
+                          (ignore-lid? #true)
+                          (percentage-critical 5.)))))
+  \end{semiverbatim}
+\end{frame}
+
+%% \begin{frame}[plain]
+%%   \Large{$\Rightarrow$ plan working
+%%     \textbf{as expected}}
+%%   \\[1cm]
+%%   \uncover<2->{\Huge{\textbf{DSL embedding helps!}}}
+%% \end{frame}
 
 \begin{frame}
   \Large{
@@ -414,94 +498,94 @@
   \item \texttt{guix refresh} package auto-updater
   \item \texttt{guix lint} package checker
   \item \texttt{guix graph} dependency graph viewer
-  \item \texttt{guix size} package size profiler
+  \item \texttt{guix system extension-graph} service composition viewer
   \item ...
   \end{itemize}
   }
 \end{frame}
 
-\begin{frame}[fragile]{}
-  \begin{tikzpicture}[tools/.style = {
-                        text width=35mm, minimum height=4cm,
-                        text centered,
-                        rounded corners=2mm,
-                        fill=white, text=black
-                      },
-                      tool/.style = {
-                        fill=white, text=black, text width=3cm,
-                        text centered
-                      },
-                      daemon/.style = {
-                        rectangle, text width=50mm, text centered,
-                        rounded corners=2mm, minimum height=15mm,
-                        top color=guixorange1,
-                        bottom color=guixyellow,
-                        text=black
-                      },
-                      builders/.style = {
-                        draw=guixorange1, very thick, dashed,
-                        fill=black, text=white, text width=5cm,
-                        rounded corners=2mm,
-                      },
-                      builder/.style = {
-                        draw=guixred2, thick, rectangle,
-                        fill=black, text=white,
-                        rotate=90
-                      }]
-    \matrix[row sep=3mm, column sep=1cm] {
-      \node(builders)[builders, text height=5cm]{}
-          node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
-          node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
-          node[builder] at (-1,-0.5) {\alert{Guile}, make, etc.}
-          node[builder] at ( 0,-0.5) {\alert{Guile}, make, etc.}
-          node[builder] at ( 1,-0.5) {\alert{Guile}, make, etc.}; &
-      \node[tools]{}
-          node[fill=white, text=black] at (0, 1) {\large{\textbf{Guile Scheme}}}
-          node[tool] at (0, 0) {\texttt{(guix packages)}}
-          node(client)[tool] at (0, -1) {\texttt{(guix store)}};
-      \\
+%% \begin{frame}[fragile]{}
+%%   \begin{tikzpicture}[tools/.style = {
+%%                         text width=35mm, minimum height=4cm,
+%%                         text centered,
+%%                         rounded corners=2mm,
+%%                         fill=white, text=black
+%%                       },
+%%                       tool/.style = {
+%%                         fill=white, text=black, text width=3cm,
+%%                         text centered
+%%                       },
+%%                       daemon/.style = {
+%%                         rectangle, text width=50mm, text centered,
+%%                         rounded corners=2mm, minimum height=15mm,
+%%                         top color=guixorange1,
+%%                         bottom color=guixyellow,
+%%                         text=black
+%%                       },
+%%                       builders/.style = {
+%%                         draw=guixorange1, very thick, dashed,
+%%                         fill=black, text=white, text width=5cm,
+%%                         rounded corners=2mm,
+%%                       },
+%%                       builder/.style = {
+%%                         draw=guixred2, thick, rectangle,
+%%                         fill=black, text=white,
+%%                         rotate=90
+%%                       }]
+%%     \matrix[row sep=3mm, column sep=1cm] {
+%%       \node(builders)[builders, text height=5cm]{}
+%%           node[fill=black, text=white] at (0, 2) {\large{\textbf{build processes}}}
+%%           node[fill=black, text=white] at (0, 1.5) {chroot, separate UIDs}
+%%           node[builder] at (-1,-0.5) {\alert{Guile}, make, etc.}
+%%           node[builder] at ( 0,-0.5) {\alert{Guile}, make, etc.}
+%%           node[builder] at ( 1,-0.5) {\alert{Guile}, make, etc.}; &
+%%       \node[tools]{}
+%%           node[fill=white, text=black] at (0, 1) {\large{\textbf{Guile Scheme}}}
+%%           node[tool] at (0, 0) {\texttt{(guix packages)}}
+%%           node(client)[tool] at (0, -1) {\texttt{(guix store)}};
+%%       \\
 
-      \node(daemon)[daemon]{\large{\textbf{build daemon}}}; &
-      &
-      \\
-    };
-  \end{tikzpicture}
+%%       \node(daemon)[daemon]{\large{\textbf{build daemon}}}; &
+%%       &
+%%       \\
+%%     };
+%%   \end{tikzpicture}
 
-  \begin{tikzpicture}[overlay]
-    \path[very thick, draw=guixorange1]
-      (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
-    \path[->, very thick, draw=guixorange1]
-      (daemon) edge (builders);
-  \end{tikzpicture}
-\end{frame}
+%%   \begin{tikzpicture}[overlay]
+%%     \path[very thick, draw=guixorange1]
+%%       (client.south) edge [out=-90, in=0, ->] node[below, sloped]{RPCs} (daemon.east);
+%%     \path[->, very thick, draw=guixorange1]
+%%       (daemon) edge (builders);
+%%   \end{tikzpicture}
+%% \end{frame}
 
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}
-  \Huge{\textbf{Unification beyond the ``distro''.}}
+  \Huge{\textbf{Unification\\beyond the ``distro''.}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
-\begin{frame}{Typical ``Core'' GNU/Linux Stack}
-  \Large{
-  \begin{itemize}
-  \item{ independently-developed daemons/systems code
-    \begin{itemize}
-    \item<2-> \Large\highlight{inconsist, hard to navigate}
-    \end{itemize}}
-  \item{little or no code sharing
-    \begin{itemize}
-    \item<2-> \Large\highlight{redundant, bug-prone}
-    \end{itemize}}
-  \item{a variety of languages, config syntaxes, etc.
-    \begin{itemize}
-    \item<2-> \Large\highlight{hard to learn \& master}
-    \end{itemize}}
-  \item ...
-  \end{itemize}
-  }
-\end{frame}
+%% \begin{frame}{Typical ``Core'' GNU/Linux Stack}
+%%   \Large{
+%%   \begin{itemize}
+%%   \item{ independently-developed daemons/systems code
+%%     \begin{itemize}
+%%     \item<2-> \Large\highlight{inconsistent, hard to navigate}
+%%     \end{itemize}}
+%%   \item{little or no code sharing
+%%     \begin{itemize}
+%%     \item<2-> \Large\highlight{redundant, bug-prone}
+%%     \end{itemize}}
+%%   \item{a variety of languages, config syntaxes, etc.
+%%     \begin{itemize}
+%%     \item<2-> \Large\highlight{hard to learn \& master}
+%%     \end{itemize}}
+%%   \item ...
+%%   \end{itemize}
+%%   }
+%% \end{frame}
 
-\begin{frame}[fragile]{Example \#1: the Initial RAM Disk}
+\begin{frame}[fragile]{The Initial RAM Disk}
   \pause
   \begin{semiverbatim}
 (expression->initrd
@@ -581,8 +665,11 @@
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]{Example \#2: System Services}
+\begin{frame}[fragile]{System Services}
   \begin{semiverbatim}
+;; \textsl{Service definition for the GNU Shepherd (PID 1)}
+;; \textsl{embedded in GuixSD.}
+
 (\alert{shepherd-service}
   (provision '(mysql))
   (documentation "Run the MySQL server.")
@@ -605,7 +692,7 @@
 \begin{frame}{Summary}
   \Large{
   \begin{itemize}
-  \item \highlight{embedding} the distro tools in Scheme is fruitful!
+  \item distro \& tools as a \highlight{Scheme library}
   \item \highlight{hackability} through uniformity
   \item \highlight{code staging} techniques to glue it all
   \end{itemize}
