@@ -1,0 +1,40 @@
+#+TITLE: Demos for the FOSDEM 2014 talk
+
+* preparation
+
+export USER=demo
+export HOME=/tmp/home/demo
+export GUIX_BUILD_OPTIONS=--no-grafts
+mkdir -p "$HOME"
+cd
+rm -f schememachine.scm
+ln -s ~ludo/src/guix-maintenance/talks/scheme-2016/schememachine.scm
+unset GUILE_LOAD_PATH
+unset GUILE_LOAD_COMPILED_PATH
+export PATH=$HOME/.guix-profile/bin:/run/current-system/profile/bin:$HOME/local/bin:/run/setuid-programs
+rm -f /var/guix/profiles/per-user/demo/guix-profile*
+rm -f ~/.guix-profile
+rm -f old-times*
+unset LANGUAGE
+
+* first
+
+LC_ALL=sr_RS guix package -s grep
+
+C-x RET cyrillic-serbian
+LC_ALL=sr_RS.utf8 guix package -s греп
+
+guix package --list-installed
+guix package -i hello
+which hello
+
+guix package -i guile
+guile --version
+
+guix package -i python -r guile
+guix package --list-generations
+guix package --roll-back
+
+guix package -p old-times -i guile-1.8.8
+./old-times/bin/guile --version
+
