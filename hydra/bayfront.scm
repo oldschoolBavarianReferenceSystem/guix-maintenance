@@ -1,8 +1,21 @@
 ;; OS configuration for bayfront, the frontend of the compile farm.
 
-(use-modules (gnu))
+(use-modules (gnu) (sysadmin people))
 (use-service-modules networking ssh)
 (use-package-modules admin linux vim)
+
+(define %sysadmins
+  ;; The sysadmins.
+  (list (sysadmin (name "ludo")
+                  (full-name "Ludovic Courtès")
+                  (lsh-public-key (local-file "keys/lsh/ludo.pub")))
+        (sysadmin (name "andreas")
+                  (full-name "Andreas Enge")
+                  (lsh-public-key (local-file "keys/lsh/andreas.pub")))
+        (sysadmin (name "mthl")
+                  (full-name "Mathieu Lirzin")
+                  (lsh-public-key (local-file "keys/lsh/mthl.pub")))))
+
 
 (define md0
   (mapped-device
@@ -32,30 +45,11 @@
                    #:extra-modules '("raid10")
                                    rest)))
 
-  (users (cons* (user-account
-                 (name "andreas")
-                 (comment "Andreas Enge")
-                 (group "users")
-                 (supplementary-groups '("wheel"))
-                 (home-directory "/home/andreas"))
-                (user-account
-                 (name "mthl")
-                 (comment "Mathieu Lirzin")
-                 (group "users")
-                 (supplementary-groups '("wheel"))
-                 (home-directory "/home/mthl"))
-                (user-account
-                 (name "ludo")
-                 (comment "Ludovic Courtès")
-                 (group "users")
-                 (supplementary-groups '("wheel"))
-                 (home-directory "/home/ludo"))
-                %base-user-accounts))
-
   ;; grub-install needs mdadm in $PATH.
   (packages (cons* mdadm vim lm-sensors %base-packages))
 
-  (services (cons* (dhcp-client-service)
+  (services (cons* (service sysadmin-service-type %sysadmins)
+                   (dhcp-client-service)
                    (lsh-service #:port-number 9024)
                    %base-services)))
 
