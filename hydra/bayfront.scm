@@ -1,8 +1,8 @@
 ;; OS configuration for bayfront, the frontend of the compile farm.
 
 (use-modules (gnu) (sysadmin people))
-(use-service-modules networking ssh)
-(use-package-modules admin linux vim)
+(use-service-modules networking admin mcron ssh)
+(use-package-modules admin linux vim package-management)
 
 (define %sysadmins
   ;; The sysadmins.
@@ -22,6 +22,11 @@
     (source (list "/dev/sda2" "/dev/sdb2"))
       (target "/dev/md0")
       (type raid-device-mapping)))
+
+(define %gc-job
+  ;; The garbage collection mcron job, once per day.
+  #~(job '(next-hour '(4))
+         (string-append #$guix "/bin/guix gc -F80G")))
 
 (operating-system
   (host-name "bayfront")
@@ -51,5 +56,18 @@
   (services (cons* (service sysadmin-service-type %sysadmins)
                    (dhcp-client-service)
                    (lsh-service #:port-number 9024)
-                   %base-services)))
+                   (guix-publish-service #:port 9080)
+
+                   (service rottlog-service-type (rottlog-configuration))
+                   (service mcron-service-type
+                            (mcron-configuration
+                             (jobs (list %gc-job))))
+
+                   (modify-services %base-services
+                     ;; Disable substitutes altogether.
+                     (guix-service-type config =>
+                                        (guix-configuration
+                                         (inherit config)
+                                         (authorized-keys '())
+                                         (use-substitutes? #f)))))))
 
