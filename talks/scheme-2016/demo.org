@@ -5,16 +5,18 @@
 export USER=demo
 export HOME=/tmp/home/demo
 export GUIX_BUILD_OPTIONS=--no-grafts
-mkdir -p "$HOME"
+mkdir -p "$HOME/.config/guix"
 cd
 rm -f schememachine.scm
 ln -s ~ludo/src/guix-maintenance/talks/scheme-2016/schememachine.scm
+ln -s ~ludo/src/guix-maintenance/talks/inria-bordeaux-2016/my-profile.scm
+(cd $HOME/.config/guix ; ln -s ~ludo/.config/guix/latest)
 unset GUILE_LOAD_PATH
 unset GUILE_LOAD_COMPILED_PATH
 export PATH=$HOME/.guix-profile/bin:/run/current-system/profile/bin:$HOME/local/bin:/run/setuid-programs
 rm -f /var/guix/profiles/per-user/demo/guix-profile*
 rm -f ~/.guix-profile
-rm -f old-times*
+rm -f old-* new-*
 unset LANGUAGE
 
 * first
