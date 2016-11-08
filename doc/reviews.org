@@ -305,3 +305,10 @@ http://lwn.net/Articles/696890/
 http://container-solutions.com/review-habitat-sh/
 https://github.com/galaxyproject/galaxy/issues/2778
 https://linuxfr.org/users/matutine/journaux/gnu-guix-et-guixsd-v0-11-testable-en-machine-virtuelle-avec-des-images-usb
+
+* September 2016
+
+http://scheme2016.snow-fort.org/
+http://cufp.org/2016/guix-scheme-as-a-uniform-os-admin-and-deployment-interface.html
+http://icfp2016.mirage.io/CUFP/guix-scheme-as-a-uniform-os-a.md
+https://matutine.gitlab.io/2016/09/26/gnu-guix-dans-un-environnement-de-supercalculateurs.html
