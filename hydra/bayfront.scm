@@ -54,8 +54,12 @@
   (packages (cons* mdadm vim lm-sensors %base-packages))
 
   (services (cons* (service sysadmin-service-type %sysadmins)
-                   (dhcp-client-service)
-                   (lsh-service #:port-number 9024)
+                   ;; We need to configure ens10 as 141.255.128.57.
+                   (static-networking-service
+                    "ens9" "141.255.128.56"
+                    #:gateway "141.255.128.126"
+                    #:name-servers '("141.255.128.100" "141.255.129.101"))
+                   (lsh-service #:port-number 22)
                    (guix-publish-service #:port 9080)
 
                    (service rottlog-service-type (rottlog-configuration))
@@ -63,11 +67,12 @@
                             (mcron-configuration
                              (jobs (list %gc-job))))
 
-                   (modify-services %base-services
-                     ;; Disable substitutes altogether.
-                     (guix-service-type config =>
-                                        (guix-configuration
-                                         (inherit config)
-                                         (authorized-keys '())
-                                         (use-substitutes? #f)))))))
+;;                   (modify-services %base-services
+;;                     ;; Disable substitutes altogether.
+;;                     (guix-service-type config =>
+;;                                        (guix-configuration
+;;                                         (inherit config)
+;;                                         (authorized-keys '())
+;;                                         (use-substitutes? #f))))
+                   %base-services)))
 
