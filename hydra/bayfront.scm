@@ -2,7 +2,7 @@
 
 (use-modules (gnu) (sysadmin people))
 (use-service-modules networking admin mcron ssh)
-(use-package-modules admin linux vim package-management)
+(use-package-modules admin linux ssh vim package-management)
 
 (define %sysadmins
   ;; The sysadmins.
@@ -50,8 +50,8 @@
                    #:extra-modules '("raid10")
                                    rest)))
 
-  ;; grub-install needs mdadm in $PATH.
-  (packages (cons* mdadm vim lm-sensors %base-packages))
+  (packages (cons* mdadm vim lm-sensors openssh
+                   %base-packages))
 
   (services (cons* (service sysadmin-service-type %sysadmins)
 
