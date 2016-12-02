@@ -1,8 +1,8 @@
 ;; OS configuration for bayfront, the frontend of the compile farm.
 
 (use-modules (gnu) (sysadmin people))
-(use-service-modules networking admin mcron ssh)
-(use-package-modules admin linux ssh vim package-management)
+(use-service-modules base networking admin mcron ssh web)
+(use-package-modules admin linux ssh tls vim package-management web wget)
 
 (define %sysadmins
   ;; The sysadmins.
@@ -33,6 +33,50 @@
                     "--cache-failures"
                     "--gc-keep-outputs" "--gc-keep-derivations"))))
 
+
+;;;
+;;; NGINX.
+;;;
+
+(define %nginx-config
+  ;; Our nginx configuration directory.  It expects 'guix publish' to be
+  ;; running on port 3000.
+  (computed-file "nginx-config"
+                 (with-imported-modules '((guix build utils))
+                   #~(begin
+                       (use-modules (guix build utils))
+
+                       (mkdir #$output)
+                       (chdir #$output)
+                       (symlink #$(local-file "nginx/bayfront.conf")
+                                "bayfront.conf")
+                       (copy-file #$(local-file
+                                     "nginx/bayfront-locations.conf")
+                                  "bayfront-locations.conf")
+                       (substitute* "bayfront-locations.conf"
+                         (("@WWWROOT@")
+                          #$(local-file "nginx/html" #:recursive? #t)))))))
+
+(define %nginx-mime-types
+  ;; Provide /etc/nginx/mime.types (and a bunch of other files.)
+  (simple-service 'nginx-mime.types
+                  etc-service-type
+                  `(("nginx" ,(file-append nginx "/share/nginx/conf")))))
+
+(define %nginx-cache-activation
+  ;; Make sure /var/cache/nginx exists on the first run.
+  (simple-service 'nginx-/var/cache/nginx
+                  activation-service-type
+                  (with-imported-modules '((guix build utils))
+                    #~(begin
+                        (use-modules (guix build utils))
+                        (mkdir-p "/var/cache/nginx")))))
+
+
+;;;
+;;; Operating system.
+;;;
+
 (operating-system
   (host-name "bayfront")
   (timezone "Europe/Paris")
@@ -58,7 +102,8 @@
                    #:extra-modules '("raid10")
                                    rest)))
 
-  (packages (cons* mdadm vim lm-sensors openssh
+  (packages (cons* certbot wget
+                   mdadm vim lm-sensors openssh
                    %base-packages))
 
   (services (cons* (service sysadmin-service-type %sysadmins)
@@ -73,7 +118,14 @@
                     #:name-servers '("141.255.128.100" "141.255.129.101"))
 
                    (lsh-service #:port-number 22)
-                   (guix-publish-service #:port 9080)
+
+                   ;; The Web service.
+                   (guix-publish-service #:port 3000)
+                   (nginx-service #:config-file
+                                  (file-append %nginx-config
+                                               "/bayfront.conf"))
+                   %nginx-mime-types
+                   %nginx-cache-activation
 
                    (service rottlog-service-type (rottlog-configuration))
                    (service mcron-service-type
