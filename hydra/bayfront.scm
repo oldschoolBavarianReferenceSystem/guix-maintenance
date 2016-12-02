@@ -17,12 +17,6 @@
                   (lsh-public-key (local-file "keys/lsh/mthl.pub")))))
 
 
-(define md0
-  (mapped-device
-    (source (list "/dev/sda2" "/dev/sdb2"))
-      (target "/dev/md0")
-      (type raid-device-mapping)))
-
 (define %gc-job
   ;; The garbage collection mcron job, once per day.
   #~(job '(next-hour '(4))
@@ -35,13 +29,16 @@
 
   (bootloader (grub-configuration (device "/dev/sda")))
 
-  (mapped-devices (list md0))
+  (mapped-devices (list (mapped-device
+                         (source (list "/dev/sda2" "/dev/sdb2"))
+                         (target "/dev/md0")
+                         (type raid-device-mapping))))
   (file-systems (cons (file-system
                         (title 'device)
                         (device "/dev/md0")
-                        (dependencies (list md0))
                         (mount-point "/")
-                        (type "ext4"))
+                        (type "ext4")
+                        (dependencies mapped-devices))
                       %base-file-systems))
 
   ;; Add a kernel module for RAID-10.
