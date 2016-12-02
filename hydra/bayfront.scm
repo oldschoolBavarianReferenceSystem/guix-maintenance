@@ -54,11 +54,16 @@
   (packages (cons* mdadm vim lm-sensors %base-packages))
 
   (services (cons* (service sysadmin-service-type %sysadmins)
-                   ;; We need to configure ens10 as 141.255.128.57.
+
+                   ;; TODO: configure ens9 as 141.255.128.57.
+                   ;; TODO: configure ens10 as with:
+                   ;;   ip a add dev ens10 2a01:474:0::56/48
                    (static-networking-service
-                    "ens9" "141.255.128.56"
+                    "ens10" "141.255.128.56"
+                    #:netmask "255.255.255.128"
                     #:gateway "141.255.128.126"
                     #:name-servers '("141.255.128.100" "141.255.129.101"))
+
                    (lsh-service #:port-number 22)
                    (guix-publish-service #:port 9080)
 
