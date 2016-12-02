@@ -22,6 +22,17 @@
   #~(job '(next-hour '(4))
          (string-append #$guix "/bin/guix gc -F80G")))
 
+(define %guix-daemon-config
+  (guix-configuration
+   ;; Disable substitutes altogether.
+   (use-substitutes? #f)
+   (substitute-urls '())
+   (authorized-keys '())
+
+   (extra-options '("--max-jobs=4" "--cores=8"    ;we have 32 cores
+                    "--cache-failures"
+                    "--gc-keep-outputs" "--gc-keep-derivations"))))
+
 (operating-system
   (host-name "bayfront")
   (timezone "Europe/Paris")
@@ -69,12 +80,7 @@
                             (mcron-configuration
                              (jobs (list %gc-job))))
 
-;;                   (modify-services %base-services
-;;                     ;; Disable substitutes altogether.
-;;                     (guix-service-type config =>
-;;                                        (guix-configuration
-;;                                         (inherit config)
-;;                                         (authorized-keys '())
-;;                                         (use-substitutes? #f))))
-                   %base-services)))
+                  (modify-services %base-services
+                    ;; Disable substitutes altogether.
+                    (guix-service-type config => %guix-daemon-config)))))
 
