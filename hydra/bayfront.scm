@@ -127,6 +127,14 @@
                    %nginx-mime-types
                    %nginx-cache-activation
 
+                   ;; Make SSH and HTTP/HTTPS available over Tor.
+                   (tor-hidden-service "http"
+                                       '((22 "127.0.0.1:22")
+                                         (80 "127.0.0.1:80")
+                                         (443 "127.0.0.1:443")))
+                   (tor-service)
+
+                   ;; Cron and log rotation.
                    (service rottlog-service-type (rottlog-configuration))
                    (service mcron-service-type
                             (mcron-configuration
