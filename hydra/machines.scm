@@ -110,13 +110,16 @@
 
       sjd sjd-i686
 
-      ;; FIXME: Temporarily disabled until Guile 2.0.13 is installed there.
-      ;;chapters chapters-i686
+      chapters chapters-i686
 
       redhill
 
       ;; librenote-mips64el    ; dead fan
       hydra-slave0
       hydra-slave1
-      hydra-slave2
+
+      ;; FIXME: This machine needs 'chsh /bin/bash' so that we can specify
+      ;; 'GUILE_LOAD_PATH' et al. in one of the non-login shell startup
+      ;; files (Dash doesn't have such a file apparently.)
+      ;hydra-slave2
       )
