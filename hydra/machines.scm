@@ -58,6 +58,7 @@
     (system "armhf-linux")
     (private-key %openssh-private-key)
     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeUsbVEfJBZY2DCKkINByFtL72EefJ7QUmd0OAPVuJe root@redhill")
+    ;;(host-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCKckkxepiZ0WX3a91sLAQQujwFFjkpG5bHhZxzxmf/ptviXPMF6ZRxOxgUP2xBP8AasVb7Wrrh739RuZnO6pP06j9nlE2CxDPqrHDiIggA3U1JXT4G1yZXv6rFfYeqkwoBCMxxMlo0jpvk7ySE6MyUkJs6l7n6sMYRG3A6XSYD2Eio1bCJR7BDZCA04SXN9WDlzn4aTfhcWDIwYtEWjfLsjtw8OZfd2AbxfloRwYRnTEueEXtKj8D+itqscfo8R97PLsEyPJUT4xop8PsBcWbg13gL/P98UUUAq/Npg8rw71/kthbmPXFa6kB06U6g2FQb+mXY/LkHAHQw4vT12oj root@redhill")
     (speed 1.0)
     (parallel-builds 4)))
 
@@ -101,6 +102,7 @@
     (user "hydra")
     (system "armhf-linux")
     (private-key %openssh-private-key)
+    ;;(host-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbeK7WlnXvG1uzD2Nbh69OYx4IXrRZNMtroCyBrzBfQaRp+c+ByIIP1ZKv9ZPWqZWJHAcujJwCP0OiPSEpzhaYNanQuReWii9hR8awsQm5IkZXisEtc28qLtXJoJAGhEM/o4ad1NY9iPD/l0/TaitAL6DMdjB4CNmqKpy3GScO4JF7szejW2mhXJ0Ho8G0XdBY5NKakxtNCvoHadw5bnx2ai5JVqxlhbhIhldupSFh7q1KeyQLwlda0L7zkk+N8QJi4ta9O1S3QTb4FfyGHmSwZRV+JWx/NSSu+GWwEMZUiBLU8hfnepXFWDP/g+Ii6yz1lTlumGuNm4idkFuE3sYl root@hydra-slave2")
     (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzlJZzZfPiEcehmLFtQVYVt3j9w4DHPL6YgSC3EHJK+ root@hydra-slave2")
     (speed 1.0)
     (parallel-builds 2)))
@@ -117,9 +119,4 @@
       ;; librenote-mips64el    ; dead fan
       hydra-slave0
       hydra-slave1
-
-      ;; FIXME: This machine needs 'chsh /bin/bash' so that we can specify
-      ;; 'GUILE_LOAD_PATH' et al. in one of the non-login shell startup
-      ;; files (Dash doesn't have such a file apparently.)
-      ;hydra-slave2
-      )
+      hydra-slave2)
