@@ -10,8 +10,8 @@
    (user "hydra")
    (system "x86_64-linux")
    (private-key %openssh-private-key)
-   ;;(host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOl8ADHhHcYnRpK5SIZaMHu5NZmpU43I86j5mde+UhL root@hydra")
-   (host-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3OPXO9pSx/+m+o4AQoyJphtFKhoQqWjwu9NaVZwmRc1B7QWqoX1OHTzhl1ybSj62sgqp1gPxkrwBCyahZIIhEE0B6pb0ixHj1iuHgdu65gFNLT3zn+43zWS+9YDMXu9C7QmTvhHhqQ3I1/6lDWL81Fr2tqWtqUzLCMGbTKfXr4QbJUk0xmfx1/zhPP4nkeoz+kF+UpQptBCOpbTRqWrSQ7eyZlj74MfiufW7IRkCJ5MJoTiJJOYfVhhZ8kxU+tYcfng0DoPlAOg9qXN6wBbQl/wlqzl878maPSYrXNlJJqezyieK1Zg8/ARq9JuK7ACqjQbGLafLKxFylCG8yObPf root@hydra")
+   (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOl8ADHhHcYnRpK5SIZaMHu5NZmpU43I86j5mde+UhL root@hydra")
+   ;;(host-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3OPXO9pSx/+m+o4AQoyJphtFKhoQqWjwu9NaVZwmRc1B7QWqoX1OHTzhl1ybSj62sgqp1gPxkrwBCyahZIIhEE0B6pb0ixHj1iuHgdu65gFNLT3zn+43zWS+9YDMXu9C7QmTvhHhqQ3I1/6lDWL81Fr2tqWtqUzLCMGbTKfXr4QbJUk0xmfx1/zhPP4nkeoz+kF+UpQptBCOpbTRqWrSQ7eyZlj74MfiufW7IRkCJ5MJoTiJJOYfVhhZ8kxU+tYcfng0DoPlAOg9qXN6wBbQl/wlqzl878maPSYrXNlJJqezyieK1Zg8/ARq9JuK7ACqjQbGLafLKxFylCG8yObPf root@hydra")
    (speed 1.7)
    (parallel-builds 4)))
 
