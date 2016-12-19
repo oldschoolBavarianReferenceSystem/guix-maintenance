@@ -1,7 +1,7 @@
 ;; OS configuration for bayfront, the frontend of the compile farm.
 
 (use-modules (gnu) (sysadmin people))
-(use-service-modules base networking admin mcron ssh web)
+(use-service-modules base networking admin mcron ssh web cuirass)
 (use-package-modules admin linux ssh tls vim package-management web wget)
 
 (define %sysadmins
@@ -74,6 +74,21 @@
 
 
 ;;;
+;;; Cuirass.
+;;;
+
+(define %cuirass-specs
+  ;; Cuirass specifications to build Guix.
+  (list `((#:name . "guix")
+          (#:url . "git://git.savannah.gnu.org/guix.git")
+          (#:load-path . ".")
+          (#:file . "tests/gnu-system.scm")
+          (#:proc . hydra-jobs)
+          (#:arguments (subset . "all"))
+          (#:branch . "master"))))
+
+
+;;;
 ;;; Operating system.
 ;;;
 
@@ -127,6 +142,11 @@
                                                "/bayfront.conf"))
                    %nginx-mime-types
                    %nginx-cache-activation
+
+                   (service cuirass-service-type
+                            (cuirass-configuration
+                             (specifications %cuirass-specs)))
+
 
                    ;; Make SSH and HTTP/HTTPS available over Tor.
                    (tor-hidden-service "http"
