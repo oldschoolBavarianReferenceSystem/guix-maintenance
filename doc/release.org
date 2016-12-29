@@ -22,7 +22,7 @@ previous version.  And then you build one for the new version:
 
   (define old
     ;; Get the list of packages of the previous release.
-    (call-with-input-file "packages-0.10.0.txt"
+    (call-with-input-file "packages-0.11.0.txt"
       read))
 
   ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
@@ -93,7 +93,7 @@ Make that list "camera-ready":
 #+BEGIN_SRC scheme
   (use-modules (ice-9 pretty-print))
 
-  (call-with-output-file "packages-0.11.0.txt"
+  (call-with-output-file "packages-0.12.0.txt"
     (lambda (port)
       (pretty-print new port)))
 
