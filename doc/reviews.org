@@ -312,3 +312,24 @@ http://scheme2016.snow-fort.org/
 http://cufp.org/2016/guix-scheme-as-a-uniform-os-admin-and-deployment-interface.html
 http://icfp2016.mirage.io/CUFP/guix-scheme-as-a-uniform-os-a.md
 https://matutine.gitlab.io/2016/09/26/gnu-guix-dans-un-environnement-de-supercalculateurs.html
+
+* November 2016
+
+https://www.coreinfrastructure.org/news/announcements/2016/11/linux-foundations-core-infrastructure-initiative-renews-funding
+https://github.com/alphagov/gds-guix
+https://www.reddit.com/r/linux/comments/5ckoqy/guixsd_growing_our_build_farm/
+http://academia.stackexchange.com/questions/80168/reasons-for-an-academic-to-need-administrator-rights-on-work-computer
+
+* December 2016
+
+https://www.reddit.com/r/linux/comments/5io2x7/whos_got_guixsd_as_their_daily_laptop_driver/
+http://bobkonf.de/2017/en/program.html
+http://arstechnica.co.uk/information-technology/2016/12/how-to-make-linux-more-trustworthy/
+https://linuxfr.org/users/dzecniv/journaux/gnu-guix-et-guix-sd-0-12-0-la-distro-et-le-gestionnaire-de-paquets-au-paradigme-fonctionnel
+http://www.phoronix.com/scan.php?page=news_item&px=GNU-Guix-0.12-Released
+https://www.opennet.ru/opennews/art.shtml?num=45753
+http://quebecos.com/?p=5390
+http://www.linuxplanet.com/news/linux-top-3-guix-parrot-security-and-openmandriva-lx.html
+http://www.codesec.net/view/517686.html
+http://linux.softpedia.com/get/System/Software-Distribution/GNU-Guix-94623.shtml
+https://news.ycombinator.com/item?id=13238115
