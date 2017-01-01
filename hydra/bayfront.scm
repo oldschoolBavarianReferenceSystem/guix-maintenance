@@ -1,8 +1,8 @@
 ;; OS configuration for bayfront, the frontend of the compile farm.
 
-(use-modules (gnu) (sysadmin people))
+(use-modules (gnu) (guix) (sysadmin people))
 (use-service-modules base networking admin mcron ssh web cuirass)
-(use-package-modules admin linux ssh tls vim package-management web wget)
+(use-package-modules admin linux ssh tls vim package-management web wget ci)
 
 (define %sysadmins
   ;; The sysadmins.
@@ -79,13 +79,19 @@
 
 (define %cuirass-specs
   ;; Cuirass specifications to build Guix.
-  (list `((#:name . "guix")
-          (#:url . "git://git.savannah.gnu.org/guix.git")
-          (#:load-path . ".")
-          (#:file . "tests/gnu-system.scm")
-          (#:proc . hydra-jobs)
-          (#:arguments (subset . "all"))
-          (#:branch . "master"))))
+  #~(list `((#:name . "guix")
+            (#:url . "git://git.savannah.gnu.org/guix.git")
+            (#:load-path . ".")
+
+            ;; FIXME: Currently this must be an absolute file name because
+            ;; the 'evaluate' command of Cuirass loads it with
+            ;; 'primitive-load'.
+            (#:file . #$(file-append (package-source cuirass)
+                                     "/tests/gnu-system.scm"))
+
+            (#:proc . hydra-jobs)
+            (#:arguments (subset . "all"))
+            (#:branch . "master"))))
 
 
 ;;;
