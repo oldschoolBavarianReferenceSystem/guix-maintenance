@@ -88,6 +88,7 @@
             ;; 'primitive-load'.
             (#:file . #$(file-append (package-source cuirass)
                                      "/tests/gnu-system.scm"))
+            (#:no-compile? #t)             ;don't try to run ./bootstrap etc.
 
             (#:proc . hydra-jobs)
             (#:arguments (subset . "all"))
