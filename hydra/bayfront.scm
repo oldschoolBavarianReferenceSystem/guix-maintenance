@@ -151,6 +151,7 @@
 
                    (service cuirass-service-type
                             (cuirass-configuration
+                             (interval (* 5 60))
                              (specifications %cuirass-specs)))
 
 
