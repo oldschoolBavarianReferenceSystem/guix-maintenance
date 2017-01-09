@@ -14,7 +14,10 @@
                   (lsh-public-key (local-file "keys/lsh/andreas.pub")))
         (sysadmin (name "mthl")
                   (full-name "Mathieu Lirzin")
-                  (lsh-public-key (local-file "keys/lsh/mthl.pub")))))
+                  (lsh-public-key (local-file "keys/lsh/mthl.pub")))
+        (sysadmin (name "rekado")
+                  (full-name "Ricardo Wurmus")
+                  (lsh-public-key (local-file "keys/lsh/rekado.pub")))))
 
 
 (define %gc-job
