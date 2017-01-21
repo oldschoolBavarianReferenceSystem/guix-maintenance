@@ -91,8 +91,8 @@
             ;; FIXME: Currently this must be an absolute file name because
             ;; the 'evaluate' command of Cuirass loads it with
             ;; 'primitive-load'.
-            (#:file . #$(file-append (package-source cuirass)
-                                     "/examples/gnu-system.scm"))
+            ;; Use our own variant of Cuirass' 'examples/gnu-system.scm'.
+            (#:file . #$(local-file "cuirass-jobs.scm"))
             (#:no-compile? #t)             ;don't try to run ./bootstrap etc.
 
             (#:proc . hydra-jobs)
