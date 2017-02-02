@@ -135,7 +135,7 @@
 
   (services (cons* (service sysadmin-service-type %sysadmins)
 
-                   ;; TODO: configure ens9 as 141.255.128.57.
+                   ;; TODO: create a bonding interface over ens9 + ens10
                    ;; TODO: configure ens10 as with:
                    ;;   ip a add dev ens10 2a01:474:0::56/48
                    ;;   ip -6 route add default via 2a01:474:0::126
@@ -144,6 +144,13 @@
                     #:netmask "255.255.255.128"
                     #:gateway "141.255.128.126"
                     #:name-servers '("141.255.128.100" "141.255.129.101"))
+
+                   ;; Alternate interface.
+                   (static-networking-service
+                    "ens9" "141.255.128.57"
+                    #:netmask "255.255.255.128"
+                    ;; Don't repeat #:gateway and #:name-servers.
+                    )
 
                    (lsh-service #:port-number 22)
 
