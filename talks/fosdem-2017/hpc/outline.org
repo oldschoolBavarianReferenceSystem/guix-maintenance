@@ -1,5 +1,8 @@
 #+TITLE: Optimized & Reproducible HPC Software Deployment
 
+https://fosdem.org/2017/schedule/event/hpc_deployment_guix/
+Sat. 11:30, H.2213
+
 * current HPC software environments are broken
 ** distros are old and inflexible, not upgraded
 ** thus, sysadmins write their own modules

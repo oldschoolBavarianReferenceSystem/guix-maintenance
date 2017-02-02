@@ -486,9 +486,11 @@
 
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}
-  \Huge{\textbf{Relocatable binaries (Pjotr).}}
+  \Huge{\textbf{Relocatable binaries.}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
+
+\input{section2.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamercolor{normal text}{bg=guixblue2}
@@ -540,14 +542,35 @@
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
+\begin{frame}{Future}
+  Implications carry beyond HPC
+  \\
+  \begin{itemize}
+  \item Automated builds with testing for different architectures
+  \item Repository of binary packages
+  \item One-click installs: download and run \texttt{install.sh}
+  \item Ship software easily
+  \item Talking about a holy grail\ldots
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Summary}
   \Large{
     \begin{itemize}
     \item Guix supports \highlight{reproducible software environments}
     \item ... allows for \highlight{experimentation} through customization
-    \item relocation allows unprivileged Guix usage in HPC
+    \item relocation allows \highlight{unprivileged} Guix usage in HPC
     \end{itemize}
   }
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+\small
+\begin{itemize}
+\item Roel Janssen (@roelj), Dennis Mungai (@Brainiarc7), and Frederick Muriithi (@fredmanglis) for helping with packaging D compilers, sambamba, Ruby packages, OpenCL etc.
+%\item GNU Guix project leaders Ludovic Court\`{e}s and Ricardo Wurmus
+\item The GNU and GNU Guix communities (many, many talented individuals)
+\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -556,15 +579,17 @@
 \vfill{
   \vspace{2.5cm}
   \center{\includegraphics[width=0.2\textwidth]{images/GuixSD}}\\[1.0cm]
-  \texttt{ludo@gnu.org}\hfill{\alert{\url{https://gnu.org/software/guix/}}}
+  %% \texttt{ludo@gnu.org}
+  \center{\alert{\url{https://gnu.org/software/guix/}}}
+  \\
 }
-
 \end{frame}
 
 \begin{frame}{}
 
   \begin{textblock}{12}(2, 8)
     \tiny{
+      Copyright \copyright{} 2017 Pjotr Prins\\
       Copyright \copyright{} 2010, 2012--2017 Ludovic Courtès \texttt{ludo@gnu.org}.\\[3.0mm]
       GNU GuixSD logo, CC-BY-SA 4.0, \url{http://gnu.org/s/guix/graphics}
 
