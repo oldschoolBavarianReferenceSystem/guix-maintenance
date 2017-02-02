@@ -104,6 +104,33 @@
 ;;; Operating system.
 ;;;
 
+(define %motd
+  ;; Message of the day!  Libcaca's img2txt gives something that's not so
+  ;; great.
+  (plain-file "motd"
+              "\
+ :                               .
+ S:                            S
+  : 8  . . :8         t . . .  ;
+     %888.   ;       :   SX8@
+          t 8       %  .
+           .8 8     .
+           .88     t  :     Welcome to bayfront!
+            .  t   .8
+             .  % .  8
+             8   8 8
+              .  X  8
+              8 8@8
+
+Best practices:
+
+  1. Store everything in guix-maintenance.git.
+  2. Use the Git checkouts of Guix and guix-maintenance in ~root.
+  3. Notify guix-sysadmin@gnu.org when reconfiguring.
+  4. Notify guix-sysadmin@gnu.org when something goes wrong.
+
+Happy hacking!\n"))
+
 (operating-system
   (host-name "bayfront")
   (timezone "Europe/Paris")
@@ -183,5 +210,8 @@
 
                   (modify-services %base-services
                     ;; Disable substitutes altogether.
-                    (guix-service-type config => %guix-daemon-config)))))
-
+                    (guix-service-type config => %guix-daemon-config)
+                    (login-service-type
+                     config => (login-configuration
+                                (inherit config)
+                                (motd %motd)))))))
