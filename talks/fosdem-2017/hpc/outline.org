@@ -1,0 +1,32 @@
+#+TITLE: Optimized & Reproducible HPC Software Deployment
+
+* current HPC software environments are broken
+** distros are old and inflexible, not upgraded
+** thus, sysadmins write their own modules
+** hand-maintained modules break, still inflexible
+** modules may be removed behind your feet
+** thus, users hand-build software in $HOME
+** possibly using language-specific package managers
+** => it's a mess
+* fixing this chaos
+** first approach: easybuild & spack
+*** layered on top of the existing distro
+*** good: packaging work is shared among HPC users, some QA
+*** bad: everyone builds in $HOME -> waste of resources
+*** bad: uses host tools -> not reproducible [screenshots]
+** second approach: app bundles
+*** we have the bits, not the source
+*** 100% reproducibility, but prevents experimentation
+** third approach: can we have our cake and eat it too?
+* Guix
+** what it is
+** example commands
+** isolated builds: 100% reproducible
+** reproducible *yet* customizable [RepPar paper]
+** package variants, personal packages
+* HPC & non-root usage (switch to Pjotr here?)
+** the problem: guix-daemon runs as root because that's the only way to get repro build envs
+** solutions:
+*** running guix-daemon as non-root: doesn't work
+*** user namespaces: unfortunately not widely available
+*** relocation: yay!
