@@ -168,9 +168,7 @@
 
 \setbeamercolor{normal text}{bg=guixdarkgrey}
 \begin{frame}[plain]
-  \Huge{\textbf{Give up on packaging?}}
-  \\[1.0cm]
-  \uncover<2->{\Large{$\rightarrow$ ``app bundles'' (Docker images \& co.)}}
+  \Huge{\textbf{Approach \#2:\\Give up on packaging.}}
 \end{frame}
 \setbeamercolor{normal text}{bg=black}
 
@@ -242,17 +240,13 @@
   \end{tikzpicture}
 \end{frame}
 
-\setbeamercolor{normal text}{bg=black}
-\begin{frame}[plain]{``app bundles'' are headed wrong}
-  \Large{
-    \begin{itemize}
-    \item difficulty to \highlight{compose} software packages
-    \item wrong \highlight{abstraction level}: image vs. package
-    \item \highlight{hardly reproducible}: we have the bits, not the
-      source
-    \item makes it hard to \highlight{customize \& experiment}
-    \end{itemize}
-  }
+\begin{frame}[fragile]
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center)]
+      {\includegraphics[width=0.7\textwidth]{images/shrink-wrap}};
+    \node<2> [at=(current page.east), anchor=east]
+      {\includegraphics[width=0.4\textwidth]{images/shrink-wrap2}};
+  \end{tikzpicture}
 \end{frame}
 
 \setbeamercolor{normal text}{bg=white}
@@ -304,24 +298,24 @@
   }
 \end{frame}
 
-\begin{frame}{cluster deployments}
-  \Large{
-    \begin{itemize}
-      % http://zvfak.blogspot.ch/2015/07/gnu-guix-for-easily-managing.html
-    \item \highlight{Max Delbrück Center} (DE): 250-node cluster +
-      workstations
-      % https://ubc.uu.nl/infrastructure/
-      % https://wiki.bioinformatics.umcutrecht.nl/pub/HPC/WebHome/HPC_Flyer.png
-    \item \highlight{Utrecht Bioinformatics Center} (NL): 68-node
-      cluster (1,000+ cores)
-      % https://www.qriscloud.org.au/support/qriscloud-documentation/75-euramoo-datasheet
-      % https://www.qriscloud.org.au/support/qriscloud-documentation/76-flashlite-datasheet
-    \item \highlight{University of Queensland} (AU): 20-node cluster
-      (900 cores)
-    \item<2-> \emph{more to come!}
-    \end{itemize}
-  }
-\end{frame}
+%% \begin{frame}{cluster deployments}
+%%   \Large{
+%%     \begin{itemize}
+%%       % http://zvfak.blogspot.ch/2015/07/gnu-guix-for-easily-managing.html
+%%     \item \highlight{Max Delbrück Center} (DE): 250-node cluster +
+%%       workstations
+%%       % https://ubc.uu.nl/infrastructure/
+%%       % https://wiki.bioinformatics.umcutrecht.nl/pub/HPC/WebHome/HPC_Flyer.png
+%%     \item \highlight{Utrecht Bioinformatics Center} (NL): 68-node
+%%       cluster (1,000+ cores)
+%%       % https://www.qriscloud.org.au/support/qriscloud-documentation/75-euramoo-datasheet
+%%       % https://www.qriscloud.org.au/support/qriscloud-documentation/76-flashlite-datasheet
+%%     \item \highlight{University of Queensland} (AU): 20-node cluster
+%%       (900 cores)
+%%     \item<2-> \emph{more to come!}
+%%     \end{itemize}
+%%   }
+%% \end{frame}
 
 \setbeamercolor{normal text}{bg=white}
 \screenshot[width=.9\paperwidth]{images/openhub-activity}
