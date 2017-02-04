@@ -128,18 +128,18 @@
 
 
 \setbeamercolor{normal text}{bg=white}
-\screenshot[width=0.8\paperwidth]{images/package-managers-cropped}
+\screenshot[width=0.9\paperwidth]{images/package-managers-cropped}
 
-\begin{frame}[plain]
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [at=(current page.center), inner sep=0pt]
-          {\includegraphics[height=\paperheight]{images/universal_install_script}};
-    \node [at=(current page.north east), anchor=south east, rotate=90,
-           text=black, text opacity=1, fill=white, opacity=.6]{
-      \url{http://xkcd.com/1654/}
-    };
-  \end{tikzpicture}
-\end{frame}
+%% \begin{frame}[plain]
+%%   \begin{tikzpicture}[remember picture, overlay]
+%%     \node [at=(current page.center), inner sep=0pt]
+%%           {\includegraphics[height=\paperheight]{images/universal_install_script}};
+%%     \node [at=(current page.north east), anchor=south east, rotate=90,
+%%            text=black, text opacity=1, fill=white, opacity=.6]{
+%%       \url{http://xkcd.com/1654/}
+%%     };
+%%   \end{tikzpicture}
+%% \end{frame}
 
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}
@@ -262,7 +262,7 @@
           {\includegraphics[height=\paperheight]{images/cake}};
     \node [at=(current page.center), anchor=north, text=black,
            fill=white, opacity=0., text opacity=1.,
-           rounded corners=2mm, inner sep=1cm]{
+           rounded corners=2mm, inner sep=1.5cm]{
       \Huge{\textbf{Can we eat it too?}}
     };
   \end{tikzpicture}
@@ -290,6 +290,43 @@
     \end{enumerate}
   }
 \end{frame}
+
+\begin{frame}
+  \Large{
+  \begin{itemize}
+    \item started in 2012
+    \item \highlight{4,800+ packages}, all free software
+    \item \highlight{4 architectures}:\\
+      x86\_64, i686, ARMv7, mips64el
+    \item binaries at \url{https://hydra.gnu.org}
+    \item 0.12.0 released in December 2016
+  \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{cluster deployments}
+  \Large{
+    \begin{itemize}
+      % http://zvfak.blogspot.ch/2015/07/gnu-guix-for-easily-managing.html
+    \item \highlight{Max Delbrück Center} (DE): 250-node cluster +
+      workstations
+      % https://ubc.uu.nl/infrastructure/
+      % https://wiki.bioinformatics.umcutrecht.nl/pub/HPC/WebHome/HPC_Flyer.png
+    \item \highlight{Utrecht Bioinformatics Center} (NL): 68-node
+      cluster (1,000+ cores)
+      % https://www.qriscloud.org.au/support/qriscloud-documentation/75-euramoo-datasheet
+      % https://www.qriscloud.org.au/support/qriscloud-documentation/76-flashlite-datasheet
+    \item \highlight{University of Queensland} (AU): 20-node cluster
+      (900 cores)
+    \item<2-> \emph{more to come!}
+    \end{itemize}
+  }
+\end{frame}
+
+\setbeamercolor{normal text}{bg=white}
+\screenshot[width=.9\paperwidth]{images/openhub-activity}
+\screenshot[width=.9\paperwidth]{images/openhub-contributors}
+\setbeamercolor{normal text}{bg=black}
 
 \begin{frame}[fragile]
 
@@ -493,49 +530,6 @@
 \input{section2.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamercolor{normal text}{bg=guixblue2}
-\begin{frame}[plain]
-  \Huge{\textbf{Status.}}
-\end{frame}
-\setbeamercolor{normal text}{fg=white,bg=black}
-
-\begin{frame}
-  \Large{
-  \begin{itemize}
-    \item started in 2012
-    \item \highlight{4,800+ packages}, all free software
-    \item \highlight{4 architectures}:\\
-      x86\_64, i686, ARMv7, mips64el
-    \item binaries at \url{https://hydra.gnu.org}
-    \item 0.12.0 released in December 2016
-  \end{itemize}
-  }
-\end{frame}
-
-\begin{frame}{cluster deployments}
-  \Large{
-    \begin{itemize}
-      % http://zvfak.blogspot.ch/2015/07/gnu-guix-for-easily-managing.html
-    \item \highlight{Max Delbrück Center} (DE): 250-node cluster +
-      workstations
-      % https://ubc.uu.nl/infrastructure/
-      % https://wiki.bioinformatics.umcutrecht.nl/pub/HPC/WebHome/HPC_Flyer.png
-    \item \highlight{Utrecht Bioinformatics Center} (NL): 68-node
-      cluster (1,000+ cores)
-      % https://www.qriscloud.org.au/support/qriscloud-documentation/75-euramoo-datasheet
-      % https://www.qriscloud.org.au/support/qriscloud-documentation/76-flashlite-datasheet
-    \item \highlight{University of Queensland} (AU): 20-node cluster
-      (900 cores)
-    \item<2-> \emph{more to come!}
-    \end{itemize}
-  }
-\end{frame}
-
-\setbeamercolor{normal text}{bg=white}
-\screenshot[width=.9\paperwidth]{images/openhub-activity}
-\screenshot[width=.9\paperwidth]{images/openhub-contributors}
-\setbeamercolor{normal text}{bg=black}
-
 \setbeamercolor{normal text}{bg=guixblue2}
 \begin{frame}[plain]
   \Huge{\textbf{Wrap-up.}}
