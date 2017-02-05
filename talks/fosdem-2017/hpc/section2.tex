@@ -1,0 +1,164 @@
+%% \begin{frame}{The stated problem}
+%% \begin{itemize}
+%% \item HPC environments generally run old software (kernel, glibc, build tools)
+%% \item Newer software is installed through other routes
+%% \item Software targeting architectures such as Intel PHI require cross compilation
+%% \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}{Supercomputer}
+%% \begin{itemize}
+%% \item \emph{Propriety} Intel/NVIDIA/Oracle software is up-to-date
+%% \item Python, R, gcc and llvm tend to be out of date
+%% \item Modern languages Dlang, Go, Julia are not supported
+%% \item Also Openblas and OpenCL libraries may not be supported
+%% \item True on most HPC systems
+%% \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}{FOSS}
+%% \begin{itemize}
+%% \item We are FOSS people - we want recent FOSS tools - how do we cope?
+%% \item Docker? Brew? Conda? From source?
+%% \item And, yes, we want reproducibility too
+%% \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}{GNU Guix on HPC}
+%% \begin{itemize}
+%% \item Guix installs in a root mounted /gnu/store ...
+%% \item Allow for running a privileged Guix daemon?
+%% \item Perhaps allow for a mounted /gnu/store?
+%% \item If not, what to do?
+%% \item Answer: relocatable Guix
+%% \end{itemize}
+%% \end{frame}
+
+\begin{frame}[fragile]{Insight 1}
+  The first key insight: Guix store paths provide unique fingerprints:
+
+\small
+\begin{verbatim}
+/gnu/store/m9vxvhdj691bq1f85lpflvnhcvrdilih-glibc-2.23/lib/libc.so
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Linked libraries}
+  \small
+ldd `which ldc2`
+\begin{verbatim}
+libconfig.so.9  /gnu/store/1v4an...-libconfig-1.5/lib/libconfig.so.9
+librt.so.1      /gnu/store/m9vxv...-glibc-2.23/lib/librt.so.1
+libdl.so.2      /gnu/store/m9vxv...-glibc-2.23/lib/libdl.so.2
+libpthread.so.0 /gnu/store/m9vxv...-glibc-2.23/lib/libpthread.so.0
+libz.so.1       /gnu/store/5992i...-zlib-1.2.8/lib/libz.so.1
+libm.so.6       /gnu/store/m9vxv...-glibc-2.23/lib/libm.so.6
+libstdc++.so.6  /gnu/store/9nifw...-gcc-4.9.3-lib/lib/libstdc++.so.6
+libgcc_s.so.1   /gnu/store/9nifw...-gcc-4.9.3-lib/lib/libgcc_s.so.1
+libc.so.6       /gnu/store/m9vxv...-glibc-2.23/lib/libc.so.6
+                /gnu/store/m9vxv...-glibc-2.23/lib/ld-linux-x86-64.so.2
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Relocate}
+\begin{itemize}
+\item Guix binaries have unique fingerprints for PATHs
+\item Replace these with the target prefix
+\item Only dependency is the kernel
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{After relocation}
+  \small
+  ldd $\sim$/opt/ldc-test/ldc-1.1.0-pk9rkm4zvdp6pglam7s2/bin/ldc2
+\begin{verbatim}
+qlibconfig.so.9  ~/opt/ldc-test/libconfig-1.5-1v4anv1.../lib/libconfig.so.9
+librt.so.1      ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/librt.so.1
+libdl.so.2      ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/libdl.so.2
+libpthread.so.0 ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/libpthread.so.0
+libz.so.1       ~/opt/ldc-test/zlib-1.2.8-5992iq1.../lib/libz.so.1
+libm.so.6       ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/libm.so.6
+libstdc++.so.6  ~/opt/ldc-test/gcc-4.9.3-lib-9nifwk7.../lib/libstdc++.so.6
+libgcc_s.so.1   ~/opt/ldc-test/gcc-4.9.3-lib-9nifwk7.../lib/libgcc_s.so.1
+libc.so.6       ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/libc.so.6
+                ~/opt/ldc-test/glibc-2.23-m9vxvh.../lib/ld-linux-x86-64.so.2
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{What really happened here?}
+
+  \begin{itemize}
+  \item All Guix packages are isolated in the store
+  \item Path is a fingerprint, e.g. \texttt{/gnu/store/m9vxvhdj691bq1f85lpflvnhcvrdilih-glibc-2.23}
+  \item Scan all files and replace fingerprints with relative path \texttt{$\sim$/opt/ldc-test/glibc-2.23-m9vxvhdj691bq1f85lpf}
+  \item First attempt by using Eelco Dolstra's Patchelf tool worked for shared libs by rewriting \texttt{RPATH} in binaries
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Other files}
+  \begin{itemize}
+  \item Text files that reference the store can be rewritten (Ruby, Perl, bash scripts)
+  \item Some formats are not zero-terminated (compiled Python and JVM files)
+  \item Also in ELF files there are references that are not zero-terminated
+  \item Solution: keep the file path at exactly the same length and patch all
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Insight 2}
+  The second key insight: if a path gets rewritten with the exact same size
+  string it will always work (unless there is encryption or some CRC checking)
+
+\small
+\begin{verbatim}
+/gnu/store/m9vxvhdj691bq1f85lpflvnhcvrdilih-glibc-2.23/lib/libc.so
+/home/user/opt/ldc-test/glibc-2.23-m9vxvhdj691bq1f851p/lib/libc.so
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}{Same size patching}
+  \begin{enumerate}
+  \item start from store path, e.g.
+    \texttt{/gnu/store/m9vxvhdj691bq1f85lpflvnhcvrdilih-glibc-2.23}
+  \item reverse the contents
+    \texttt{/gnu/store/glibc-2.23-m9vxvhdj691bq1f85lpflvnhcvrdilih}
+  \item overwrite with prefix and shorten the HASH value to match the same size
+  \texttt{/home/user/opt/ldc-test/glibc-2.23-m9vxvhdj691bq1f851p}
+  \item and replace in all files
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Example}
+  So, store path
+  \small
+\begin{verbatim}
+    /gnu/store/m9vxvhdj691bq1f85lpflvnhcvrdilih-glibc-2.23/bin/ldc2
+
+    prefix /home/usr/opt/ldc-test/ becomes
+    /home/user/opt/ldc-test/glibc-2.23-m9vxvhdj691bq1f851p/bin/ldc2
+
+    prefix /usr/local/share/ldc-1.1.0/ becomes
+    /usr/local/share/ldc-1.1.0/glibc-2.23-m9vxvhdj691bq1f8/bin/ldc2
+\end{verbatim}
+Note: prefix can be up to $\sim 40$ letters long
+\end{frame}
+
+\begin{frame}{So far\ldots}
+  Successfully compiled and run
+\begin{itemize}
+\item ldc2 1.1.0: the LLVM D compiler
+\item ruby 2.3.0: with ssl and nokogiri
+\item sambamba: tool used in many sequencing HPCs around the world
+\item more to come, including OpenCL, R, Python and Julia
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cross compile}
+\begin{itemize}
+\item Install compilers that can cross compile binaries
+\item LLVM can output C code
+\item Provide GNU Guix packages for Intel PHI and NVIDIA TESLA
+\item GNU Guix has elegant support for different targets, including a build farm for ARM, ...
+\end{itemize}
+\end{frame}

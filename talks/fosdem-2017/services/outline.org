@@ -1,0 +1,106 @@
+#+TITLE: Composing System Services in GuixSD
+#+SUBTITLE: or how we came to wonder what a "system service" really is
+#+STARTUP: content hidestars
+
+* COMMENT Abstract
+
+In most people’s mind, system services are a bunch of daemons that
+simply need to be started at boot time, or whenever they are actually
+needed.  Possibly services form a dependency graph, and possibly they
+are actions other than spawning a daemon, such as mounting a file
+system.
+
+As always, the devil is in the detail, and reality is that “system
+services” on a modern GNU/Linux system—with udev, dbus, polkit, along
+with more traditional Unix services—include lots of different
+“activities”, with lots of interactions among them.  That naive picture
+of a graph of services no longer works.
+
+This talk is going to tell the story of system services in GuixSD.
+GuixSD started from the naive visions of a “dependency graph of actions”
+to evolve into a generic model of /service composition/.  I will
+describe what makes GuixSD’s service composition model unique, and how
+it helps users and sysadmins reason about the whole system.
+
+https://fosdem.org/2017/schedule/event/composingsystemservicesinguixsd/
+
+See also [[https://www.gnu.org/software/guix/news/service-composition-in-guixsd.html]].
+
+
+* What’s GuixSD
+
+** declarative OS config
+
+*** like Puppet, Chef, etc.
+
+*** but purely functional: show ‘guix system build’
+
+** some services written in Scheme: Shepherd, mcron
+
+** Scheme code can flow around
+
+*** Guix modules can be used in Shepherd definitions
+
+*** simple example: syscalls for networking, file systems, etc.
+
+**** contrast with systemd “plugins”
+
+*** MAYBE killer example: services in containers
+
+* Services, take #1
+
+** Shepherd dependency graph
+
+** services: host name, mount, start daemon, etc.
+
+** wait! lshd, login, etc. need PAM -> add PAM to <service>
+
+** same for /etc files
+
+** problem: GNOME/Freedesktop, or inetd, D-Bus, udev, etc.
+
+* Composable services
+
+** insight: “services” extend each other
+
+** parenthesis: what NixOS does
+
+*** fixed point over the whole OS config (key/value attribute)
+
+*** good: completely extensible, simple, concise, elegant
+
+*** bad
+**** services can change anything
+**** syntactic structure, but not value structure
+**** can enter endless loops
+**** no static checks: dependencies among units, wrong key
+**** implementors have to fiddle with lazy/strict evaluation
+
+** intuition: the “extension graph”
+
+** “folding” values from high-level (e.g., colord service config) to low-level (the system)
+
+** API
+
+*** what users type in in their ‘services’ field
+*** services types
+*** services
+*** service extensions
+*** ‘fold-services’
+*** Haskellers: this is a monoid!
+
+** examples
+
+*** sshd (OpenSSH)
+*** GNOME, polkit, etc.
+*** cross-cutting concerns: elogind
+
+* Testing
+
+** VM with instrumentation
+
+** 3 Scheme layers: VM under test (marionette-eval), derivation code, host code
+
+** fine-grain testing
+
+* Wrap-up
