@@ -133,6 +133,15 @@
 
 \begin{frame}[fragile]
   \begin{semiverbatim}
+  (service openssh-service-type
+           (openssh-configuration
+             (x11-forwarding? #t)
+             (permit-root-login 'without-password)))
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
 (\alert{operating-system}
   ;; \textrm{...}
   (services (remove (lambda (service)
@@ -249,7 +258,44 @@
   \end{semiverbatim}
 \end{frame}
 
-% TODO: Add container example.
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+;; Shepherd service to mount/unmount a file system.
+
+(\alert{with-imported-modules} '((gnu build file-systems))
+  (\alert{shepherd-service}
+    (provision '(file-system-/home))
+    (start \alert{#~}(lambda ()
+               (mount "/dev/foo" "/home" "ext4")))
+    (stop \alert{#~}(lambda ()
+              (umount "/home")))))
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{semiverbatim}
+;; Shepherd service for the BitlBee IRC gateway daemon.
+\uncover<2->{;; Running in a container!}
+
+\uncover<2->{(\alert{with-imported-modules} '((gnu build linux-container))}
+  (\alert{shepherd-service}
+    (provision '(bitlbee))
+    (requirement '(loopback))
+    (start \alert{#~}(\alert<2>{make-forkexec-constructor\uncover<2->{/container}}
+              (list \alert{#$}(file-append bitlbee "/sbin/bitlbee")
+                    \textrm{...})))
+    (stop  \highlight{#~}(make-kill-destructor)))\uncover<2->{)}
+  \end{semiverbatim}
+
+  \begin{tikzpicture}[overlay]
+    \node<2->[rounded corners=4, text centered,
+          fill=guixorange1, text width=3cm,
+          inner sep=3mm, rotate=5, opacity=.75, text opacity=1,
+          drop shadow={opacity=0.5}] at (9, 0) {
+            \large{\textbf{world première!}}
+          };
+  \end{tikzpicture}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamercolor{normal text}{bg=guixblue2}
@@ -373,7 +419,8 @@
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=guixred3}
 \begin{frame}
-  \Huge{\textbf{Digression: NixOS configuration.}}
+  \Huge{\textbf{Digression:\\
+      NixOS configuration.}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
 
@@ -401,12 +448,126 @@ in \{
   \end{semiverbatim}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamercolor{normal text}{bg=guixblue2}
-\begin{frame}
-  \Huge{\textbf{OS testing!}}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\begin{frame}[fragile]
+  \vspace{2cm}
+  \begin{overlayarea}{\textwidth}{\textheight}
+  \begin{tikzpicture}[service/.style = {
+              rectangle, text width=17mm, text centered,
+              rounded corners=2mm, minimum height=10mm,
+              fill=guixyellow,
+              text=black}]
+    %% \node[text=black, at=(1,1), anchor=north]
+    %%    {\textbf{the ``service extension'' graph}};
+   \matrix[row sep=10mm, column sep=13mm]
+   {
+      \node(colord)[service]{colord}; &
+      \node(geoclue)[service]{geoclue}; &
+
+      \\
+
+      \node(polkit)[service]{polkit}; &
+      \node(elogind)[service]{elogind}; &
+      \node(upower)[service]{upower};
+      \\
+
+      \node(udev)[service]{udev}; &
+      \node(dbus)[service]{dbus}; &
+      \node(udisks)[service]{udisks};
+      \\
+
+      \node(shepherd)[service, onslide=<1>{white}]{shepherd}; &
+      \node(etc)[service, onslide=<1-2>{white}]{/etc}; &
+      \\
+    };
+
+    \path[->, very thick, draw=guixgrey, dashed] (udisks) edge [out=210, in=-30] (udev);
+    \path[->, very thick, draw=guixgrey] (udisks) edge (dbus);
+    \path[->, very thick, draw=guixgrey, dashed] (upower) edge (udev);
+    \path[->, very thick, draw=guixgrey] (upower) edge (dbus);
+    \path[->, very thick, draw=guixgrey] (elogind) edge (dbus);
+    \path[->, very thick, draw=guixgrey] (polkit) edge (dbus);
+    \path[->, very thick, draw=guixgrey] (polkit) edge (dbus);
+    \path[->, very thick, draw=guixgrey] (colord) edge (dbus);
+    \path[->, very thick, draw=guixgrey] (colord) edge (polkit);
+    \path[->, very thick, draw=guixgrey, dashed] (colord)
+       edge [out=210, in=120] node[text=black]{\texttt{.rules}} (udev);
+    \path[->, very thick, draw=guixgrey] (geoclue) edge [out=-30, in=30]
+       node[text=black]{\texttt{.service}} (dbus);
+    \path[->, very thick, draw=guixgrey]<2-> (dbus) edge (shepherd);
+    \path[->, very thick, draw=guixgrey]<3-> (dbus) edge (etc);
+  \end{tikzpicture}
+  \end{overlayarea}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
+
+\begin{frame}[fragile]{what users type}
+  \begin{semiverbatim}
+    \small{
+(\alert{operating-system}
+  (host-name "schememachine")
+  ;; \textrm{...}
+  (services (cons* (dhcp-client-service)
+                   (service openssh-service-type
+                            (openssh-configuration
+                              (x11-forwarding? #t)
+                              (permit-root-login
+                                'without-password)))
+                   (service nginx-service-type \textrm{...})
+                   %base-services)))
+    }
+  \end{semiverbatim}
+\end{frame}
+
+\setbeamercolor{normal text}{fg=white,bg=guixgrey}
+\begin{frame}[plain]
+  \Huge{Services,\\
+    service types.\\}
+\end{frame}
+
+\setbeamercolor{normal text}{fg=black,bg=white}
+\begin{frame}[fragile]
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      \includegraphics[width=1.2\textwidth]{images/service-extensions}
+    };
+    \node (command) [at=(current page.south west), text=guixgrey,
+                    anchor=south west, inner sep=5mm]{
+      \small{\texttt{guix system extension-graph config.scm}}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+\setbeamercolor{normal text}{fg=black,bg=white}
+\begin{frame}[fragile]
+  \begin{tikzpicture}[overlay]
+    \node [at=(current page.center), inner sep=0mm]{
+      \includegraphics[width=1.2\textwidth]{images/service-extensions-desktop}
+    };
+    \node (command) [at=(current page.south west), text=guixgrey,
+                    anchor=south west, inner sep=5mm]{
+      \small{\texttt{guix system extension-graph config.scm}}
+    };
+  \end{tikzpicture}
+\end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
+
+\setbeamercolor{normal text}{fg=white,bg=guixgrey}
+\begin{frame}[plain]
+  \Huge{\texttt{fold-services}.}
+\end{frame}
+
+\begin{frame}[plain]
+  \Huge{Dear Haskeller,\\
+    this is a monoid!}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \setbeamercolor{normal text}{bg=guixblue2}
+%% \begin{frame}
+%%   \Huge{\textbf{OS testing!}}
+%% \end{frame}
+%% \setbeamercolor{normal text}{fg=white,bg=black}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamercolor{normal text}{bg=guixblue2}
@@ -414,6 +575,26 @@ in \{
   \Huge{\textbf{Wrap-up.}}
 \end{frame}
 \setbeamercolor{normal text}{fg=white,bg=black}
+
+\setbeamercolor{normal text}{fg=white,bg=guixgrey}
+\begin{frame}[plain]
+  \Huge{\textbf{GuixSD leverages\\
+      a holistic approach\\
+      to system services.}}
+\end{frame}
+\setbeamercolor{normal text}{fg=white,bg=black}
+
+\begin{frame}[plain]
+  \Large{
+    \begin{itemize}
+    \item services can \highlight{use and extend} PID 1
+    \item ``service extensions'' capture\\
+      \highlight{\emph{all} the service aspects}
+    \item makes complex configurations \highlight{tractable}
+    \item<2-> \textbf{come up with your own services!}
+    \end{itemize}
+  }
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[plain]

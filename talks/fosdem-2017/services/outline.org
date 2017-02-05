@@ -71,7 +71,7 @@ See also [[https://www.gnu.org/software/guix/news/service-composition-in-guixsd.
 
 *** bad
 **** services can change anything
-**** unstructured
+**** syntactic structure, but not value structure
 **** can enter endless loops
 **** no static checks: dependencies among units, wrong key
 **** implementors have to fiddle with lazy/strict evaluation
