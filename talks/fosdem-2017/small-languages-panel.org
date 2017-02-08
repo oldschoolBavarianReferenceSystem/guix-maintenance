@@ -1,0 +1,20 @@
+#+TITLE: Small languages panel
+
+https://fosdem.org/2017/schedule/event/smalllanguagepanel/
+Sunday, K.4.601, 09:45
+
+* future of small languages?
+* what makes a successful project?
+* how to attarct newbies?
+* how to attract talent?
+* when should you apply guile, when LUA?
+* what large environments/companies are using a small language?
+* can we generate income from working on these tools?
+* ecosystem & community
+** things helpful in growing the community
+** reaching out to various technical audiences
+** project evolution vs. users
+* Lua vs. LuaJIT
+* hot topics
+** Networking & async programming in Guile
+** Lua?

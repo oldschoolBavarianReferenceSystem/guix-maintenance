@@ -1,0 +1,103 @@
+#+TITLE: Future of Guix (panel)
+#+STARTUP: content hidestars
+
+https://fosdem.org/2017/schedule/event/futureofguix/
+Sunday, 16:30, K.4.601
+
+* Organization
+
+** sharing the work load
+
+*** security updates
+
+*** build farm
+
+*** web site, posts, videos, etc.
+
+*** handling branches: starting & merging ‘core-updates’, ‘staging’
+
+*** release management: setting a date, choosing what goes in, publishing
+
+*** GSoC mentoring
+
+** review
+
+*** getting more reviewers
+
+*** facilitating the process
+
+*** encouraging newcomers
+
+** funding
+
+*** development
+
+  - how do we get core & maintenance work funded?
+  - how do we get funding for new areas (like ‘guix deploy’)?
+
+*** infrastructure (build farm)
+
+  - sustaining infrastructure growth and maintenance
+  - Jan. 2016 crowdfunding was enough for a start
+
+* Publicity, outreach
+
+** high-performance computing (HPC)
+
+*** competition: EasyBuild, Spack, Singularity, Shifter
+
+*** stories: MDC, Utrecht, Brisbane
+
+*** possible cooperation in the near future
+
+** reproducible science
+
+*** how to help projects such as [[https://rescience.github.io/][ReScience]]?
+
+*** make reproducible free software stacks the obvious choice
+
+** containers, deployment
+
+*** competition: Docker, Kubernetes, NixOps
+
+*** stories: gov.uk (Chris Baines), bayfront.guixsd.org
+
+** hold Guix User Gatherings (GUGs)?
+
+* Code
+
+** 1.0 in 2017! (see roadmap in [[https://www.gnu.org/software/guix/guix-ghm-20160818.pdf][GHM 2016 talk]])
+
+*** ‘guix pull’ and channels
+
+*** Git checkout authentication
+
+*** performance & usability improvements
+
+*** GuixSD graphical installer (John)
+
+*** self-hosted infrastructure
+
+**** Cuirass
+
+**** ‘guix publish’ improvements
+
+**** build machines running GuixSD
+
+*** bug fixes
+
+** next big thing: ‘guix deploy’
+
+** scalability
+
+*** better importers & updaters
+
+*** better ‘guix lint -c cve’
+
+** reproducibility: reach 90% or so, and measure
+
+** bootstrapping
+
+*** reduce the size of our bootstrap binaries (Bournish? Mes? …)
+
+*** “do something” about compilers that cannot be bootstrapped
