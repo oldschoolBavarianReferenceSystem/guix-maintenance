@@ -333,3 +333,13 @@ http://www.linuxplanet.com/news/linux-top-3-guix-parrot-security-and-openmandriv
 http://www.codesec.net/view/517686.html
 http://linux.softpedia.com/get/System/Software-Distribution/GNU-Guix-94623.shtml
 https://news.ycombinator.com/item?id=13238115
+
+* January 2017
+
+http://ivory.idyll.org/blog/2017-pof-software-archivability.html#comment-3094772219
+https://www.meetup.com/HK-Functional-programming/events/236840480/
+https://lwn.net/Articles/712318/
+
+* February 2017
+
+http://linuxfr.org/users/dzecniv/journaux/decouvrons-common-lisp-comparaison-avec-l-environnement-python
