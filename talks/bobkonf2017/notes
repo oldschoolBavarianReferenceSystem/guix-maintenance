@@ -1,0 +1,11 @@
+These are the slides for Ricardo's 45 minute BOBkonf 2017 talk with
+the pretentious title "Functional package management with GNU Guix for
+developers and power users" (http://bobkonf.de/2017/wurmus.html).
+
+All slides were created in Inkscape.  Many of the slides use the
+"League Gothic" fonts.  Run "make" to convert the SVG files to PDF
+with Inkscape and glue them together to one "slides.pdf" with
+Ghostscript.
+
+All of the slides are available under the Create Commons license
+CC-BY-SA 4.0.

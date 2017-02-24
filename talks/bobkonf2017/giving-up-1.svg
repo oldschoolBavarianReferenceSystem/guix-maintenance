@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="483.77951"
+   height="362.83463"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.92.0 r15299"
+   sodipodi:docname="giving-up-1.svg"
+   version="1.0"
+   viewBox="0 0 128 95.999997"
+   style="enable-background:new">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient9709"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop9711" />
+    </linearGradient>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Roughen"
+       id="filter13391-1">
+      <feTurbulence
+         type="fractalNoise"
+         numOctaves="5"
+         seed="1"
+         baseFrequency="0.013 0.013"
+         result="turbulence"
+         id="feTurbulence13393-2" />
+      <feDisplacementMap
+         in="SourceGraphic"
+         in2="turbulence"
+         scale="10.2094"
+         yChannelSelector="G"
+         xChannelSelector="R"
+         id="feDisplacementMap13395-8" />
+    </filter>
+    <marker
+       inkscape:stockid="Arrow2Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Send-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path6389-4"
+         style="fill:#f34eaf;fill-opacity:1;fill-rule:evenodd;stroke:#f34eaf;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)" />
+    </marker>
+    <filter
+       y="-0.2"
+       height="1.4"
+       inkscape:label="Rough and Dilate"
+       inkscape:menu="Distort"
+       inkscape:menu-tooltip="Create a turbulent contour around"
+       style="color-interpolation-filters:sRGB"
+       id="filter6525">
+      <feMorphology
+         radius="7"
+         operator="dilate"
+         result="result8"
+         in="SourceGraphic"
+         id="feMorphology6527" />
+      <feComposite
+         in2="result8"
+         result="result10"
+         in="SourceGraphic"
+         operator="arithmetic"
+         k1="0.5"
+         k3="0.5"
+         id="feComposite6529"
+         k2="0"
+         k4="0" />
+      <feTurbulence
+         result="result11"
+         type="fractalNoise"
+         numOctaves="3"
+         baseFrequency="0.07"
+         id="feTurbulence6531" />
+      <feDisplacementMap
+         result="result12"
+         in2="result11"
+         in="result10"
+         xChannelSelector="R"
+         scale="10"
+         id="feDisplacementMap6533"
+         yChannelSelector="A" />
+      <feComposite
+         operator="arithmetic"
+         result="result13"
+         in="SourceGraphic"
+         in2="result12"
+         k1="0.25"
+         k2="0.25"
+         k3="0.75"
+         id="feComposite6535"
+         k4="0" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Roughen"
+       id="filter6597">
+      <feTurbulence
+         type="fractalNoise"
+         numOctaves="5"
+         seed="69"
+         baseFrequency="0.013 0.001"
+         result="turbulence"
+         id="feTurbulence6599" />
+      <feDisplacementMap
+         in="SourceGraphic"
+         in2="turbulence"
+         scale="41.4"
+         yChannelSelector="G"
+         xChannelSelector="R"
+         id="feDisplacementMap6601" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2862346"
+     inkscape:cx="226.72782"
+     inkscape:cy="140.2068"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g31531"
+     inkscape:window-width="1278"
+     inkscape:window-height="798"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     width="12.8cm"
+     height="9.6cm"
+     units="cm"
+     showgrid="false"
+     grid_units="mm"
+     inkscape:object-paths="false"
+     inkscape:grid-points="true"
+     inkscape:grid-bbox="true"
+     inkscape:guide-points="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="0">
+    <sodipodi:guide
+       orientation="vertical"
+       position="15.938931,0"
+       id="guide3573"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0,3.1145038"
+       id="guide3579"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0,6.7786261"
+       id="guide3886"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0,80.610687"
+       id="guide3988"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0,85.557253"
+       id="guide4081"
+       inkscape:locked="false" />
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0"
+       originy="0"
+       spacingx="2.1333334"
+       spacingy="2.1333334"
+       color="#3f3fff"
+       empcolor="#3f3fff"
+       opacity="0.15"
+       empopacity="0.38"
+       empspacing="5" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(4.149475e-6,-698.0315)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.28888893px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="69.999992"
+       y="754.03149"
+       id="text5335"><tspan
+         sodipodi:role="line"
+         id="tspan5337"
+         x="69.999992"
+         y="764.01953"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'" /></text>
+    <g
+       id="g31531"
+       transform="matrix(0.42305207,0,0,0.42305207,-168.22716,514.30643)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:88.99999857%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         x="548.47968"
+         y="525.74231"
+         id="text4140-4-1"><tspan
+           sodipodi:role="line"
+           x="548.47968"
+           y="525.74231"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40.02659225px;line-height:97.00000286%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:center;text-anchor:middle;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan9584">big binary bundles</tspan><tspan
+           sodipodi:role="line"
+           x="548.47968"
+           y="554.96173"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.68439674px;line-height:97.00000286%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:center;text-anchor:middle;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan7850">are <tspan
+   style="fill:#000000"
+   id="tspan9596">indistinguishable</tspan> from</tspan><tspan
+           sodipodi:role="line"
+           x="548.47968"
+           y="595.25519"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.69769287px;line-height:97.00000286%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic';text-align:center;text-anchor:middle;fill:#f34eaf;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="tspan9594">giving up</tspan></text>
+    </g>
+  </g>
+</svg>
