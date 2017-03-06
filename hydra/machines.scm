@@ -57,8 +57,7 @@
     (user "hydra")
     (system "armhf-linux")
     (private-key %openssh-private-key)
-    (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeUsbVEfJBZY2DCKkINByFtL72EefJ7QUmd0OAPVuJe root@redhill")
-    ;;(host-key "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCKckkxepiZ0WX3a91sLAQQujwFFjkpG5bHhZxzxmf/ptviXPMF6ZRxOxgUP2xBP8AasVb7Wrrh739RuZnO6pP06j9nlE2CxDPqrHDiIggA3U1JXT4G1yZXv6rFfYeqkwoBCMxxMlo0jpvk7ySE6MyUkJs6l7n6sMYRG3A6XSYD2Eio1bCJR7BDZCA04SXN9WDlzn4aTfhcWDIwYtEWjfLsjtw8OZfd2AbxfloRwYRnTEueEXtKj8D+itqscfo8R97PLsEyPJUT4xop8PsBcWbg13gL/P98UUUAq/Npg8rw71/kthbmPXFa6kB06U6g2FQb+mXY/LkHAHQw4vT12oj root@redhill")
+    (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+FYr1NUTsXrJgquSTMz0Izkqw3ob7pCU+JPFHgEhHa root@redhill")
     (speed 1.0)
     (parallel-builds 4)))
 
@@ -114,9 +113,9 @@
 
       chapters chapters-i686
 
-      redhill
-
       ;; librenote-mips64el    ; dead fan
       hydra-slave0
+
+      redhill
       hydra-slave1
       hydra-slave2)
