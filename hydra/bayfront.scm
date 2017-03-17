@@ -25,6 +25,13 @@
   #~(job '(next-hour '(4))
          (string-append #$guix "/bin/guix gc -F80G")))
 
+(define %certbot-job
+  ;; Attempt to renew the Let's Encrypt certificate twice a week.
+  #~(job (lambda (now)
+           (next-day-from (next-hour-from now '(3))
+                          '(2 5)))
+         (string-append #$certbot "/bin/certbot renew")))
+
 (define %guix-daemon-config
   (guix-configuration
    ;; Disable substitutes altogether.
@@ -204,7 +211,7 @@ Happy hacking!\n"))
                    (service rottlog-service-type (rottlog-configuration))
                    (service mcron-service-type
                             (mcron-configuration
-                             (jobs (list %gc-job))))
+                             (jobs (list %gc-job %certbot-job))))
 
                   (modify-services %base-services
                     ;; Disable substitutes altogether.
