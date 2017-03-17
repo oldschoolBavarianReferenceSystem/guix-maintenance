@@ -29,6 +29,7 @@
              (guix store)
              (guix grafts)
              (guix packages)
+             (guix profiles)
              (guix derivations)
              (guix monads)
              ((guix licenses)
@@ -39,9 +40,11 @@
              (gnu packages commencement)
              (gnu packages guile)
              (gnu packages make-bootstrap)
+             (gnu packages package-management)
              (gnu system)
              (gnu system vm)
-             (gnu system install)
+             ((guix scripts pack)
+              #:select (lookup-compressor self-contained-tarball))
              (srfi srfi-1)
              (ice-9 match))
 
@@ -120,8 +123,14 @@ for TARGET on SYSTEM."
                           (run-with-store store
                             (mbegin %store-monad
                               (set-guile-for-build (default-guile))
-                              (self-contained-tarball))
-                            #:system system))))
+                              (>>= (profile-derivation
+                                    (packages->manifest (list guix)))
+                                   (lambda (profile)
+                                     (self-contained-tarball
+                                      "guix-binary" profile
+                                      #:compressor
+                                      (lookup-compressor "lzip"))))))
+                          #:system system)))
       (#:description . "Stand-alone binary Guix tarball")
       (#:long-description . "This is a tarball containing binaries of Guix
 and all its dependencies, and ready to be installed on non-GuixSD
