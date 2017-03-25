@@ -30,11 +30,11 @@
    Assets:Bank                     €5000
    Income:Donations
 
-2016-06-10 * Hydra
+2016-06-10 * Bayfront
    Assets:Bank                     €-2142
    Expenses:Purchases
-2016-06-23 * Hydra
-   Assets:Stock:Hydra              €1
+2016-06-23 * Bayfront
+   Assets:Stock:Bayfront           €1
    Equity
 
 2016-07-07 * External hard disk for Redhill
