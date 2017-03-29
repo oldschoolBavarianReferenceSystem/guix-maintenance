@@ -122,6 +122,7 @@ for TARGET on SYSTEM."
       (>>= (profile-derivation (packages->manifest (list guix)))
            (lambda (profile)
              (self-contained-tarball "guix-binary" profile
+                                     #:localstatedir? #t
                                      #:compressor
                                      (lookup-compressor "lzip"))))))
 
