@@ -116,20 +116,20 @@ for TARGET on SYSTEM."
 
 (define (tarball-job store system)
   "Return Hydra jobs to build the self-contained Guix binary tarball."
+  (define drv
+    (mbegin %store-monad
+      (set-guile-for-build (default-guile))
+      (>>= (profile-derivation (packages->manifest (list guix)))
+           (lambda (profile)
+             (self-contained-tarball "guix-binary" profile
+                                     #:compressor
+                                     (lookup-compressor "lzip"))))))
+
   (λ ()
     `((#:job-name . (string-append "binary-tarball." system))
       (#:derivation . ,(derivation-file-name
                         (parameterize ((%graft? #f))
-                          (run-with-store store
-                            (mbegin %store-monad
-                              (set-guile-for-build (default-guile))
-                              (>>= (profile-derivation
-                                    (packages->manifest (list guix)))
-                                   (lambda (profile)
-                                     (self-contained-tarball
-                                      "guix-binary" profile
-                                      #:compressor
-                                      (lookup-compressor "lzip")))))
+                          (run-with-store store drv
                             #:system system))))
       (#:description . "Stand-alone binary Guix tarball")
       (#:long-description . "This is a tarball containing binaries of Guix
