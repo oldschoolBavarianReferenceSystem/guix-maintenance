@@ -129,8 +129,8 @@ for TARGET on SYSTEM."
                                      (self-contained-tarball
                                       "guix-binary" profile
                                       #:compressor
-                                      (lookup-compressor "lzip"))))))
-                          #:system system)))
+                                      (lookup-compressor "lzip")))))
+                            #:system system))))
       (#:description . "Stand-alone binary Guix tarball")
       (#:long-description . "This is a tarball containing binaries of Guix
 and all its dependencies, and ready to be installed on non-GuixSD
