@@ -173,7 +173,6 @@ valid."
   (define subset
     (match (assoc-ref arguments 'subset)
       ("core" 'core)                    ; only build core packages
-      ("hello" 'hello)                  ; only build hello
       (_ 'all)))                        ; build everything
 
   (define (cross-jobs system)
@@ -230,12 +229,6 @@ valid."
                                                  package system))
                                   %core-packages)
                              (cross-jobs system)))
-                    ((hello)
-                     ;; Build hello package only.
-                     (if (string=? system (%current-system))
-                         (let ((hello (specification->package "hello")))
-                           (list (package-job store (%job-name hello) hello system)))
-                         '()))
                     (else
                      (error "unknown subset" subset))))
                 '("x86_64-linux" "i686-linux"))))
