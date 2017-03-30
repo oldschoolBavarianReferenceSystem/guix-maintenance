@@ -158,7 +158,7 @@ Happy hacking!\n"))
                    #:extra-modules '("raid10")
                                    rest)))
 
-  (packages (cons* certbot wget
+  (packages (cons* certbot wget iptables jnettop
                    mdadm vim lm-sensors openssh
                    %base-packages))
 
