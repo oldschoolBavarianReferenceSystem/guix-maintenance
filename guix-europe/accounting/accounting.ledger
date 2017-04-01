@@ -44,3 +44,11 @@
    Assets:Stock:Redhill            €1
    Equity
 
+2016-03-28 * Membership fee
+   Assets:Bank                     €10
+   Income:Membership
+
+2016-04-01 * Membership fee
+   Assets:Bank                     €50
+   Income:Membership
+
