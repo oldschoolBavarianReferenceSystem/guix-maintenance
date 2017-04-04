@@ -36,7 +36,9 @@
    (substitute-urls '())
    (authorized-keys '())
 
-   (extra-options '("--max-jobs=4" "--cores=8"    ;we have 32 cores
+   (extra-options '(;; "--max-jobs=4" "--cores=8"    ;we have 32 cores
+                    "--max-jobs=2" "--cores=4"    ;XXX: workaround to reduce
+                                                  ;load until RAM is replaced
                     "--cache-failures"
                     "--gc-keep-outputs" "--gc-keep-derivations"))))
 
