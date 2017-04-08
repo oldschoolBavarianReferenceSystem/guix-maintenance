@@ -106,6 +106,17 @@
     (speed 1.0)
     (parallel-builds 2)))
 
+(define hydra-slave3
+  (build-machine
+    (name "hydra-slave3.netris.org")
+    (port 7274)
+    (user "hydra")
+    (system "armhf-linux")
+    (private-key %openssh-private-key)
+    (host-key "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBLOVhnS24E+Z1bXLUU4z4gE5+HsFxDxUPA6MbLHmnME root@hydra-slave3")
+    (speed 1.0)
+    (parallel-builds 2)))
+
 
 (list gnunet gnunet-i686
 
@@ -118,4 +129,5 @@
 
       redhill
       hydra-slave1
-      hydra-slave2)
+      hydra-slave2
+      hydra-slave3)

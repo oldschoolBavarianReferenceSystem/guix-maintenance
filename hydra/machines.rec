@@ -81,6 +81,24 @@ PublicKey: (public-key
 +   )
 + 
 
+Nickname: hydra-slave3
+Hostname: hydra-slave3.netris.org
+Port: 7274
+Physical: Yes
+Vendor: Novena
+Location: Cambridge, MA, USA
+Contact: Mark H Weaver <mhw@netris.org>
+SystemType: armhf-linux
+Cores: 4
+BaseSystem: Debian GNU/Linux 8.1
+PublicKey:  (public-key 
++   (ecc 
++    (curve Ed25519)
++    (q #21F7C3052E02239D73024619CBC757ABC3432A2BD4657388361133CBA08834F3#)
++    )
++   )
++ 
+
 Nickname: hydra-slave2
 Hostname: hydra-slave2.netris.org
 Port: 7276
