@@ -186,7 +186,11 @@ Happy hacking!\n"))
                    (lsh-service #:port-number 22)
 
                    ;; The Web service.
-                   (guix-publish-service #:port 3000)
+                   (service guix-publish-service-type
+                            (guix-publish-configuration
+                             (port 3000)
+                             (cache "/var/cache/guix/publish")
+                             (ttl (* 14 24 3600))))
                    (nginx-service #:config-file
                                   (file-append %nginx-config
                                                "/bayfront.conf"))
