@@ -190,7 +190,9 @@ Happy hacking!\n"))
                             (guix-publish-configuration
                              (port 3000)
                              (cache "/var/cache/guix/publish")
-                             (ttl (* 14 24 3600))))
+                             (ttl (* 45 24 3600))
+                             (workers 3)))        ;XXX: to reduce load
+
                    (nginx-service #:config-file
                                   (file-append %nginx-config
                                                "/bayfront.conf"))
