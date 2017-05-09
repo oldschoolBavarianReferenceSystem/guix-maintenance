@@ -101,6 +101,11 @@ Make that list "camera-ready":
 
 * Prepare & upload tarball
 
+** Create branch 'version-X.Y.Z'
+
+  $ git branch version-X.Y.Z
+  $ git checkout version-X.Y.Z
+
 ** Add a Git tag
 
 Create a signed Git tag, like this:
@@ -110,31 +115,41 @@ Create a signed Git tag, like this:
 The tag must be `vX.Y'.  For the sake of consistency, always use
 "GNU Guix X.Y." as the tag comment.
 
-** Push the tag and changes
+The next “make dist” will automatically update the version number to
+match the tag.
 
-  $ git push && git push --tags
+** Run “make release”
 
-Normally nobody committed in the meantime.  ;-)
+This will automatically build:
 
-** Create branch 'version-X.Y.Z'
+  1. The source tarball, with “make distcheck” (commit V).
+  2. The binary tarballs for each architecture, after first updating the
+     ‘guix’ package in (gnu packages package-management) so that it uses
+     the commit above (we’re now at V + 1).
+  3. The GuixSD installation images, after first updating the ‘guix’
+     package again to refer to the 2nd commit above (we’re now at V + 2).
 
-  $ git branch version-X.Y.Z
-  $ git checkout version-X.Y.Z
+All these files will end up in a ‘release-X.Y.Z’ sub-directory.
 
-** Add a Hydra jobset for branch 'version-X.Y.Z'
+Needless to say, this operation takes some time.  Since this is
+committing on your behalf, it will contact your gpg-agent to sign
+commits, so you need to keep an eye on it.
 
-This jobset will have to be kept until the next release, so that
-substitutes remain available.
+Steps #2 and #3 require you to have [[info:guix#Daemon%20Offload%20Setup][offloading]] set up so you can build
+for all the supported architectures.  For instance, if you’re running
+this on an x86_64 machine, you should have an “armhf-linux” machine in
+/etc/guix/machines.scm.
 
-** Run "make distcheck"
+** Push the branch
 
-After "make distcheck", double-check that `./configure --version'
-reports the new version number.
+If “make release” succeeded, push the branch and tag:
 
-** Upload
+  $ git push
 
-  $ /path/to/gnulib/build-aux/gnupload \
-     --to alpha.gnu.org:guix guix-X.Y.tar.gz
+** Upload all the files
+
+  $ ./build-aux/gnupload --to alpha.gnu.org:guix \
+       release-X.Y.Z/*.[xlg]z
 
 You'll get an email soon after when the upload is complete.
 
@@ -145,63 +160,10 @@ Make sure to publish your public key on public OpenPGP servers
 (keys.gnupg.net, pgp.mit.edu, etc.), so that people can actually use it
 to check the authenticity and integrity of the tarball.
 
-** Download
+** Add a Hydra jobset for branch 'version-X.Y.Z'
 
-Make sure the file was uploaded and is available for download as
-expected:
-
-  $ mkdir t && cd t && \
-    wget ftp://alpha.gnu.org/gnu/guix/guix-X.Y.tar.gz
-  $ diff guix-X.Y.tar.gz ../guix-X.Y.tar.gz
-
-* Prepare & upload bootable USB images and binary tarballs
-
-** Update (gnu packages package-management)
-
-  1. Change the stable Guix to refer to the just-uploaded tarball, and
-     change the 'guix' binding to refer to 'guix-X.Y'.  Push that
-     commit.
-  2. Change the 'guix-devel' package to refer to the above
-     commit---i.e., the commit right after version X.Y---and change the
-     'guix' binding to refer to 'guix-devel'.
-
-Both commits go to the 'version-X.Y.Z' branch.
-
-You're now all set to build the bootable images.
-
-That way, the bootable image will run Guix X.Y + 1 commit, and running
-'guix system init' in the bootable image will install exactly Guix X.Y.
-
-** Build the binary tarballs using commit vX.Y.Z + 1
-
-Start from the commit right after vX.Y.Z so that the Guix included in
-the tarball is exactly vX.Y.Z.
-
-  $ for i in x86_64-linux i686-linux mips64el-linux armhf-linux ; \
-    do make guix-binary.$i.tar.xz && \
-       mv guix-binary.$i.tar.gz guix-binary-X.Y.Z.$i.tar.xz ; done
-
-For architectures that you do not have access to, you may need SSH
-access to hydra.gnu.org, from where you can explicitly ‘guix build’ the
-derivations of interest; use ‘guix archive’ to transfer things back and
-forth.
-
-** Build USB images for all the supported architectures
-
-Start from commit vX.Y.Z + 2, as explained above.
-
-  $ ./pre-inst-env guix system disk-image \
-       --image-size=850MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.x86_64-linux.xz
-
-  $ ./pre-inst-env guix system disk-image -s i686-linux \
-       --image-size=850MiB gnu/system/install.scm
-  $ xz < /gnu/store/...-disk-image > guixsd-usb-install-X.Y.i686-linux.xz
-
-** Upload
-
-  $ ./build-aux/gnupload --to alpha.gnu.org:guix \
-       guixsd-usb-install-X.Y.Z.*.xz guix-binary-X.Y.Z.*.tar.xz
+This jobset will have to be kept until the next release, so that
+substitutes remain available.
 
 * Announcements
 
