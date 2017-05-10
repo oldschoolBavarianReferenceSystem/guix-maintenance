@@ -111,12 +111,10 @@ Make that list "camera-ready":
 Create a signed Git tag, like this:
 
   $ git tag -s -u MY-KEY -m "GNU Guix X.Y." vX.Y
+  $ autoreconf  # to update $(PACKAGE_VERSION)
 
 The tag must be `vX.Y'.  For the sake of consistency, always use
 "GNU Guix X.Y." as the tag comment.
-
-The next “make dist” will automatically update the version number to
-match the tag.
 
 ** Run “make release”
 
