@@ -36,9 +36,7 @@
    (substitute-urls '())
    (authorized-keys '())
 
-   (extra-options '(;; "--max-jobs=4" "--cores=8"    ;we have 32 cores
-                    "--max-jobs=2" "--cores=4"    ;XXX: workaround to reduce
-                                                  ;load until RAM is replaced
+   (extra-options '("--max-jobs=5" "--cores=8"    ;we have 32 cores
                     "--cache-failures"
                     "--gc-keep-outputs" "--gc-keep-derivations"))))
 
@@ -191,7 +189,8 @@ Happy hacking!\n"))
                              (port 3000)
                              (cache "/var/cache/guix/publish")
                              (ttl (* 45 24 3600))
-                             (workers 3)))        ;XXX: to reduce load
+                             (compression-level 9)
+                             (workers 8)))
 
                    (nginx-service #:config-file
                                   (file-append %nginx-config
