@@ -11,93 +11,21 @@ This document describes the typical release process for Guix.
 
 Run "git log" and search for "^Fixes".
 
-** Update the list of new packages
+** Update the list of new and updated packages
 
-Typically, you already have a list of package/version pairs from the
-previous version.  And then you build one for the new version:
+Run “make update-NEWS”.
 
-#+BEGIN_SRC scheme
-  (use-modules (gnu) (guix)
-               (srfi srfi-1))
+This target needs requires a checkout of
+<git://git.savannah.gnu.org/guix/maintenance.git>, which is where we
+store the list of package/version pairs of each Guix release.
 
-  (define old
-    ;; Get the list of packages of the previous release.
-    (call-with-input-file "packages-0.11.0.txt"
-      read))
+** Commit the new list of packages in maintenance.git
 
-  ;; Don't browse things listed in the user's $GUIX_PACKAGE_PATH.  Here we
-  ;; assume that the last item in (%package-module-path) is the distro
-  ;; directory.
-  (%package-module-path (list (last (%package-module-path))))
+Running “make update-NEWS” creates a ‘data/packages-X.Y.Z.txt’ file in
+your maintenance.git checkout.  Make sure to commit it:
 
-  (define new
-    ;; List of package/version pairs for the new Guix version.
-    (fold-packages (lambda (p r)
-                     (alist-cons (package-name p) (package-version p)
-                                 r))
-                   '()))
-
-#+END_SRC
-
-From there, compute the list of packages that were added:
-
-#+BEGIN_SRC scheme
-  (define added
-    ;; List of packages present in NEW and not in OLD.
-    (lset-difference string=? (map car new) (map car old)))
-
-#+END_SRC
-
-Make that list "camera-ready":
-
-#+BEGIN_SRC scheme
-  (string-join (sort added string<?) ", ")
-#+END_SRC
-
-... and paste it into 'NEWS'.
-
-** Update the list of upgraded packages
-
-Same idea: identify what's been updated:
-
-#+BEGIN_SRC scheme
-  (use-modules (ice-9 match))
-
-  (define upgraded
-    ;; List of package/version pairs for packages that were upgraded.
-    (filter-map (match-lambda
-                 ((package . new-version)
-                  (match (assoc package old)
-                    ((_ . old-version)
-                     (and (version>? new-version old-version)
-                          (cons package new-version)))
-                    (_ #f))))
-                new))
-#+END_SRC
-
-Make that list "camera-ready":
-
-#+BEGIN_SRC scheme
-  (string-join (sort (map (match-lambda
-                           ((package . version)
-                            (string-append package "-" version)))
-                          upgraded)
-                     string<?)
-               ", ")
-#+END_SRC
-
-... and paste it into NEWS.
-
-** Save the current list of packages for later
-
-#+BEGIN_SRC scheme
-  (use-modules (ice-9 pretty-print))
-
-  (call-with-output-file "packages-0.12.0.txt"
-    (lambda (port)
-      (pretty-print new port)))
-
-#+END_SRC
+  git add data/packages-X.Y.Z.txt
+  git commit -m "Data for X.Y.Z."
 
 * Prepare & upload tarball
 
