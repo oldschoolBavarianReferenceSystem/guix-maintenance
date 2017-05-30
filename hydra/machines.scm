@@ -129,7 +129,8 @@
       ;; librenote-mips64el    ; dead fan
       hydra-slave0
 
-      redhill
+      ;; redhill   ; networking issue
+
       hydra-slave1
       hydra-slave2
       hydra-slave3)
