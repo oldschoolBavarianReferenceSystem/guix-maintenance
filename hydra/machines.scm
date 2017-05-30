@@ -36,6 +36,7 @@
     (parallel-builds 2)))
 
 (define chapters
+  ;; This machine has been dead since roughly October 2016.
   (build-machine
     (name "chapters.gnu.org")
     (port 9022)
@@ -122,7 +123,8 @@
 
       sjd sjd-i686
 
-      chapters chapters-i686
+      ;; Dead (see above.)
+      ;; chapters chapters-i686
 
       ;; librenote-mips64el    ; dead fan
       hydra-slave0
