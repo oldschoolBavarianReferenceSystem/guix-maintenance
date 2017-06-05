@@ -35,6 +35,8 @@
    (use-substitutes? #f)
    (substitute-urls '())
    (authorized-keys '())
+   (max-silent-time 7200)
+   (timeout (* 4 max-silent-time))
 
    (extra-options '("--max-jobs=5" "--cores=8"    ;we have 32 cores
                     "--cache-failures"
